@@ -23,7 +23,7 @@ MUTATION_CHANCE = .05
 CHILDREN_PER_GEN = 64
 ADAM_FILE = "imp"
 EVE_FILE = "imp"
-ROUNDS_PER_GEN_PER_CHILD = 2
+ROUNDS_PER_GEN_PER_CHILD = 5
 WIN_TO_TIE_RATIO = 10
 
 def get_mutator():
@@ -110,14 +110,14 @@ def spawn(a, b):
 	a_len = len(a) / 14
 	b_len = len(b) / 14
 
-	cutpt = random.randint(0, min(a_len, b_len)) * 14
+	#cutpt = random.randint(0, min(a_len, b_len)) * 14
 
-	return a[:cutpt] + b[cutpt:]
+	#return a[:cutpt] + b[cutpt:]
 
-	#a_cutpt = random.randint(1, a_len) * 14
-	#b_cutpt = random.randint(1, b_len) * 14
+	a_cutpt = random.randint(1, a_len) * 14
+	b_cutpt = random.randint(1, b_len) * 14
 
-	#return a[:a_cutpt] + b[b_cutpt:]
+	return a[:a_cutpt] + b[b_cutpt:]
 
 def flip_mutator(dna):
 	strpos = random.randint(0, len(dna) - 1)
@@ -168,7 +168,7 @@ def gengen(lastgen, winners):
 def rungen(gen):
 	parser = Corewar.Parser(coresize=8000,
                                 maxprocesses=8000,
-                                maxcycles=80000,
+                                maxcycles=8000,
                                 maxlength=100,
                                 mindistance=100,
                                 standard=Corewar.STANDARD_88)
