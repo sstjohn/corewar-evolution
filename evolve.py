@@ -5,15 +5,26 @@ import random
 import sys
 import Corewar, Corewar.Benchmarking
 
-INSTRUCTIONS = ["DAT", "MOV", "ADD", "SUB", "JMP", "JMZ", "JMN", "CMP", "SLT", "DJN", "SPL"]
 UNARY_OPS = ["DAT","JMP","SPL"]
-ADDRESSING = ["$", "#", "@", "<"]
-PARENTAL_CHOICE_SEQ = [1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 4]
-MUTATION_CHANCE = .25
-CHILDREN_PER_GEN = 32
+INSTRUCTIONS = 		 {"DAT": [["#", "<"], ["#", "<"]],
+			  "MOV": [["$", "#", "@", "<"], ["$", "@", "<"]],
+			  "ADD": [["$", "#", "@", "<"], ["$", "@", "<"]],
+			  "SUB": [["$", "#", "@", "<"], ["$", "@", "<"]],
+			  "CMP": [["$", "#", "@", "<"], ["$", "@", "<"]],
+			  "SLT": [["$", "#", "@", "<"], ["$", "@", "<"]],
+			  "JMP": [["$", "@", "<"], ["$", "#", "@", "<"]],
+			  "JMZ": [["$", "@", "<"], ["$", "#", "@", "<"]],
+			  "JMN": [["$", "@", "<"], ["$", "#", "@", "<"]],
+			  "DJN": [["$", "@", "<"], ["$", "#", "@", "<"]],
+			  "SPL": [["$", "@", "<"], ["$", "#", "@", "<"]]}
+
+PARENTAL_CHOICE_SEQ = [1, 1, 1, 1, 2, 2, 2, 3, 3, 4]
+MUTATION_CHANCE = .05
+CHILDREN_PER_GEN = 64
 ADAM_FILE = "imp"
 EVE_FILE = "imp"
-ROUNDS_PER_GEN_PER_CHILD = .5
+ROUNDS_PER_GEN_PER_CHILD = 2
+WIN_TO_TIE_RATIO = 10
 
 def get_mutator():
 	return random.choice([flip_mutator, drop_mutator, dupe_mutator])
@@ -26,16 +37,17 @@ def line_parse(i):
 		return ""
 	instruction = -1
 	try:
-		instruction = INSTRUCTIONS.index(parts[0])
+		instruction = INSTRUCTIONS.keys().index(parts[0])
+		a_modes, b_modes = INSTRUCTIONS[parts[0]]
 	except:
 		print "Unknown instruction: %s" % parts[0]
 		return ""
 	
-	if parts[1][0] in ADDRESSING:
-		a_mode = ADDRESSING.index(parts[1][0])
+	if parts[1][0] in a_modes:
+		a_mode = a_modes.index(parts[1][0])
 		a_val = int(parts[1][1:])
 	else:
-		a_mode = ADDRESSING.index("$")
+		a_mode = 0
 		a_val = int(parts[1])
 	if a_val < 0:
 		a_val = -a_val
@@ -44,13 +56,13 @@ def line_parse(i):
 		a_neg = 0
 		
 	if len(parts) < 3 or parts[2][0] == ';':
-		b_mode = ADDRESSING.index("$")
+		b_mode = 0
 		b_val = 0
-	elif parts[2][0] in ADDRESSING:
-		b_mode = ADDRESSING.index(parts[2][0])
+	elif parts[2][0] in b_modes:
+		b_mode = b_modes.index(parts[2][0])
 		b_val = int(parts[2][1:])
 	else:
-		b_mode = ADDRESSING.index("$")
+		b_mode = 0
 		b_val = int(parts[2])
 	if b_val < 0:
 		b_val = -b_val
@@ -66,16 +78,17 @@ def unparse(dna):
 		result += "\n\t"
 		line = dna[:14]
 		dna = dna[14:]
-		inst = INSTRUCTIONS[int(line[0:2]) % len(INSTRUCTIONS)]
+		inst = INSTRUCTIONS.keys()[int(line[0:2]) % len(INSTRUCTIONS)]
+		a_modes, b_modes = INSTRUCTIONS[inst]
 		result += inst
 		result += " "
-		mode = ADDRESSING[int(line[2]) % len(ADDRESSING)]
+		mode = a_modes[int(line[2]) % len(a_modes)]
 		if not mode == "$":
 			result += mode
 		if int(line[3]) % 2 == 1:
 			result += "-"
 		result += str(int(line[4:8]))
-		mode = ADDRESSING[int(line[8]) % len(ADDRESSING)]
+		mode = b_modes[int(line[8]) % len(b_modes)]
 		val = int(line[10:14])
 		if (not inst in UNARY_OPS) or (not mode == "$") or (not val == 0):
 			result += ", "
@@ -177,7 +190,7 @@ def rungen(gen):
                                             mindistance=200,
                                             maxlength=200)
 	result = mars.mw_run(warriors, max(1, int(ROUNDS_PER_GEN_PER_CHILD * CHILDREN_PER_GEN)))
-	scores = zip(range(len(result)), [x[0] * 5 + x[2] for x in result[:-1]])
+	scores = zip(range(len(result)), [x[0] * WIN_TO_TIE_RATIO + x[2] for x in result[:-1]])
 	scores.sort(key=lambda x: x[1], reverse=True)
 	winners = scores[0:4]
 	print "gen %d winners:" % gen
