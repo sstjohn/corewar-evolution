@@ -9,7 +9,11 @@ INSTRUCTIONS = ["DAT", "MOV", "ADD", "SUB", "JMP", "JMZ", "JMN", "CMP", "SLT", "
 UNARY_OPS = ["DAT","JMP","SPL"]
 ADDRESSING = ["$", "#", "@", "<"]
 PARENTAL_CHOICE_SEQ = [1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 4]
-MUTATION_CHANCE = .5
+MUTATION_CHANCE = .25
+CHILDREN_PER_GEN = 32
+ADAM_FILE = "imp"
+EVE_FILE = "imp"
+ROUNDS_PER_GEN_PER_CHILD = .5
 
 def get_mutator():
 	return random.choice([flip_mutator, drop_mutator, dupe_mutator])
@@ -90,18 +94,17 @@ def warrior_read(f):
 	return dna
 
 def spawn(a, b):
-	if random.randint(0, 1) == 1:
-		tmp_a = a
-		a = b
-		b = tmp_a
-
 	a_len = len(a) / 14
 	b_len = len(b) / 14
 
-	a_cutpt = random.randint(1, a_len) * 14
-	b_cutpt = random.randint(1, b_len) * 14
+	cutpt = random.randint(0, min(a_len, b_len)) * 14
 
-	return a[:a_cutpt] + b[b_cutpt:]
+	return a[:cutpt] + b[cutpt:]
+
+	#a_cutpt = random.randint(1, a_len) * 14
+	#b_cutpt = random.randint(1, b_len) * 14
+
+	#return a[:a_cutpt] + b[b_cutpt:]
 
 def flip_mutator(dna):
 	strpos = random.randint(0, len(dna) - 1)
@@ -142,7 +145,7 @@ def gengen(lastgen, winners):
 			parents.append(warrior_read(f))
 	nextgen = str(lastgen + 1)
 	os.mkdir(nextgen)
-	for i in range(16):
+	for i in range(CHILDREN_PER_GEN):
 		mother = random.choice(PARENTAL_CHOICE_SEQ)
 		father = random.choice([x for x in PARENTAL_CHOICE_SEQ if x != mother])
 		#father = random.choice(PARENTAL_CHOICE_SEQ)
@@ -157,7 +160,7 @@ def rungen(gen):
                                 mindistance=100,
                                 standard=Corewar.STANDARD_88)
 	warriors = []
-	for i in range(16):
+	for i in range(CHILDREN_PER_GEN):
 		try:
 			warriors.append(parser.parse_file(str(gen) + "/" + str(i + 1)))
 			if parser.warnings:
@@ -168,12 +171,12 @@ def rungen(gen):
             		print e
             		sys.exit(1)
 
-	mars = Corewar.Benchmarking.MARS_88(coresize=8000,
+	mars = Corewar.Benchmarking.MARS_88(coresize=80000,
                                             maxprocesses=8000,
                                             maxcycles=80000,
-                                            mindistance=100,
-                                            maxlength=100)
-	result = mars.mw_run(warriors, 10)
+                                            mindistance=200,
+                                            maxlength=200)
+	result = mars.mw_run(warriors, max(1, int(ROUNDS_PER_GEN_PER_CHILD * CHILDREN_PER_GEN)))
 	scores = zip(range(len(result)), [x[0] * 5 + x[2] for x in result[:-1]])
 	scores.sort(key=lambda x: x[1], reverse=True)
 	winners = scores[0:4]
@@ -184,12 +187,27 @@ def rungen(gen):
 	
 	return map(lambda x: x[0] + 1, winners)
 
+def initial_setup():
+	os.mkdir("0")
+	adam = None
+	with open(ADAM_FILE, "r") as f:
+		adam = warrior_read(f)
+
+	eve = None
+	with open(EVE_FILE, "r") as f:
+		eve = warrior_read(f)
+
+	for i in range(CHILDREN_PER_GEN):
+		with open("0/" + str(i + 1), "w") as f:
+                        f.write(evolve(adam, eve))
+
 if __name__ == "__main__":
 	if len(sys.argv) > 1:
 		generations_to_run = int(sys.argv[1])
 	else:
 		generations_to_run = 10
 	random.seed()
+	initial_setup()
 	for i in range(generations_to_run):
 		winners = rungen(i)
 		gengen(i, winners)
