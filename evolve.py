@@ -136,7 +136,7 @@ def evolve(a, b):
 	child = spawn(a, b)
 	while random.random() <= MUTATION_CHANCE:
 		child = get_mutator()(child)
-	return unparse(spawn(a, b))
+	return unparse(child)
 
 def gengen(lastgen, winners):
 	parents = []
