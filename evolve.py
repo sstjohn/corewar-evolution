@@ -21,19 +21,16 @@ INSTRUCTIONS = 		 {"DAT": [["#", "<"], ["#", "<"]],
 
 MUTATION_CHANCE = .15
 CHILDREN_PER_GEN = 50
-WINNERS_PER_GEN = 45
+WINNERS_PER_GEN = 50
 ADAM_FILE = "imp"
 EVE_FILE = "scanner"
-ROUNDS_PER_GEN_PER_CHILD = 1
-WIN_POINTS = 10
-TIE_POINTS = 1
-LOSS_POINTS = -5
-SCORE_PICKING_EXPONENT = 1.5
-SPLICE_MECH_ONE_PROB = .4
-DIGIT_MUNGE_PROB = (6.0 / 7.0)
-SCORE_PICK_REL_PROB = .95
-INTERERA_SW_RETENTION_AMT = 12
-INTERERA_SW_AGE_PENALTY = 0.01
+ROUNDS_PER_GEN_PER_CHILD = 2
+SCORE_PICKING_EXPONENT = 2
+SPLICE_MECH_ONE_PROB = .5
+DIGIT_MUNGE_PROB = (1.0 / 3.0)
+SCORE_PICK_REL_PROB = .75
+INTERERA_SW_RETENTION_AMT = 40
+INTERERA_SW_AGE_PENALTY = 0.001
 
 superwinners = []
 def print_superwinners():
@@ -293,21 +290,29 @@ def rungen(gen):
                                             maxcycles=240000,
                                             mindistance=200,
                                             maxlength=200)
-	result = mars.mw_run(warriors, max(1, int(ROUNDS_PER_GEN_PER_CHILD * CHILDREN_PER_GEN)))
-	scores = zip(range(len(result)), [x[0] * WIN_POINTS + x[1] * LOSS_POINTS + x[2] * TIE_POINTS for x in result[:-1]])
+	results = mars.mw_run(warriors, max(1, int(ROUNDS_PER_GEN_PER_CHILD * CHILDREN_PER_GEN)))
+	scores = []
+	score_tot = 0.0
+	for result in results[:-1]:
+		score = 0.0
+		for winners_cnt in range(len(result) - 1):
+			score += float(result[winners_cnt]) * (1.0 / (1.0 + float(winners_cnt)))
+		scores.append(score)
+		score_tot += score
+	avg = float(score_tot) / float(len(result) - 1)
+	scores = zip(range(len(scores)), [x / max(avg, 1) for x in scores])
 	scores.sort(key=lambda x: x[1], reverse=True)
-	totes = reduce(lambda x, y: x + y, map(lambda x: max(0.0, float(x[1])) ** SCORE_PICKING_EXPONENT, scores))
-	superwinners = map(lambda x: [(float(x[1]) * ((float(max(0, x[1]) ** SCORE_PICKING_EXPONENT)) / max(1, x[1], totes))), str(gen) + "/" + str(x[0] + 1)], scores) + superwinners
+	totes = reduce(lambda x, y: x + y, map(lambda x: x[1], scores))
+	superwinners = map(lambda x: [x[1], str(gen) + "/" + str(x[0] + 1)], scores) + superwinners
 	superwinners.sort(key=lambda x: x[0], reverse=True)
 	superwinners = superwinners[:CHILDREN_PER_GEN]
 	winners = scores[0:4]
 	print "gen %d winners:" % gen
 	for x in winners:
-		print "\t%02d: %04d %03.2f" % (x[0] + 1, x[1], 100 * float(x[1]) / max(x[1], totes, 1))
-	report(scores)
+		print "\t%02d: %4.2f " % (x[0] + 1, x[1])
 	print
 	
-	return map(lambda x: [x[1], str(gen) + "/" + str(x[0] + 1)], scores)
+	return map(lambda x: [x[1], str(gen) + "/" + str(x[0] + 1)], filter(lambda x: x[1] >= 1, scores))
 
 def initial_setup():
 	os.mkdir("0")
