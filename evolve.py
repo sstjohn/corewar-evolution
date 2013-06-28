@@ -19,19 +19,19 @@ INSTRUCTIONS = 		 {"DAT": [["#", "<"], ["#", "<"]],
 			  "DJN": [["$", "@", "<"], ["$", "#", "@", "<"]],
 			  "SPL": [["$", "@", "<"], ["$", "#", "@", "<"]]}
 
-MUTATION_CHANCE = .15
-CHILDREN_PER_GEN = 50
+MUTATION_CHANCE = .10
+CHILDREN_PER_GEN = 75
 WINNERS_PER_GEN = 50
 ADAM_FILE = "imp"
 EVE_FILE = "scanner"
-ROUNDS_PER_GEN_PER_CHILD = 4
+ROUNDS_PER_GEN_PER_CHILD = 3
 WIN_POINTS = 10
-TIE_POINTS = 0
-LOSS_POINTS = -2
-SCORE_PICKING_EXPONENT = 2
+TIE_POINTS = 1
+LOSS_POINTS = -3
+SCORE_PICKING_EXPONENT = 1.25
 SUPERWINNER_SELECTION_PROB = 0.001
-SPLICE_MECH_ONE_PROB = .75
-DIGIT_MUNGE_PROB = (1.0 / 7.0)
+SPLICE_MECH_ONE_PROB = .6
+DIGIT_MUNGE_PROB = (1.5 / 14.0)
 
 superwinners = []
 def print_superwinners():
@@ -40,7 +40,7 @@ def print_superwinners():
 		print "%d - score: %d, fname %s" % (i, superwinners[i][0], superwinners[i][1])
 
 def get_mutator():
-	return random.choice([flip_mutator, dupe_mutator, drop_mutator, swap_mutator])
+	return random.choice([flip_mutator, swap_mutator])
 
 def line_parse(i):
 	parts = i.replace(",", " ").split()
