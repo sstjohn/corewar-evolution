@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/python
 
 import bisect
 import os
@@ -19,18 +19,18 @@ INSTRUCTIONS = 		 {"DAT": [["#", "<"], ["#", "<"]],
 			  "DJN": [["$", "@", "<"], ["$", "#", "@", "<"]],
 			  "SPL": [["$", "@", "<"], ["$", "#", "@", "<"]]}
 
-MUTATION_CHANCE = .1
-CHILDREN_PER_GEN = 100
-WINNERS_PER_GEN = 100
+MUTATION_CHANCE = .15
+CHILDREN_PER_GEN = 50
+WINNERS_PER_GEN = 50
 ADAM_FILE = "imp"
-EVE_FILE = "imp"
-ROUNDS_PER_GEN_PER_CHILD = 1
+EVE_FILE = "scanner"
+ROUNDS_PER_GEN_PER_CHILD = 4
 WIN_POINTS = 10
 TIE_POINTS = 0
-LOSS_POINTS = -5
-SCORE_PICKING_EXPONENT = 1.5
-SUPERWINNER_SELECTION_PROB = 0.005
-SPLICE_MECH_ONE_PROB = .5
+LOSS_POINTS = -2
+SCORE_PICKING_EXPONENT = 2
+SUPERWINNER_SELECTION_PROB = 0.001
+SPLICE_MECH_ONE_PROB = .75
 DIGIT_MUNGE_PROB = (1.0 / 7.0)
 
 superwinners = []
