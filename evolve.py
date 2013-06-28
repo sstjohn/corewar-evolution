@@ -19,18 +19,19 @@ INSTRUCTIONS = 		 {"DAT": [["#", "<"], ["#", "<"]],
 			  "DJN": [["$", "@", "<"], ["$", "#", "@", "<"]],
 			  "SPL": [["$", "@", "<"], ["$", "#", "@", "<"]]}
 
-MUTATION_CHANCE = .15
+MUTATION_CHANCE = .1
 CHILDREN_PER_GEN = 50
 WINNERS_PER_GEN = 50
 ADAM_FILE = "imp"
 EVE_FILE = "scanner"
 ROUNDS_PER_GEN_PER_CHILD = 2
-SCORE_PICKING_EXPONENT = 2
+SCORE_PICKING_EXPONENT = 1.25
 SPLICE_MECH_ONE_PROB = .5
 DIGIT_MUNGE_PROB = (1.0 / 3.0)
-SCORE_PICK_REL_PROB = .75
+SCORE_PICK_REL_PROB = .5
 INTERERA_SW_RETENTION_AMT = 40
-INTERERA_SW_AGE_PENALTY = 0.001
+INTERERA_SW_AGE_PENALTY = 0.1
+RADIATION_THRESH = 1.5
 
 superwinners = []
 def print_superwinners():
@@ -182,9 +183,9 @@ def dupe_mutator(dna):
 	new_dna += dna[inst * 14:]
 	return new_dna
 
-def evolve(a, b):
+def evolve(a, b, radiation = 0):
 	child = spawn(a, b)
-	while random.random() <= MUTATION_CHANCE:
+	if random.random() <= (MUTATION_CHANCE * (1 + radiation)):
 		child = get_mutator()(child)
 	return unparse(child)
 
@@ -259,11 +260,16 @@ def gengen(lastgen, scores):
 	parents = []
 	nextgen = str(lastgen + 1)
 	os.mkdir(nextgen)
+	if scores[0][0] < RADIATION_THRESH:
+		radiation = RADIATION_THRESH - scores[0][0]
+		print "radiation now at %f" % radiation
+	else:
+		radiation = 0
 	for i in range(CHILDREN_PER_GEN):
 		mother, exclude = score_pick(scores[0:WINNERS_PER_GEN])
 		father, _ = score_pick(scores[0:WINNERS_PER_GEN], exclude)
 		with open(nextgen + "/" + str(i + 1), "w") as f:
-			f.write(evolve(mother, father))
+			f.write(evolve(mother, father, radiation))
 
 def rungen(gen):
 	global superwinners
