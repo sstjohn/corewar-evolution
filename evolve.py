@@ -19,17 +19,17 @@ INSTRUCTIONS = 		 {"DAT": [["#", "<"], ["#", "<"]],
 			  "DJN": [["$", "@", "<"], ["$", "#", "@", "<"]],
 			  "SPL": [["$", "@", "<"], ["$", "#", "@", "<"]]}
 
-MUTATION_CHANCE = .1
-CHILDREN_PER_GEN = 100
-WINNERS_PER_GEN = 90
+MUTATION_CHANCE = .15
+CHILDREN_PER_GEN = 50
+WINNERS_PER_GEN = 45
 ADAM_FILE = "imp"
 EVE_FILE = "scanner"
 ROUNDS_PER_GEN_PER_CHILD = 1
 WIN_POINTS = 10
 TIE_POINTS = 1
-LOSS_POINTS = -2
+LOSS_POINTS = -5
 SCORE_PICKING_EXPONENT = 1.5
-SPLICE_MECH_ONE_PROB = .5
+SPLICE_MECH_ONE_PROB = .4
 DIGIT_MUNGE_PROB = (6.0 / 7.0)
 SCORE_PICK_REL_PROB = .95
 INTERERA_SW_RETENTION_AMT = 12
@@ -42,7 +42,7 @@ def print_superwinners():
 		print "%d - score: %f, fname %s" % (i, superwinners[i][0], superwinners[i][1])
 
 def get_mutator():
-	return random.choice([flip_mutator, swap_mutator])
+	return random.choice([flip_mutator, swap_mutator, drop_mutator, dupe_mutator])
 
 def line_parse(i):
 	parts = i.replace(",", " ").split()
@@ -187,7 +187,7 @@ def dupe_mutator(dna):
 
 def evolve(a, b):
 	child = spawn(a, b)
-	if random.random() <= MUTATION_CHANCE:
+	while random.random() <= MUTATION_CHANCE:
 		child = get_mutator()(child)
 	return unparse(child)
 
@@ -303,7 +303,7 @@ def rungen(gen):
 	winners = scores[0:4]
 	print "gen %d winners:" % gen
 	for x in winners:
-		print "\t%02d: %04d %03.2f" % (x[0] + 1, x[1], 100 * float(x[1]) / max(x[1], totes))
+		print "\t%02d: %04d %03.2f" % (x[0] + 1, x[1], 100 * float(x[1]) / max(x[1], totes, 1))
 	report(scores)
 	print
 	
