@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import bisect
 import os
 import random
 import sys
@@ -18,18 +19,28 @@ INSTRUCTIONS = 		 {"DAT": [["#", "<"], ["#", "<"]],
 			  "DJN": [["$", "@", "<"], ["$", "#", "@", "<"]],
 			  "SPL": [["$", "@", "<"], ["$", "#", "@", "<"]]}
 
-PARENTAL_CHOICE_SEQ = [1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 4]
-MUTATION_CHANCE = .25
-CHILDREN_PER_GEN = 64
+MUTATION_CHANCE = .1
+CHILDREN_PER_GEN = 100
+WINNERS_PER_GEN = 100
 ADAM_FILE = "imp"
 EVE_FILE = "imp"
 ROUNDS_PER_GEN_PER_CHILD = 1
-WIN_TO_TIE_RATIO = 100
+WIN_POINTS = 10
+TIE_POINTS = 0
+LOSS_POINTS = -5
+SCORE_PICKING_EXPONENT = 1.5
+SUPERWINNER_SELECTION_PROB = 0.005
+SPLICE_MECH_ONE_PROB = .5
+DIGIT_MUNGE_PROB = (1.0 / 7.0)
 
 superwinners = []
+def print_superwinners():
+	print "\nsuperwinners!\n-------------\n"
+	for i in range(len(superwinners)):
+		print "%d - score: %d, fname %s" % (i, superwinners[i][0], superwinners[i][1])
 
 def get_mutator():
-	return random.choice([flip_mutator, drop_mutator, dupe_mutator])
+	return random.choice([flip_mutator, dupe_mutator, drop_mutator, swap_mutator])
 
 def line_parse(i):
 	parts = i.replace(",", " ").split()
@@ -111,24 +122,49 @@ def warrior_read(f):
 def spawn(a, b):
 	a_len = len(a) / 14
 	b_len = len(b) / 14
+	result = ""
+	while len(result) == 0:
+		if random.random() < SPLICE_MECH_ONE_PROB:
+			cutpt = random.randint(0, max(a_len, b_len)) * 14
+			result = a[:cutpt] + b[cutpt:]
+		else:
+			a_cutpt = random.randint(0, a_len) * 14
+			b_cutpt = random.randint(0, b_len) * 14
+			result = a[:a_cutpt] + b[b_cutpt:]
 
-	#cutpt = random.randint(0, min(a_len, b_len)) * 14
+	while len(result) > (200 * 14):
+		result = drop_mutator(result)
+	return result
 
-	#return a[:cutpt] + b[cutpt:]
+def swap_mutator(dna):
+	inst_cnt = len(dna) / 14
+	if inst_cnt < 2:
+		return flip_mutator(dupe_mutator(dna))
+	choices = random.sample(range(inst_cnt), 2)
+	if choices[0] > choices[1]:
+		choices = [choices[1], choices[0]]
 
-	a_cutpt = random.randint(1, a_len) * 14
-	b_cutpt = random.randint(1, b_len) * 14
-
-	return a[:a_cutpt] + b[b_cutpt:]
+	new_dna = dna[:choices[0] * 14]
+	new_dna += dna[choices[1] * 14:(choices[1] + 1) * 14]
+	new_dna += dna[(choices[0] + 1) * 14:choices[1] * 14]
+	new_dna += dna[choices[0] * 14:(choices[0] + 1) * 14]
+	new_dna += dna[(choices[1] + 1) * 14:]
+	return new_dna
 
 def flip_mutator(dna):
-	strpos = random.randint(0, len(dna) - 1)
-	amt = random.randint(0, 10)
+	strpos = random.randint(0, len(dna) / 14)
+	first_part = dna[:(strpos * 14)]
+	mutatee = dna[strpos * 14:(strpos + 1) * 14]
+	sec_part = dna[(strpos + 1) * 14:]
+	
+	mutated = ""
+	for c in mutatee:
+		if random.random() < DIGIT_MUNGE_PROB:
+			mutated += str(random.randint(0, 9))
+		else:
+			mutated += c
 
-	new_dna = dna[0:strpos]
-	new_dna += str((int(dna[strpos]) + (amt - 5)) % 10)
-	new_dna += dna[strpos + 1:]
-	return new_dna
+	return first_part + mutated + sec_part
 
 def drop_mutator(dna):
 	if len(dna) < 29:
@@ -139,7 +175,7 @@ def drop_mutator(dna):
 	return new_dna
 
 def dupe_mutator(dna):
-	if not len(dna) < 1400:
+	if not len(dna) < 1000:
 		return flip_mutator(drop_mutator(dna))
 	inst = random.randint(0, (len(dna) / 14) - 1)
 	new_dna = dna[:inst * 14]
@@ -149,34 +185,61 @@ def dupe_mutator(dna):
 
 def evolve(a, b):
 	child = spawn(a, b)
-	while random.random() <= MUTATION_CHANCE:
+	if random.random() <= MUTATION_CHANCE:
 		child = get_mutator()(child)
 	return unparse(child)
 
+def report(scores):
+	sum = reduce(lambda x, y: x + y, map(lambda x: x[1], scores))
+	avg = sum / len(scores)
+	print "\t----------"
+	print "\tsum: %d" % sum
+	print "\tavg: %d" % avg
+	print
 
-def gengen(lastgen, winners):
+def score_pick(scores, exclude_ind = None, no_sw = False):
+	global superwinners
+
+	if not no_sw and random.random() < SUPERWINNER_SELECTION_PROB:
+		scores = superwinners
+		exclude_ind = None
+
+	sum = 0.0
+	partitions = []
+	for i in range(len(scores)):
+		if i != exclude_ind:
+			sum += (max(0, scores[i][0]) ** SCORE_PICKING_EXPONENT) #* (len(scores) - i))
+		partitions.append(sum)
+
+	if sum == 0:
+		if not no_sw:
+			return score_pick(superwinners, None, True)
+		else:
+			picked = random.randint(1, len(scores)) - 1
+	else:
+		score_choice = random.random() * sum
+
+		picked = bisect.bisect(partitions, score_choice)
+
+	with open(scores[picked][1], "r") as f:
+		warrior = warrior_read(f)
+	return (warrior, picked)
+
+def gengen(lastgen, scores):
+	global superwinners
+
 	parents = []
-	sw = 0
-        for i in range(4):
-		if winners[i][0] == 0:
-			winners[i] = superwinners[sw]
-			sw += 1
-			print "substituting sw %s" % str(winners[i])
-		with open(winners[i][1], "r") as f:
-			parents.append(warrior_read(f))
 	nextgen = str(lastgen + 1)
 	os.mkdir(nextgen)
 	for i in range(CHILDREN_PER_GEN):
-		mother = random.choice(PARENTAL_CHOICE_SEQ)
-		father = random.choice([x for x in PARENTAL_CHOICE_SEQ if x != mother])
-		#father = random.choice(PARENTAL_CHOICE_SEQ)
+		mother, exclude = score_pick(scores[0:WINNERS_PER_GEN])
+		father, _ = score_pick(scores[0:WINNERS_PER_GEN], exclude)
 		with open(nextgen + "/" + str(i + 1), "w") as f:
-			f.write(evolve(parents[mother - 1], parents[father - 1]))
-
+			f.write(evolve(mother, father))
 
 def rungen(gen):
 	global superwinners
-	parser = Corewar.Parser(coresize=80000,
+	parser = Corewar.Parser(coresize=160000,
                                 maxprocesses=8000,
                                 maxcycles=160000,
                                 maxlength=200,
@@ -186,7 +249,7 @@ def rungen(gen):
 	for i in range(CHILDREN_PER_GEN):
 		try:
 			warriors.append(parser.parse_file(str(gen) + "/" + str(i + 1)))
-			if parser.warnings:
+			if len(parser.warnings) > 0:
 		                for warning in parser.warnings:
                 		    print 'Warning: %s' % warning
                 		print '\n'
@@ -194,24 +257,25 @@ def rungen(gen):
             		print e
             		sys.exit(1)
 
-	mars = Corewar.Benchmarking.MARS_88(coresize=80000,
+	mars = Corewar.Benchmarking.MARS_88(coresize=160000,
                                             maxprocesses=8000,
                                             maxcycles=160000,
                                             mindistance=200,
                                             maxlength=200)
 	result = mars.mw_run(warriors, max(1, int(ROUNDS_PER_GEN_PER_CHILD * CHILDREN_PER_GEN)))
-	scores = zip(range(len(result)), [x[0] * WIN_TO_TIE_RATIO + x[2] for x in result[:-1]])
+	scores = zip(range(len(result)), [x[0] * WIN_POINTS + x[1] * LOSS_POINTS + x[2] * TIE_POINTS for x in result[:-1]])
 	scores.sort(key=lambda x: x[1], reverse=True)
-	superwinners += map(lambda x: [x[1], str(gen) + "/" + str(x[0] + 1)], scores)
+	superwinners = map(lambda x: [x[1], str(gen) + "/" + str(x[0] + 1)], scores) + superwinners
 	superwinners.sort(key=lambda x: x[0], reverse=True)
-	superwinners = superwinners[:64]
+	superwinners = superwinners[:CHILDREN_PER_GEN]
 	winners = scores[0:4]
 	print "gen %d winners:" % gen
 	for x in winners:
 		print "\t%s: %s" % (x[0] + 1, x[1])
+	report(scores)
 	print
 	
-	return map(lambda x: [x[1], str(gen) + "/" + str(x[0] + 1)], winners)
+	return map(lambda x: [x[1], str(gen) + "/" + str(x[0] + 1)], scores)
 
 def initial_setup():
 	os.mkdir("0")
@@ -228,14 +292,37 @@ def initial_setup():
 		with open(fname, "w") as f:
                         f.write(evolve(adam, eve))
 		superwinners.append([0, fname])
+def era_gen(g):
+	os.mkdir(str(g))
+	i = 0
+	for s in superwinners:
+		i += 1
+		with open(str(g) + "/" + str(i), "w") as f:
+			with open(s[1], "r") as source:
+				f.write(source.read())
+	print "======================="
+	print "it's the end of an era!"
+	print "======================="
+	print
+	print_superwinners()
 
 if __name__ == "__main__":
 	if len(sys.argv) > 1:
 		generations_to_run = int(sys.argv[1])
 	else:
 		generations_to_run = 10
+	if len(sys.argv) > 2:
+		eras = int(sys.argv[2])
+	else:
+		eras = 1
 	random.seed()
 	initial_setup()
-	for i in range(generations_to_run):
-		winners = rungen(i)
-		gengen(i, winners)
+	for e in range(eras):
+		if e > 0:
+			era_gen(e * generations_to_run)
+		for i in range(generations_to_run):
+			winners = rungen(generations_to_run * e + i)
+			if (i + 1) != generations_to_run:
+				gengen(generations_to_run * e + i, winners)
+
+	print_superwinners()
