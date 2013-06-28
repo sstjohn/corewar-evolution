@@ -19,25 +19,27 @@ INSTRUCTIONS = 		 {"DAT": [["#", "<"], ["#", "<"]],
 			  "DJN": [["$", "@", "<"], ["$", "#", "@", "<"]],
 			  "SPL": [["$", "@", "<"], ["$", "#", "@", "<"]]}
 
-MUTATION_CHANCE = .10
-CHILDREN_PER_GEN = 75
-WINNERS_PER_GEN = 50
+MUTATION_CHANCE = .1
+CHILDREN_PER_GEN = 100
+WINNERS_PER_GEN = 90
 ADAM_FILE = "imp"
 EVE_FILE = "scanner"
-ROUNDS_PER_GEN_PER_CHILD = 3
+ROUNDS_PER_GEN_PER_CHILD = 1
 WIN_POINTS = 10
 TIE_POINTS = 1
-LOSS_POINTS = -3
-SCORE_PICKING_EXPONENT = 1.25
-SUPERWINNER_SELECTION_PROB = 0.001
-SPLICE_MECH_ONE_PROB = .6
-DIGIT_MUNGE_PROB = (1.5 / 14.0)
+LOSS_POINTS = -2
+SCORE_PICKING_EXPONENT = 1.5
+SPLICE_MECH_ONE_PROB = .5
+DIGIT_MUNGE_PROB = (6.0 / 7.0)
+SCORE_PICK_REL_PROB = .95
+INTERERA_SW_RETENTION_AMT = 12
+INTERERA_SW_AGE_PENALTY = 0.01
 
 superwinners = []
 def print_superwinners():
 	print "\nsuperwinners!\n-------------\n"
 	for i in range(len(superwinners)):
-		print "%d - score: %d, fname %s" % (i, superwinners[i][0], superwinners[i][1])
+		print "%d - score: %f, fname %s" % (i, superwinners[i][0], superwinners[i][1])
 
 def get_mutator():
 	return random.choice([flip_mutator, swap_mutator])
@@ -197,12 +199,34 @@ def report(scores):
 	print "\tavg: %d" % avg
 	print
 
-def score_pick(scores, exclude_ind = None, no_sw = False):
+def score_pick_rel(scores, exclude_ind = None, no_sw = False):
 	global superwinners
 
-	if not no_sw and random.random() < SUPERWINNER_SELECTION_PROB:
-		scores = superwinners
-		exclude_ind = None
+	partitions = []
+	sum = reduce(lambda x, y: x + y, map(lambda x: float(max(0.0, x[0])) ** SCORE_PICKING_EXPONENT if exclude_ind == None or scores[exclude_ind] != x else 0.0, scores))
+	if sum == 0:
+		if not no_sw:
+			return score_pick_rel(superwinners, None, True)
+		else:
+			picked = random.randint(1, len(scores)) - 1
+	else:
+		running_total = 0.0
+		for i in range(len(scores)):
+			if i != exclude_ind:
+				running_total += ((max(0.0, float(scores[i][0])) ** SCORE_PICKING_EXPONENT) / sum)
+			partitions.append(running_total)
+		picked = bisect.bisect(partitions, random.random() * running_total)
+
+	try:
+		with open(scores[picked][1], "r") as f:
+			warrior = warrior_read(f)
+		return (warrior, picked)					
+	except:
+		return score_pick_abs(scores, exclude_ind, no_sw)
+
+
+def score_pick_abs(scores, exclude_ind = None, no_sw = False):
+	global superwinners
 
 	sum = 0.0
 	partitions = []
@@ -213,7 +237,7 @@ def score_pick(scores, exclude_ind = None, no_sw = False):
 
 	if sum == 0:
 		if not no_sw:
-			return score_pick(superwinners, None, True)
+			return score_pick_abs(superwinners, None, True)
 		else:
 			picked = random.randint(1, len(scores)) - 1
 	else:
@@ -221,13 +245,20 @@ def score_pick(scores, exclude_ind = None, no_sw = False):
 
 		picked = bisect.bisect(partitions, score_choice)
 
-	with open(scores[picked][1], "r") as f:
-		warrior = warrior_read(f)
-	return (warrior, picked)
+	try:
+		with open(scores[picked][1], "r") as f:
+			warrior = warrior_read(f)
+		return (warrior, picked)
+	except:
+		return score_pick_rel(scores, exclude_ind, no_sw)
 
 def gengen(lastgen, scores):
 	global superwinners
-
+	
+	if random.random() < SCORE_PICK_REL_PROB:
+		score_pick = score_pick_rel
+	else:
+		score_pick = score_pick_abs
 	parents = []
 	nextgen = str(lastgen + 1)
 	os.mkdir(nextgen)
@@ -239,9 +270,9 @@ def gengen(lastgen, scores):
 
 def rungen(gen):
 	global superwinners
-	parser = Corewar.Parser(coresize=160000,
+	parser = Corewar.Parser(coresize=240000,
                                 maxprocesses=8000,
-                                maxcycles=160000,
+                                maxcycles=240000,
                                 maxlength=200,
                                 mindistance=200,
                                 standard=Corewar.STANDARD_88)
@@ -257,21 +288,22 @@ def rungen(gen):
             		print e
             		sys.exit(1)
 
-	mars = Corewar.Benchmarking.MARS_88(coresize=160000,
+	mars = Corewar.Benchmarking.MARS_88(coresize=240000,
                                             maxprocesses=8000,
-                                            maxcycles=160000,
+                                            maxcycles=240000,
                                             mindistance=200,
                                             maxlength=200)
 	result = mars.mw_run(warriors, max(1, int(ROUNDS_PER_GEN_PER_CHILD * CHILDREN_PER_GEN)))
 	scores = zip(range(len(result)), [x[0] * WIN_POINTS + x[1] * LOSS_POINTS + x[2] * TIE_POINTS for x in result[:-1]])
 	scores.sort(key=lambda x: x[1], reverse=True)
-	superwinners = map(lambda x: [x[1], str(gen) + "/" + str(x[0] + 1)], scores) + superwinners
+	totes = reduce(lambda x, y: x + y, map(lambda x: max(0.0, float(x[1])) ** SCORE_PICKING_EXPONENT, scores))
+	superwinners = map(lambda x: [(float(x[1]) * ((float(max(0, x[1]) ** SCORE_PICKING_EXPONENT)) / max(1, x[1], totes))), str(gen) + "/" + str(x[0] + 1)], scores) + superwinners
 	superwinners.sort(key=lambda x: x[0], reverse=True)
 	superwinners = superwinners[:CHILDREN_PER_GEN]
 	winners = scores[0:4]
 	print "gen %d winners:" % gen
 	for x in winners:
-		print "\t%s: %s" % (x[0] + 1, x[1])
+		print "\t%02d: %04d %03.2f" % (x[0] + 1, x[1], 100 * float(x[1]) / max(x[1], totes))
 	report(scores)
 	print
 	
@@ -292,7 +324,9 @@ def initial_setup():
 		with open(fname, "w") as f:
                         f.write(evolve(adam, eve))
 		superwinners.append([0, fname])
+
 def era_gen(g):
+	global superwinners
 	os.mkdir(str(g))
 	i = 0
 	for s in superwinners:
@@ -305,6 +339,7 @@ def era_gen(g):
 	print "======================="
 	print
 	print_superwinners()
+	superwinners = map(lambda x: [x[0] * (1.0 - INTERERA_SW_AGE_PENALTY), x[1]], superwinners[:INTERERA_SW_RETENTION_AMT])
 
 if __name__ == "__main__":
 	if len(sys.argv) > 1:
