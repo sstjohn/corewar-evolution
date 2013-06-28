@@ -18,13 +18,15 @@ INSTRUCTIONS = 		 {"DAT": [["#", "<"], ["#", "<"]],
 			  "DJN": [["$", "@", "<"], ["$", "#", "@", "<"]],
 			  "SPL": [["$", "@", "<"], ["$", "#", "@", "<"]]}
 
-PARENTAL_CHOICE_SEQ = [1, 1, 1, 1, 2, 2, 2, 3, 3, 4]
-MUTATION_CHANCE = .05
+PARENTAL_CHOICE_SEQ = [1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 4]
+MUTATION_CHANCE = .25
 CHILDREN_PER_GEN = 64
 ADAM_FILE = "imp"
 EVE_FILE = "imp"
-ROUNDS_PER_GEN_PER_CHILD = 5
-WIN_TO_TIE_RATIO = 10
+ROUNDS_PER_GEN_PER_CHILD = 1
+WIN_TO_TIE_RATIO = 100
+
+superwinners = []
 
 def get_mutator():
 	return random.choice([flip_mutator, drop_mutator, dupe_mutator])
@@ -151,10 +153,16 @@ def evolve(a, b):
 		child = get_mutator()(child)
 	return unparse(child)
 
+
 def gengen(lastgen, winners):
 	parents = []
+	sw = 0
         for i in range(4):
-		with open(str(lastgen) + "/" + str(winners[i]), "r") as f:
+		if winners[i][0] == 0:
+			winners[i] = superwinners[sw]
+			sw += 1
+			print "substituting sw %s" % str(winners[i])
+		with open(winners[i][1], "r") as f:
 			parents.append(warrior_read(f))
 	nextgen = str(lastgen + 1)
 	os.mkdir(nextgen)
@@ -165,12 +173,14 @@ def gengen(lastgen, winners):
 		with open(nextgen + "/" + str(i + 1), "w") as f:
 			f.write(evolve(parents[mother - 1], parents[father - 1]))
 
+
 def rungen(gen):
-	parser = Corewar.Parser(coresize=8000,
+	global superwinners
+	parser = Corewar.Parser(coresize=80000,
                                 maxprocesses=8000,
-                                maxcycles=8000,
-                                maxlength=100,
-                                mindistance=100,
+                                maxcycles=160000,
+                                maxlength=200,
+                                mindistance=200,
                                 standard=Corewar.STANDARD_88)
 	warriors = []
 	for i in range(CHILDREN_PER_GEN):
@@ -186,19 +196,22 @@ def rungen(gen):
 
 	mars = Corewar.Benchmarking.MARS_88(coresize=80000,
                                             maxprocesses=8000,
-                                            maxcycles=80000,
+                                            maxcycles=160000,
                                             mindistance=200,
                                             maxlength=200)
 	result = mars.mw_run(warriors, max(1, int(ROUNDS_PER_GEN_PER_CHILD * CHILDREN_PER_GEN)))
 	scores = zip(range(len(result)), [x[0] * WIN_TO_TIE_RATIO + x[2] for x in result[:-1]])
 	scores.sort(key=lambda x: x[1], reverse=True)
+	superwinners += map(lambda x: [x[1], str(gen) + "/" + str(x[0] + 1)], scores)
+	superwinners.sort(key=lambda x: x[0], reverse=True)
+	superwinners = superwinners[:64]
 	winners = scores[0:4]
 	print "gen %d winners:" % gen
 	for x in winners:
 		print "\t%s: %s" % (x[0] + 1, x[1])
 	print
 	
-	return map(lambda x: x[0] + 1, winners)
+	return map(lambda x: [x[1], str(gen) + "/" + str(x[0] + 1)], winners)
 
 def initial_setup():
 	os.mkdir("0")
@@ -211,8 +224,10 @@ def initial_setup():
 		eve = warrior_read(f)
 
 	for i in range(CHILDREN_PER_GEN):
-		with open("0/" + str(i + 1), "w") as f:
+		fname = "0/" + str(i + 1)
+		with open(fname, "w") as f:
                         f.write(evolve(adam, eve))
+		superwinners.append([0, fname])
 
 if __name__ == "__main__":
 	if len(sys.argv) > 1:
