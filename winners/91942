@@ -1,0 +1,6 @@
+;redcode
+;assert 1
+	MOV 8828, <-44
+	SPL -1, 2593
+	JMP -1, 2593
+	MOV 8828, <-44
