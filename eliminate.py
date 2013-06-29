@@ -12,7 +12,8 @@ ROUNDS_PER_GAME = 10
 COMPETITORS_DIR = "winners"
 ELIMINATION_SOFT_CUTOFF = 1.5
 ELIMINATION_HARD_CUTOFF = 3
-MIN_USEFUL_STD_DEV = 400
+MIN_USEFUL_STD_DEV = 150
+MAX_TRIES = 100
 
 if len(os.listdir(COMPETITORS_DIR)) > 1500:
 	COMPETITORS_TO_ELIMINATE = 15
@@ -111,5 +112,12 @@ def run_games(left, right):
 
 if __name__ == "__main__":
 	random.seed()
+	comp_tries = 0
 	while competitors_destroyed < COMPETITORS_TO_ELIMINATE:
 		run_comp()
+		if competitors_destroyed < COMPETITORS_TO_ELIMINATE:
+			comp_tries += 1
+			if comp_tries % 10 == 0:
+				os.system("git pull --no-edit -X theirs")
+				if comp_tries > MAX_TRIES:
+					sys.exit(0)
