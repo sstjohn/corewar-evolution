@@ -1,5 +1,5 @@
 ;redcode
 ;assert 1
-	MOV 9427, <-94
+	MOV 3507, <-75
 	JMP -1, -2012
-	SLT 5427, <-119
+	JMP -1, -2012
