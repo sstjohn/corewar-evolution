@@ -1,0 +1,8 @@
+;redcode
+;assert 1
+	MOV 8803, <-4
+	JMP -1, -2012
+	CMP 8133, 0
+	CMP 8133, 300
+	CMP 8133, 0
+	CMP 8133, 0

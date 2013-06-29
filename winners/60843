@@ -1,0 +1,6 @@
+;redcode
+;assert 1
+	MOV 501, <-93
+	JMP -1, -192
+	MOV 501, <-93
+	MOV 501, <-93
