@@ -1,5 +1,0 @@
-;redcode
-;assert 1
-	MOV 9427, <-94
-	JMP -1, -3832
-	JMP -1, -3832
