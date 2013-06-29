@@ -1,4 +1,0 @@
-;redcode
-;assert 1
-	JMP -8000, 5195
-	SUB <8566, @-1616
