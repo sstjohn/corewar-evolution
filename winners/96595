@@ -1,0 +1,6 @@
+;redcode
+;assert 1
+	SUB 8871, <-798
+	MOV 8828, <-94
+	JMP -1, 6046
+	JMP -1, 6046
