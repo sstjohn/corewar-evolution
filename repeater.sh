@@ -1,5 +1,7 @@
 #!/bin/sh
 
+export GIT_MERGE_AUTOEDIT=no
+
 while true; do
 	git pull
 	./evolve.py 100 50
