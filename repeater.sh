@@ -8,9 +8,25 @@ if [ 0 -eq $? ]; then
 	git commit -m "adding winners"
 	git pull -X ours
 	git push
+	if [ 0 -ne $? ]; then
+		git pull -X ours
+		git push
+	fi
 else
 	git pull -X ours
 fi
 rm -rf `seq 0 10000`
-
+./eliminate.py
+if [ 0 -eq $? ]; then
+	git add -u winners
+	git commit -m "removing losers"
+	git pull -X theirs
+	git push
+	if [ 0 -ne $? ]; then
+		git pull -X theirs
+		git push
+	fi
+else
+	git pull -X theirs
+fi
 . ./repeater.sh
