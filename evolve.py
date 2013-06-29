@@ -194,9 +194,9 @@ def dupe_mutator(dna):
 def evolve(a, b, radiation = 0):
 	child_l, child_r = spawn(a, b)
 	while random.random() <= (MUTATION_CHANCE + (((radiation / (RADIATION_THRESH - 1)) * MAX_RADIATION_MUTATION_PROB))):
-		child_l = get_mutator()(child)
+		child_l = get_mutator()(child_l)
 	while random.random() <= (MUTATION_CHANCE + (((radiation / (RADIATION_THRESH - 1)) * MAX_RADIATION_MUTATION_PROB))):
-		child_r = get_mutator()(child)
+		child_r = get_mutator()(child_r)
 	return (unparse(child_l), unparse(child_r))
 
 def report(scores):
