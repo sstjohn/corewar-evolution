@@ -20,11 +20,11 @@ INSTRUCTIONS =		 {"DAT": [["#", "<"], ["#", "<"]],
 			  "SPL": [["$", "@", "<"], ["$", "#", "@", "<"]]}
 
 MUTATION_CHANCE = .05
-CHILDREN_PER_GEN = 5
-WINNERS_PER_GEN = 5
+CHILDREN_PER_GEN = 10
+WINNERS_PER_GEN = 10
 ADAM_FILE = "jmp"
 EVE_FILE = "dat"
-ROUNDS_PER_GEN = 16
+ROUNDS_PER_GEN = 8
 SPLICE_MECH_ONE_PROB = .4
 DIGIT_MUNGE_PROB = (2.5 / 7.0)
 INTERERA_SW_AGE_PENALTY = 0.01
