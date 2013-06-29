@@ -1,6 +1,0 @@
-;redcode
-;assert 1
-	ADD -1, -2018
-	SPL 3727, @-54
-	MOV 8727, <-54
-	JMP -1, -2012
