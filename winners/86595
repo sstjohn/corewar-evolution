@@ -1,4 +1,0 @@
-;redcode
-;assert 1
-	MOV 807, <-193
-	JMP -1, -2012
