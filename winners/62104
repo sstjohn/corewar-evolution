@@ -1,0 +1,5 @@
+;redcode
+;assert 1
+	MOV 8894, <-74
+	JMP -1, -2012
+	DAT <8837, #-5104
