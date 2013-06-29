@@ -12,14 +12,21 @@ ROUNDS_PER_GAME = 10
 COMPETITORS_DIR = "winners"
 ELIMINATION_SOFT_CUTOFF = 1.5
 ELIMINATION_HARD_CUTOFF = 3
-COMPETITORS_TO_ELIMINATE = 10
 MIN_USEFUL_STD_DEV = 400
+
+if len(os.listdir(COMPETITORS_DIR)) > 1500:
+	COMPETITORS_TO_ELIMINATE = 15
+else:
+	COMPETITORS_TO_ELIMINATE = 10
+
+competitors_destroyed = 0
 
 def destroy_competitor(warrior):
 	print "destroying %s (with score %d)" % (warrior[0], warrior[1])
 	os.remove(warrior[0])
 
 def eliminate_failures(results):
+	global competitors_destroyed
 	avg = float(reduce(lambda x, y: x + y, map(lambda x: x[1], results))) / float(len(results))
 	std_dev = (float(reduce(lambda x, y: x + y, map(lambda x: (float(x[1]) - avg) ** 2, results))) / float(len(results) - 1)) ** 0.5
 	print "average score is %4.03d" % avg
@@ -28,8 +35,7 @@ def eliminate_failures(results):
 		print "insufficient deviation in results. results voided."
 		return 0
 
-	competitors_destroyed = 0
-	while(results[-1][1] < (avg - (float(ELIMINATION_SOFT_CUTOFF) * std_dev))):
+	while(results[-1][1] < (avg - (float(ELIMINATION_SOFT_CUTOFF) * std_dev))) and competitors_destroyed < COMPETITORS_TO_ELIMINATE:
 		if False and results[-1][1] < (avg - (float(ELIMINATION_HARD_CUTOFF) * std_dev)):
 			destroy_competitor(results.pop())
 			competitors_destroyed += 1
@@ -42,7 +48,6 @@ def eliminate_failures(results):
 				competitors_destroyed += 1
 			else:
 				break
-	return competitors_destroyed
 
 def run_comp():
 	parser = Corewar.Parser(coresize=8000,
@@ -106,6 +111,5 @@ def run_games(left, right):
 
 if __name__ == "__main__":
 	random.seed()
-	destruction_count = 0
-	while destruction_count < COMPETITORS_TO_ELIMINATE:
-		destruction_count += run_comp()
+	while competitors_destroyed < COMPETITORS_TO_ELIMINATE:
+		run_comp()
