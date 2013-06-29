@@ -6,13 +6,11 @@ import random
 import sys
 import Corewar, Corewar.Benchmarking
 
-COMPETITORS_PER_TOURN = 20
-GAMES_PER_PAIR = 4
-ROUNDS_PER_GAME = 10
+COMPETITORS_PER_TOURN = 8
 COMPETITORS_DIR = "winners"
-ELIMINATION_SOFT_CUTOFF = 1.5
-ELIMINATION_HARD_CUTOFF = 3
-MIN_USEFUL_STD_DEV = 150
+ELIMINATION_SOFT_CUTOFF = 1
+ELIMINATION_HARD_CUTOFF = 2
+MIN_USEFUL_STD_DEV = 10
 MAX_TRIES = 100
 
 if len(os.listdir(COMPETITORS_DIR)) > 1500:
@@ -64,6 +62,8 @@ def run_comp():
 		print e
 		sys.exit(1)
 
+	print "beginning round-robin elimination...",
+
 	pairings = range(1, COMPETITORS_PER_TOURN)
 	for i in range((COMPETITORS_PER_TOURN - 1)):
 		top = [0] + pairings[:(COMPETITORS_PER_TOURN / 2) - 1]
@@ -73,7 +73,8 @@ def run_comp():
 			warriors[top[j]][2] += top_score_delta
 			warriors[bottom[j]][2] += bottom_score_delta
 		pairings.append(pairings.pop(0))
-
+	
+	print
 	print
 	print "elimination results!"
 	print "--------------------"
@@ -93,21 +94,12 @@ def run_games(left, right):
 						maxcycles=80000,
 						mindistance=100,
 						maxlength=100)
-	left_score = 0
-	right_score = 0
-	for i in range(GAMES_PER_PAIR):
-		if i % 2 == 0:
-			warriors = (left, right)
-		else:
-			warriors = (right, left)
-		results = mars.run(warriors, rounds = ROUNDS_PER_GAME)
-		if i % 2 == 0:
-			left_score += (5 * results[0][0] + results[0][2])
-			right_score += (5 * results[1][0] + results[1][2])
-		else:
-			left_score += (5 * results[1][0] + results[1][2])
-			right_score += (5 * results[0][0] + results[0][2])
 	
+	results = mars.p_run((left, right))
+	left_score = (5 * results[0][0] + results[0][2])
+	right_score = (5 * results[1][0] + results[1][2])
+	print ".",
+
 	return left_score, right_score
 
 if __name__ == "__main__":
