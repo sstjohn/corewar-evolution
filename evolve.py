@@ -328,18 +328,22 @@ def initial_setup():
 		with open(EVE_FILE, "r") as f:
 			eve = warrior_read(f)
 
-	for i in range(CHILDREN_PER_GEN):
-		fname = "0/" + str(i + 1)
+	for i in range(0, CHILDREN_PER_GEN, 2):
+		fname_l = "0/" + str(i + 1)
+		fname_r = "0/" + str(i + 2)
 		if progenitor_options != None:
 			adam_file, eve_file = random.sample(progenitor_options, 2)
 			with open(PROGENITOR_DIR + "/" + adam_file, "r") as f:
 				adam = warrior_read(f)
 			with open(PROGENITOR_DIR + "/" + eve_file, "r") as f:
 				eve = warrior_read(f)
-
-		with open(fname, "w") as f:
-						f.write(evolve(adam, eve))
-		superwinners.append([0, fname])
+		child_l, child_r = evolve(adam, eve)
+		with open(fname_l, "w") as f:
+			f.write(child_l)
+		with open(fname_r, "w") as f:
+			f.write(child_r)
+		superwinners.append([0, fname_l])
+		superwinners.append([0, fname_r])
 
 def era_gen(g, prev_gen):
 	global superwinners
