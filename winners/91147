@@ -1,9 +1,0 @@
-;redcode
-;assert 1
-	SPL -1, 2593
-	SPL -1, 2593
-	MOV 8828, <-94
-	JMP -1, 2593
-	SPL -603, 2593
-	SPL -1, 2593
-	JMP -1, 2593
