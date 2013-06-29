@@ -1,0 +1,6 @@
+;redcode
+;assert 1
+	MOV 503, <-8090
+	JMP -1, -2012
+	SLT 1803, 8390
+	MOV 304, 8574
