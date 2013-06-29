@@ -7,7 +7,7 @@ while true; do
 	if [ 0 -eq $? ]; then
 		git add winners
 		git commit -m "adding winners"
-		git pull -X ours
+		git pull -X mine
 		git push
 	fi
 	rm -rf `seq 0 10000`
