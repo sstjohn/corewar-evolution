@@ -1,6 +1,0 @@
-;redcode
-;assert 1
-	MOV 9427, <-94
-	MOV 427, <-44
-	JMP -1, -2012
-	SUB #421, <-224
