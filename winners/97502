@@ -1,0 +1,6 @@
+;redcode
+;assert 1
+	MOV 8727, <-54
+	JMP -1, -2012
+	ADD -1, -2018
+	ADD -1, -2018
