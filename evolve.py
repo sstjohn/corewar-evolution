@@ -7,7 +7,7 @@ import sys
 import Corewar, Corewar.Benchmarking
 
 UNARY_OPS = ["DAT","JMP","SPL"]
-INSTRUCTIONS = 		 {"DAT": [["#", "<"], ["#", "<"]],
+INSTRUCTIONS =		 {"DAT": [["#", "<"], ["#", "<"]],
 			  "MOV": [["$", "#", "@", "<"], ["$", "@", "<"]],
 			  "ADD": [["$", "#", "@", "<"], ["$", "@", "<"]],
 			  "SUB": [["$", "#", "@", "<"], ["$", "@", "<"]],
@@ -20,19 +20,19 @@ INSTRUCTIONS = 		 {"DAT": [["#", "<"], ["#", "<"]],
 			  "SPL": [["$", "@", "<"], ["$", "#", "@", "<"]]}
 
 MUTATION_CHANCE = .1
-CHILDREN_PER_GEN = 10
-WINNERS_PER_GEN = 10
+CHILDREN_PER_GEN = 8
+WINNERS_PER_GEN = 8
 ADAM_FILE = "imp"
 EVE_FILE = "scanner"
-ROUNDS_PER_GEN = 5
+ROUNDS_PER_GEN = 16
 SPLICE_MECH_ONE_PROB = .5
-DIGIT_MUNGE_PROB = (1.5 / 14.0)
-INTERERA_SW_AGE_PENALTY = 0.001
-RADIATION_THRESH = 1.25
-MAX_RADIATION_MUTATION_PROB = .45
-TIE_PENALTY = 1
-REPRODUCTION_SCORE_MIN = .5
-EXTINCTION_LEVEL_RADIATION_THRESHOLD = 0.2
+DIGIT_MUNGE_PROB = (1.0 / 7.0)
+INTERERA_SW_AGE_PENALTY = 0.02
+RADIATION_THRESH = 1.4
+MAX_RADIATION_MUTATION_PROB = .4
+TIE_PENALTY = 1.001
+REPRODUCTION_SCORE_MIN = .1
+EXTINCTION_LEVEL_RADIATION_THRESHOLD = 0.35
 EXTINCTION_LEVEL_RADIATION_ROUNDS = 10
 
 superwinners = []
@@ -242,28 +242,28 @@ def gengen(lastgen, scores):
 def rungen(gen):
 	global superwinners
 	parser = Corewar.Parser(coresize=240000,
-                                maxprocesses=8000,
-                                maxcycles=24000,
-                                maxlength=200,
-                                mindistance=200,
-                                standard=Corewar.STANDARD_88)
+								maxprocesses=8000,
+								maxcycles=24000,
+								maxlength=200,
+								mindistance=200,
+								standard=Corewar.STANDARD_88)
 	warriors = []
 	for i in range(CHILDREN_PER_GEN):
 		try:
 			warriors.append(parser.parse_file(str(gen) + "/" + str(i + 1)))
 			if len(parser.warnings) > 0:
-		                for warning in parser.warnings:
-                		    print 'Warning: %s' % warning
-                		print '\n'
+						for warning in parser.warnings:
+							print 'Warning: %s' % warning
+						print '\n'
 		except Corewar.WarriorParseError, e:
-            		print e
-            		sys.exit(1)
+					print e
+					sys.exit(1)
 
 	mars = Corewar.Benchmarking.MARS_88(coresize=240000,
-                                            maxprocesses=8000,
-                                            maxcycles=24000,
-                                            mindistance=200,
-                                            maxlength=200)
+											maxprocesses=8000,
+											maxcycles=24000,
+											mindistance=200,
+											maxlength=200)
 	results = mars.mw_run(warriors, max(1, int(ROUNDS_PER_GEN * CHILDREN_PER_GEN)))
 	scores = []
 	score_tot = 0.0
@@ -301,14 +301,14 @@ def initial_setup():
 	for i in range(CHILDREN_PER_GEN):
 		fname = "0/" + str(i + 1)
 		with open(fname, "w") as f:
-                        f.write(evolve(adam, eve))
+						f.write(evolve(adam, eve))
 		superwinners.append([0, fname])
 
-def era_gen(g):
+def era_gen(g, prev_gen):
 	global superwinners
 	os.mkdir(str(g))
 	i = 0
-	for s in superwinners:
+	for s in random.sample(superwinners + prev_gen, CHILDREN_PER_GEN):
 		i += 1
 		with open(str(g) + "/" + str(i), "w") as f:
 			with open(s[1], "r") as source:
@@ -331,12 +331,15 @@ if __name__ == "__main__":
 		eras = 1
 	random.seed()
 	initial_setup()
+	prev_gen_winners = []
 	for e in range(eras):
 		radioactive_rounds = 0
 		if e > 0:
-			era_gen(e * generations_to_run)
+			era_gen(e * generations_to_run, prev_gen_winners)
+			prev_gen_winners = []
 		for i in range(generations_to_run):
 			winners = rungen(generations_to_run * e + i)
+			prev_gen_winners = winners
 			if (i + 1) != generations_to_run:
 				cur_rad = gengen(generations_to_run * e + i, winners)
 				if cur_rad > EXTINCTION_LEVEL_RADIATION_THRESHOLD:
@@ -346,5 +349,6 @@ if __name__ == "__main__":
 			if radioactive_rounds == EXTINCTION_LEVEL_RADIATION_ROUNDS:
 				print "Extinction level event! Begining next era!"
 				break
+		
 
 	print_superwinners()
