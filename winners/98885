@@ -1,6 +1,0 @@
-;redcode
-;assert 1
-	ADD <8972, <-90
-	JMP -1, -2697
-	MOV <8978, <-90
-	JMP -1, -2697
