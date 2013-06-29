@@ -1,6 +1,0 @@
-;redcode
-;assert 1
-	JMN 701, @-2213
-	JMP -1, -2012
-	JMP -1, -2012
-	JMP -1, -2012

@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python -u
 
 import bisect
 import os
@@ -24,16 +24,16 @@ CHILDREN_PER_GEN = 10
 WINNERS_PER_GEN = 10
 ADAM_FILE = "jmp"
 EVE_FILE = "dat"
-ROUNDS_PER_GEN = 8
+ROUNDS_PER_GEN = 5
 SPLICE_MECH_ONE_PROB = .4
-DIGIT_MUNGE_PROB = (2.5 / 7.0)
+DIGIT_MUNGE_PROB = (1.5 / 14.0)
 INTERERA_SW_AGE_PENALTY = 0.01
-RADIATION_THRESH = 1.25
+RADIATION_THRESH = 1.5
 MAX_RADIATION_MUTATION_PROB = .9
 TIE_PENALTY = 1.9
 REPRODUCTION_SCORE_MIN = 0
-EXTINCTION_LEVEL_RADIATION_THRESHOLD = 0.1
-EXTINCTION_LEVEL_RADIATION_ROUNDS = 75
+EXTINCTION_LEVEL_RADIATION_THRESHOLD = 0.4
+EXTINCTION_LEVEL_RADIATION_ROUNDS = 25
 PROGENITOR_DIR = "winners"
 
 superwinners = []
@@ -43,7 +43,7 @@ def print_superwinners():
 		print "%d - score: %f, fname %s" % (i, superwinners[i][0], superwinners[i][1])
 
 def get_mutator():
-	return random.choice([flip_mutator, swap_mutator, drop_mutator, dupe_mutator])
+	return random.choice([flip_mutator, swap_mutator])
 
 def line_parse(i):
 	parts = i.replace(",", " ").split()
@@ -125,19 +125,24 @@ def warrior_read(f):
 def spawn(a, b):
 	a_len = len(a) / 14
 	b_len = len(b) / 14
-	result = ""
-	while len(result) == 0:
+	result_l = ""
+	result_r = ""
+	while len(result_l) == 0 or len(result_r) == 0:
 		if random.random() < SPLICE_MECH_ONE_PROB:
 			cutpt = random.randint(0, max(a_len, b_len)) * 14
-			result = a[:cutpt] + b[cutpt:]
+			result_l = a[:cutpt] + b[cutpt:]
+			result_r = b[:cutpt] + a[cutpt:]
 		else:
 			a_cutpt = random.randint(0, a_len) * 14
 			b_cutpt = random.randint(0, b_len) * 14
-			result = a[:a_cutpt] + b[b_cutpt:]
+			result_l = a[:a_cutpt] + b[b_cutpt:]
+			result_r = b[:b_cutpt] + a[a_cutpt:]
 
-	while len(result) > (100 * 14):
-		result = drop_mutator(result)
-	return result
+	while len(result_l) > (100 * 14):
+		result_l = drop_mutator(result_l)
+	while len(result_r) > (100 * 14):
+		result_r = drop_mutator(result_r)
+	return (result_l, result_r)
 
 def swap_mutator(dna):
 	inst_cnt = len(dna) / 14
@@ -187,10 +192,12 @@ def dupe_mutator(dna):
 	return new_dna
 
 def evolve(a, b, radiation = 0):
-	child = spawn(a, b)
+	child_l, child_r = spawn(a, b)
 	while random.random() <= (MUTATION_CHANCE + (((radiation / (RADIATION_THRESH - 1)) * MAX_RADIATION_MUTATION_PROB))):
-		child = get_mutator()(child)
-	return unparse(child)
+		child_l = get_mutator()(child_l)
+	while random.random() <= (MUTATION_CHANCE + (((radiation / (RADIATION_THRESH - 1)) * MAX_RADIATION_MUTATION_PROB))):
+		child_r = get_mutator()(child_r)
+	return (unparse(child_l), unparse(child_r))
 
 def report(scores):
 	sum = reduce(lambda x, y: x + y, map(lambda x: x[1], scores))
@@ -233,11 +240,14 @@ def gengen(lastgen, scores):
 		print "radiation now at %f" % radiation
 	else:
 		radiation = 0
-	for i in range(CHILDREN_PER_GEN):
+	for i in range(0, CHILDREN_PER_GEN, 2):
 		mother, exclude = score_pick(scores[0:WINNERS_PER_GEN])
 		father, _ = score_pick(scores[0:WINNERS_PER_GEN], exclude)
+		l, r = evolve(mother, father, radiation)
 		with open(nextgen + "/" + str(i + 1), "w") as f:
-			f.write(evolve(mother, father, radiation))
+			f.write(l)
+		with open(nextgen + "/" + str(i + 2), "w") as f:
+			f.write(r)
 	return radiation
 
 def rungen(gen):
@@ -318,18 +328,22 @@ def initial_setup():
 		with open(EVE_FILE, "r") as f:
 			eve = warrior_read(f)
 
-	for i in range(CHILDREN_PER_GEN):
-		fname = "0/" + str(i + 1)
+	for i in range(0, CHILDREN_PER_GEN, 2):
+		fname_l = "0/" + str(i + 1)
+		fname_r = "0/" + str(i + 2)
 		if progenitor_options != None:
 			adam_file, eve_file = random.sample(progenitor_options, 2)
 			with open(PROGENITOR_DIR + "/" + adam_file, "r") as f:
 				adam = warrior_read(f)
 			with open(PROGENITOR_DIR + "/" + eve_file, "r") as f:
 				eve = warrior_read(f)
-
-		with open(fname, "w") as f:
-						f.write(evolve(adam, eve))
-		superwinners.append([0, fname])
+		child_l, child_r = evolve(adam, eve)
+		with open(fname_l, "w") as f:
+			f.write(child_l)
+		with open(fname_r, "w") as f:
+			f.write(child_r)
+		superwinners.append([0, fname_l])
+		superwinners.append([0, fname_r])
 
 def era_gen(g, prev_gen):
 	global superwinners
