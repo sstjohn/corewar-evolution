@@ -127,7 +127,7 @@ def spawn(a, b):
 	b_len = len(b) / 14
 	result_l = ""
 	result_r = ""
-	while len(result) == 0:
+	while len(result_l) == 0 or len(result_r) == 0:
 		if random.random() < SPLICE_MECH_ONE_PROB:
 			cutpt = random.randint(0, max(a_len, b_len)) * 14
 			result_l = a[:cutpt] + b[cutpt:]
