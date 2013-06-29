@@ -8,6 +8,10 @@ if [ 0 -eq $? ]; then
 	git commit -m "adding winners"
 	git pull -X ours
 	git push
+	if [ 0 -ne $? ]; then
+		git pull -X ours
+		git push
+	fi
 else
 	git pull -X ours
 fi
@@ -18,6 +22,10 @@ if [ 0 -eq $? ]; then
 	git commit -m "removing losers"
 	git pull -X theirs
 	git push
+	if [ 0 -ne $? ]; then
+		git pull -X theirs
+		git push
+	fi
 else
 	git pull -X theirs
 fi
