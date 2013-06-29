@@ -1,7 +1,0 @@
-;redcode
-;assert 1
-	SPL 0, @-2233
-	SPL 0, @-2233
-	SPL 0, @-2233
-	SUB <83, -225
-	SPL 0, @-2233
