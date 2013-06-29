@@ -19,21 +19,21 @@ INSTRUCTIONS =		 {"DAT": [["#", "<"], ["#", "<"]],
 			  "DJN": [["$", "@", "<"], ["$", "#", "@", "<"]],
 			  "SPL": [["$", "@", "<"], ["$", "#", "@", "<"]]}
 
-MUTATION_CHANCE = .1
-CHILDREN_PER_GEN = 8
-WINNERS_PER_GEN = 8
-ADAM_FILE = "imp"
-EVE_FILE = "scanner"
+MUTATION_CHANCE = .05
+CHILDREN_PER_GEN = 5
+WINNERS_PER_GEN = 5
+ADAM_FILE = "jmp"
+EVE_FILE = "dat"
 ROUNDS_PER_GEN = 16
 SPLICE_MECH_ONE_PROB = .6
-DIGIT_MUNGE_PROB = (1.0 / 7.0)
-INTERERA_SW_AGE_PENALTY = 0
-RADIATION_THRESH = 1.4
-MAX_RADIATION_MUTATION_PROB = .4
-TIE_PENALTY = 1.001
-REPRODUCTION_SCORE_MIN = .5
-EXTINCTION_LEVEL_RADIATION_THRESHOLD = 0.35
-EXTINCTION_LEVEL_RADIATION_ROUNDS = 10
+DIGIT_MUNGE_PROB = (3.0 / 7.0)
+INTERERA_SW_AGE_PENALTY = 0.01
+RADIATION_THRESH = 1.1
+MAX_RADIATION_MUTATION_PROB = .5
+TIE_PENALTY = 1.1
+REPRODUCTION_SCORE_MIN = 0
+EXTINCTION_LEVEL_RADIATION_THRESHOLD = 0.095
+EXTINCTION_LEVEL_RADIATION_ROUNDS = 75
 
 superwinners = []
 def print_superwinners():
@@ -134,7 +134,7 @@ def spawn(a, b):
 			b_cutpt = random.randint(0, b_len) * 14
 			result = a[:a_cutpt] + b[b_cutpt:]
 
-	while len(result) > (200 * 14):
+	while len(result) > (100 * 14):
 		result = drop_mutator(result)
 	return result
 
@@ -177,7 +177,7 @@ def drop_mutator(dna):
 	return new_dna
 
 def dupe_mutator(dna):
-	if not len(dna) < 1000:
+	if not len(dna) < 1400:
 		return flip_mutator(drop_mutator(dna))
 	inst = random.randint(0, (len(dna) / 14) - 1)
 	new_dna = dna[:inst * 14]
@@ -187,7 +187,7 @@ def dupe_mutator(dna):
 
 def evolve(a, b, radiation = 0):
 	child = spawn(a, b)
-	if random.random() <= (MUTATION_CHANCE + (((radiation / (RADIATION_THRESH - 1)) * MAX_RADIATION_MUTATION_PROB))):
+	while random.random() <= (MUTATION_CHANCE + (((radiation / (RADIATION_THRESH - 1)) * MAX_RADIATION_MUTATION_PROB))):
 		child = get_mutator()(child)
 	return unparse(child)
 
@@ -241,11 +241,11 @@ def gengen(lastgen, scores):
 
 def rungen(gen):
 	global superwinners
-	parser = Corewar.Parser(coresize=240000,
+	parser = Corewar.Parser(coresize=8000,
 								maxprocesses=8000,
-								maxcycles=24000,
-								maxlength=200,
-								mindistance=200,
+								maxcycles=80000,
+								maxlength=100,
+								mindistance=100,
 								standard=Corewar.STANDARD_88)
 	warriors = []
 	for i in range(CHILDREN_PER_GEN):
@@ -259,11 +259,11 @@ def rungen(gen):
 					print e
 					sys.exit(1)
 
-	mars = Corewar.Benchmarking.MARS_88(coresize=240000,
+	mars = Corewar.Benchmarking.MARS_88(coresize=8000,
 											maxprocesses=8000,
-											maxcycles=24000,
-											mindistance=200,
-											maxlength=200)
+											maxcycles=80000,
+											mindistance=100,
+											maxlength=100)
 	results = mars.mw_run(warriors, max(1, int(ROUNDS_PER_GEN * CHILDREN_PER_GEN)))
 	scores = []
 	score_tot = 0.0

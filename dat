@@ -1,0 +1,10 @@
+;redcode
+;assert 1
+       DAT #0
+       DAT #0
+       DAT #0
+       DAT #0
+       DAT #0
+       DAT #0
+       DAT #0
+       DAT #0

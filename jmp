@@ -1,0 +1,10 @@
+;redcode
+;assert 1
+	JMP 0
+	JMP 0
+	JMP 0
+	JMP 0
+	JMP 0
+	JMP 0
+	JMP 0
+	JMP 0
