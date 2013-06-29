@@ -1,0 +1,6 @@
+;redcode
+;assert 1
+	MOV @2828, <-24
+	JMP -1, -2012
+	MOV @2828, <-24
+	JMP -1, -2012
