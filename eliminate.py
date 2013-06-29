@@ -13,6 +13,7 @@ COMPETITORS_DIR = "winners"
 ELIMINATION_SOFT_CUTOFF = 1.5
 ELIMINATION_HARD_CUTOFF = 3
 MIN_USEFUL_STD_DEV = 150
+MAX_TRIES = 100
 
 if len(os.listdir(COMPETITORS_DIR)) > 1500:
 	COMPETITORS_TO_ELIMINATE = 15
@@ -118,4 +119,5 @@ if __name__ == "__main__":
 			comp_tries += 1
 			if comp_tries % 10 == 0:
 				os.system("git pull --no-edit -X theirs")
-				comp_tries = 0
+				if comp_tries > MAX_TRIES:
+					sys.exit(0)
