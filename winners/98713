@@ -1,0 +1,5 @@
+;redcode
+;assert 1
+	MOV 9427, <-94
+	JMP -1, -2019
+	DJN @1, <-4912
