@@ -1,5 +1,0 @@
-;redcode
-;assert 1
-	SUB -907, <-8878
-	SPL 0, @-4442
-	DJN @9144, #4925
