@@ -1,0 +1,5 @@
+;redcode
+;assert 1
+	SPL -1, -5810
+	SPL -1, -5810
+	MOV -2910, <-15
