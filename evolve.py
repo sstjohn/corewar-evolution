@@ -26,14 +26,15 @@ ADAM_FILE = "jmp"
 EVE_FILE = "dat"
 ROUNDS_PER_GEN = 16
 SPLICE_MECH_ONE_PROB = .4
-DIGIT_MUNGE_PROB = (3.0 / 7.0)
+DIGIT_MUNGE_PROB = (2.5 / 7.0)
 INTERERA_SW_AGE_PENALTY = 0.01
-RADIATION_THRESH = 1.1
-MAX_RADIATION_MUTATION_PROB = .7
+RADIATION_THRESH = 1.25
+MAX_RADIATION_MUTATION_PROB = .9
 TIE_PENALTY = 1.9
 REPRODUCTION_SCORE_MIN = 0
-EXTINCTION_LEVEL_RADIATION_THRESHOLD = 0.095
+EXTINCTION_LEVEL_RADIATION_THRESHOLD = 0.1
 EXTINCTION_LEVEL_RADIATION_ROUNDS = 75
+PROGENITOR_DIR = "winners"
 
 superwinners = []
 def print_superwinners():
@@ -270,7 +271,7 @@ def rungen(gen):
 	for result in results[:-1]:
 		score = 0.0
 		for winners_cnt in range(len(result) - 1):
-			score += float(result[winners_cnt]) * ((1.0 / (1.0 + float(winners_cnt)) ** TIE_PENALTY))
+			score += float(result[winners_cnt]) * float(len(results) - (1 + winners_cnt))
 		scores.append(score)
 		score_tot += score
 	avg = float(score_tot) / float(len(result) - 1)
@@ -288,18 +289,44 @@ def rungen(gen):
 	
 	return map(lambda x: [x[1], str(gen) + "/" + str(x[0] + 1)], filter(lambda x: x[1] >= REPRODUCTION_SCORE_MIN, scores))
 
+def save_progenitors():
+	global superwinners
+	if PROGENITOR_DIR != None:
+		for w in superwinners:
+			sname = w[1]
+			dname = PROGENITOR_DIR + "/" + sname.replace("/","")
+			with open(sname, "r") as s:
+				with open(dname, "w") as d:
+					d.write(s.read())
+
 def initial_setup():
 	os.mkdir("0")
 	adam = None
-	with open(ADAM_FILE, "r") as f:
-		adam = warrior_read(f)
+	progenitor_options = None
+	if PROGENITOR_DIR != None:
+		try:
+			progenitor_options = os.listdir(PROGENITOR_DIR)
+			adam = None
+			eve = None
+		except:
+			pass
 
-	eve = None
-	with open(EVE_FILE, "r") as f:
-		eve = warrior_read(f)
+	if progenitor_options == None:
+		with open(ADAM_FILE, "r") as f:
+			adam = warrior_read(f)
+
+		with open(EVE_FILE, "r") as f:
+			eve = warrior_read(f)
 
 	for i in range(CHILDREN_PER_GEN):
 		fname = "0/" + str(i + 1)
+		if progenitor_options != None:
+			adam_file, eve_file = random.sample(progenitor_options, 2)
+			with open(PROGENITOR_DIR + "/" + adam_file, "r") as f:
+				adam = warrior_read(f)
+			with open(PROGENITOR_DIR + "/" + eve_file, "r") as f:
+				eve = warrior_read(f)
+
 		with open(fname, "w") as f:
 						f.write(evolve(adam, eve))
 		superwinners.append([0, fname])
@@ -349,6 +376,7 @@ if __name__ == "__main__":
 			if radioactive_rounds == EXTINCTION_LEVEL_RADIATION_ROUNDS:
 				print "Extinction level event! Begining next era!"
 				break
-		
+
+	save_progenitors()
 
 	print_superwinners()
