@@ -1,0 +1,7 @@
+;redcode
+;assert 1
+	ADD -400, @-695
+	JMP -1, -2012
+	JMP -1, -2012
+	ADD -1, -5012
+	JMP -1, -2012

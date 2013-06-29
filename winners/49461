@@ -1,0 +1,6 @@
+;redcode
+;assert 1
+	ADD 2177, @594
+	MOV 8828, <-94
+	JMP -1, 2012
+	JMN 2860, 9997
