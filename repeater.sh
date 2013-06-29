@@ -2,7 +2,7 @@
 
 while true; do
 	git pull
-	./evolve.py 100 60
+	./evolve.py 100 50
 	if [ 0 -eq $? ]; then
 		git add winners
 		git commit -m "adding winners"
