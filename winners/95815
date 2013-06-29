@@ -1,0 +1,6 @@
+;redcode
+;assert 1
+	MOV 8828, <-94
+	JMP -1, -2012
+	CMP -3081, -2116
+	CMP -1, -2116
