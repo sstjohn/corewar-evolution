@@ -1,9 +1,0 @@
-;redcode
-;assert 1
-	SPL 0, <5100
-	SPL 408, 5007
-	SPL 0, <5100
-	SPL 408, 5007
-	SPL 408, 5007
-	JMZ 9582, -1544
-	SPL @60, 42
