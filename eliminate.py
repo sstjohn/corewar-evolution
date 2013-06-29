@@ -13,7 +13,7 @@ COMPETITORS_DIR = "winners"
 ELIMINATION_SOFT_CUTOFF = 1.5
 ELIMINATION_HARD_CUTOFF = 3
 COMPETITORS_TO_ELIMINATE = 10
-MIN_USEFUL_STD_DEV = 100
+MIN_USEFUL_STD_DEV = 400
 
 def destroy_competitor(warrior):
 	print "destroying %s (with score %d)" % (warrior[0], warrior[1])
