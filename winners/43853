@@ -1,4 +1,0 @@
-;redcode
-;assert 1
-	MOV @8678, <-84
-	JMZ -1, -2055
