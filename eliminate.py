@@ -12,8 +12,12 @@ ROUNDS_PER_GAME = 10
 COMPETITORS_DIR = "winners"
 ELIMINATION_SOFT_CUTOFF = 1.5
 ELIMINATION_HARD_CUTOFF = 3
-COMPETITORS_TO_ELIMINATE = 10
 MIN_USEFUL_STD_DEV = 400
+
+if len(os.listdir(COMPETITORS_DIR)) > 1500:
+	COMPETITORS_TO_ELIMINATE = 15
+else:
+	COMPETITORS_TO_ELIMINATE = 10
 
 competitors_destroyed = 0
 
@@ -97,11 +101,11 @@ def run_games(left, right):
 			warriors = (right, left)
 		results = mars.run(warriors, rounds = ROUNDS_PER_GAME)
 		if i % 2 == 0:
-			left_score += (5 * results[0][0] + results[0][1])
-			right_score += (5 * results[1][0] + results[1][1])
+			left_score += (5 * results[0][0] + results[0][2])
+			right_score += (5 * results[1][0] + results[1][2])
 		else:
-			left_score += (5 * results[1][0] + results[1][1])
-			right_score += (5 * results[0][0] + results[0][1])
+			left_score += (5 * results[1][0] + results[1][2])
+			right_score += (5 * results[0][0] + results[0][2])
 	
 	return left_score, right_score
 
