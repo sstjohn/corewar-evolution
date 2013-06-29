@@ -1,8 +1,0 @@
-;redcode
-;assert 1
-	MOV 2427, <-2
-	MOV 2427, <-2
-	SPL -1, 2615
-	SPL -1, 2615
-	MOV 2427, <-2
-	MOV 2427, <-2
