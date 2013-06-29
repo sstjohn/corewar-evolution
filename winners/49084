@@ -1,5 +1,0 @@
-;redcode
-;assert 1
-	SPL -8000, @6141
-	MOV 9427, <-24
-	MOV 9427, <-24
