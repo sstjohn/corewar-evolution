@@ -1,5 +1,0 @@
-;redcode
-;assert 1
-	MOV 3207, <-215
-	SPL 0, <9043
-	MOV 3037, <-215
