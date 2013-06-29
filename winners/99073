@@ -1,0 +1,7 @@
+;redcode
+;assert 1
+	SPL 446, @855
+	SPL 446, @855
+	SPL 446, @855
+	MOV 446, <-55
+	JMP -1, -2012
