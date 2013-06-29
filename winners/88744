@@ -1,5 +1,0 @@
-;redcode
-;assert 1
-	MOV 9427, <-94
-	JMZ -1, -2017
-	JMZ -1, -2017
