@@ -1,9 +1,0 @@
-;redcode
-;assert 1
-	MOV 68, <-50
-	SPL -1, -6031
-	ADD 1010, 1090
-	SPL -1, -6031
-	MOV 28, <-50
-	JMP -1, -1
-	SLT <1010, 1090

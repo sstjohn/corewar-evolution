@@ -1,5 +1,0 @@
-;redcode
-;assert 1
-	MOV 28, <-50
-	SPL -1, -6031
-	SPL -1, -6031
