@@ -19,29 +19,32 @@ INSTRUCTIONS =		 {"DAT": [["#", "<"], ["#", "<"]],
 			  "DJN": [["$", "@", "<"], ["$", "#", "@", "<"]],
 			  "SPL": [["$", "@", "<"], ["$", "#", "@", "<"]]}
 
-ROUNDS_PER_GAME=1		#needs to be odd?
-MUTATION_CHANCE = .1
-CHILDREN_PER_GEN = 64
+ROUNDS_PER_GAME=3		#needs to be odd?
+MUTATION_CHANCE = .05
+CHILDREN_PER_GEN = 16
 ADAM_FILE = "dat"
 EVE_FILE = "dat"
 SPLICE_MECH_ONE_PROB = .4
 DIGIT_MUNGE_PROB = (1.5 / 14.0)
-INTERERA_SW_AGE_PENALTY = 0.01
-RADIATION_THRESH = 100
+INTERERA_SW_AGE_PENALTY = 0.05
+RADIATION_THRESH = 3.5
+MIN_REPRODUCTIVE_STDDEV = -.5
 MAX_RADIATION_MUTATION_PROB = .9
-EXTINCTION_LEVEL_RADIATION_THRESHOLD = 24
+EXTINCTION_LEVEL_RADIATION_THRESHOLD = .9
 EXTINCTION_LEVEL_RADIATION_ROUNDS = 10
-PROGENITOR_DIR = None
+PROGENITOR_DIR = "winners"
 DUPEDROP_MUTATOR_PROB = 0.25
-WINNING_MULTIPLIER = 1
+WINNING_MULTIPLIER = 10
 LOSS_PENALTY = 0
-TIE_SCORE = 0
+TIE_SCORE = 1
+SCORING_EXP = 2
+SINGLE_GEN_INCEST_CHANCE = .05
 
-superwinners = []
+superwinners = None
 def print_superwinners():
 	print "\nsuperwinners!\n-------------\n"
 	for i in range(len(superwinners)):
-		print "%d - score: %f, fname %s" % (i, superwinners[i][0], superwinners[i][1])
+		print "%d - score: %f, fname %s" % (i, superwinners[i][2], superwinners[i][0])
 
 def get_mutator():
 	return random.choice([flip_mutator, swap_mutator, dupedrop_mutator, irev_mutator, dupe_mutator, drop_mutator])
@@ -115,6 +118,10 @@ def unparse(dna):
 				result += "-"
 			result += str(val)
 	return result + "\n"
+
+def warrior_load(fname):
+	with open(fname, "r") as f:
+		return warrior_read(f)
 	
 def warrior_read(f):
 	dna = ""
@@ -211,10 +218,12 @@ def dupe_mutator(dna):
 
 def evolve(a, b, radiation = 0):
 	child_l, child_r = spawn(a, b)
-	if random.random() <= (MUTATION_CHANCE + (((radiation / (RADIATION_THRESH - 1)) * MAX_RADIATION_MUTATION_PROB))):
+	if random.random() <= (MUTATION_CHANCE + (radiation  * MAX_RADIATION_MUTATION_PROB)):
 		child_l = get_mutator()(child_l)
-	if random.random() <= (MUTATION_CHANCE + (((radiation / (RADIATION_THRESH - 1)) * MAX_RADIATION_MUTATION_PROB))):
+	if random.random() <= (MUTATION_CHANCE + (radiation  * MAX_RADIATION_MUTATION_PROB)):
 		child_r = get_mutator()(child_r)
+	if random.random() <= SINGLE_GEN_INCEST_CHANCE:
+		return evolve(child_l, child_r, radiation)
 	return (unparse(child_l), unparse(child_r))
 
 def report(scores):
@@ -225,54 +234,57 @@ def report(scores):
 	print "\tavg: %d" % avg
 	print
 
-def score_pick(scores, exclude_ind = None, no_sw = False):
-	global superwinners
-
+def score_pick(scores, exclude_ind = None):
+	avg = float(reduce(lambda x, y: x + y, map(lambda x: x[2], scores))) / float(len(scores))
+        std_dev = (float(reduce(lambda x, y: x + y, map(lambda x: (float(x[2]) - avg) ** 2, scores))) / float(len(scores) - 1)) ** 0.5
 	
+	if std_dev != 0:
+		rel_scores = map(lambda x: float(max(0.0, ((float(x[2]) - avg) / std_dev) - MIN_REPRODUCTIVE_STDDEV) ** SCORING_EXP if exclude_ind == None or scores[exclude_ind] != x else 0.0), scores)
 
-	#partitions = []
-	#sum = reduce(lambda x, y: x + y, map(lambda x: float(max(0.0, x[0])) if exclude_ind == None or scores[exclude_ind] != x else 0.0, scores))
-	#if sum == 0:
-	#	if not no_sw:
-	#		return score_pick(superwinners, None, True)
-	#	else:
-	#		picked = random.randint(1, len(scores)) - 1
-	#else:
-	#	running_total = 0.0
-	#	for i in range(len(scores)):
-	#		if i != exclude_ind:
-	#			running_total += ((max(0.0, float(scores[i][0]))) / sum)
-	#		partitions.append(running_total)
-	#	picked = bisect.bisect(partitions, random.random() * running_total)
-
-	if exclude_ind == 0:
-		picked = 1
+		partitions = []
+		sum = reduce(lambda x, y: x + y, map(lambda x: x if x > 0 else 0, rel_scores))
+		running_total = 0.0
+		for i in range(len(rel_scores)):
+			running_total += rel_scores[i]
+			partitions.append(running_total)
+		picked = bisect.bisect(partitions, random.random() * running_total)
 	else:
-		picked = 0
-	with open(superwinners[picked][1], "r") as f:
-		warrior = warrior_read(f)
-	return (warrior, picked)					
+		picked = random.randint(1, len(scores)) - 1
+
+	return picked
 
 def gengen(lastgen, scores):
-	global superwinners
-	
 	parents = []
 	nextgen = str(lastgen + 1)
 	os.mkdir(nextgen)
-	if scores[0][0] < RADIATION_THRESH:
-		radiation = RADIATION_THRESH - scores[0][0]
+
+	avg = float(reduce(lambda x, y: x + y, map(lambda x: x[2], scores))) / float(len(scores))
+        std_dev = (float(reduce(lambda x, y: x + y, map(lambda x: (float(x[2]) - avg) ** 2, scores))) / float(len(scores) - 1)) ** 0.5
+
+	if std_dev != 0:
+		win_loss_dev = float(scores[0][2] - scores[-1][2]) / std_dev
+	else:
+		win_loss_dev = 0.0
+
+	print "win loss deviation is %2.04f" % win_loss_dev
+
+	if win_loss_dev < RADIATION_THRESH:
+		radiation = 1.0 - float(win_loss_dev / RADIATION_THRESH)
 		print "radiation now at %f" % radiation
 	else:
 		radiation = 0
+
 	for i in range(0, CHILDREN_PER_GEN, 2):
-		mother, exclude = score_pick(scores)
-		father, _ = score_pick(scores, exclude)
-		l, r = evolve(mother, father, radiation)
+		mother = score_pick(scores)
+		father = score_pick(scores, mother)
+		l, r = evolve(scores[mother][1], scores[father][1], radiation)
 		with open(nextgen + "/" + str(i + 1), "w") as f:
 			f.write(l)
 		with open(nextgen + "/" + str(i + 2), "w") as f:
 			f.write(r)
 	return radiation
+
+
 
 def rungen(gen):
 	global superwinners
@@ -284,7 +296,7 @@ def rungen(gen):
 								standard=Corewar.STANDARD_88)
 	
 	try:
-		warriors = [[str(gen) + "/" + str(x + 1), parser.parse_file(str(gen) + "/" + str(x + 1)), 0]
+		warriors = [[str(gen) + "/" + str(x + 1), warrior_load(str(gen) + "/" + str(x + 1)), 0]
 				for x in range(CHILDREN_PER_GEN)]
 	except Corewar.WarriorParseError, e:
 		print e
@@ -295,24 +307,19 @@ def rungen(gen):
 											maxcycles=80000,
 											mindistance=100,
 											maxlength=100)
-
-	pairings = range(1, CHILDREN_PER_GEN)
-	for i in range((CHILDREN_PER_GEN - 1)):
-		top = [0] + pairings[:(CHILDREN_PER_GEN / 2) - 1]
-		bottom = pairings[len(top) - 1:][::-1]
-		for j in range(CHILDREN_PER_GEN / 2):
-			top_score_delta, bottom_score_delta = run_games(warriors[top[j]][1], warriors[bottom[j]][1])
-			warriors[top[j]][2] += top_score_delta
-			warriors[bottom[j]][2] += bottom_score_delta
-		pairings.append(pairings.pop(0))
+	if superwinners == None:
+		superwinners = warriors
+	for i in range(CHILDREN_PER_GEN - 1):
+		for j in range(CHILDREN_PER_GEN):
+			child_score, sw_score = run_games(parser.parse(unparse(warriors[j][1])), parser.parse(unparse(superwinners[j][1])))
+			warriors[j][2] += child_score
+		warriors.append(warriors.pop(0))
 
 	warriors.sort(key=lambda x: x[2], reverse=True)
 
-	superwinners = map(lambda x: [x[2], x[0]], warriors) + superwinners
-	superwinners.sort(key=lambda x: x[0], reverse=True)
+	superwinners = warriors + superwinners
+	superwinners.sort(key=lambda x: x[2], reverse=True)
 	superwinners = superwinners[:CHILDREN_PER_GEN]
-
-	print_superwinners()
 
 	winners = warriors[0:4]
 	print "gen %d winners:" % gen
@@ -320,7 +327,7 @@ def rungen(gen):
 		print "\t%s: %4.2f " % (x[0].split("/")[1], x[2])
 	print
 	
-	return map(lambda x: [x[2], x[0]], warriors)
+	return warriors
 
 def run_games(left, right):
 		mars = Corewar.Benchmarking.MARS_88(coresize=8000,
@@ -343,7 +350,7 @@ def save_progenitors():
 	global superwinners
 	if PROGENITOR_DIR != None:
 		for w in superwinners:
-			sname = w[1]
+			sname = w[0]
 			dname = PROGENITOR_DIR + "/" + sname.replace("/","")
 			with open(sname, "r") as s:
 				with open(dname, "w") as d:
@@ -382,8 +389,6 @@ def initial_setup():
 			f.write(child_l)
 		with open(fname_r, "w") as f:
 			f.write(child_r)
-		superwinners.append([0, fname_l])
-		superwinners.append([0, fname_r])
 
 def era_gen(g, prev_gen):
 	global superwinners
@@ -392,14 +397,14 @@ def era_gen(g, prev_gen):
 	for s in random.sample(superwinners + prev_gen, CHILDREN_PER_GEN):
 		i += 1
 		with open(str(g) + "/" + str(i), "w") as f:
-			with open(s[1], "r") as source:
+			with open(s[0], "r") as source:
 				f.write(source.read())
 	print "======================="
 	print "it's the end of an era!"
 	print "======================="
 	print
 	print_superwinners()
-	superwinners = map(lambda x: [x[0] * (1.0 - INTERERA_SW_AGE_PENALTY), x[1]], superwinners)
+	superwinners = map(lambda x: [x[0], x[1], x[2] * (1.0 - INTERERA_SW_AGE_PENALTY)], superwinners)
 
 if __name__ == "__main__":
 	if len(sys.argv) > 1:
