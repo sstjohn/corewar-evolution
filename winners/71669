@@ -1,0 +1,7 @@
+;redcode
+;assert 1
+	MOV 1897, <-20
+	DJN -1, <5010
+	DJN -1, <5010
+	MOV 1897, <-20
+	DJN -1, <1010
