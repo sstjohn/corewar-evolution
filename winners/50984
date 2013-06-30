@@ -1,6 +1,0 @@
-;redcode
-;assert 1
-	MOV 456, <-55
-	JMP -1, #2491
-	JMP -1, #2491
-	JMP -1, #2491
