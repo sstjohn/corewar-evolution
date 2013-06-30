@@ -28,11 +28,11 @@ ROUNDS_PER_GEN = 5
 SPLICE_MECH_ONE_PROB = .4
 DIGIT_MUNGE_PROB = (1.5 / 14.0)
 INTERERA_SW_AGE_PENALTY = 0.01
-RADIATION_THRESH = 1.75
-MAX_RADIATION_MUTATION_PROB = .9
+RADIATION_THRESH = 1.55
+MAX_RADIATION_MUTATION_PROB = .3
 TIE_PENALTY = 1.9
 REPRODUCTION_SCORE_MIN = 0
-EXTINCTION_LEVEL_RADIATION_THRESHOLD = 0.7
+EXTINCTION_LEVEL_RADIATION_THRESHOLD = 0.5
 EXTINCTION_LEVEL_RADIATION_ROUNDS = 25
 PROGENITOR_DIR = "winners"
 DUPEDROP_MUTATOR_PROB = 0.75
@@ -44,7 +44,7 @@ def print_superwinners():
 		print "%d - score: %f, fname %s" % (i, superwinners[i][0], superwinners[i][1])
 
 def get_mutator():
-	return random.choice([flip_mutator, swap_mutator, dupedrop_mutator, irev_mutator])
+	return random.choice([flip_mutator, swap_mutator, dupedrop_mutator, irev_mutator, dupe_mutator, drop_mutator])
 
 def line_parse(i):
 	parts = i.replace(",", " ").split()
