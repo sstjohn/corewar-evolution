@@ -8,10 +8,11 @@ import Corewar, Corewar.Benchmarking
 
 COMPETITORS_PER_TOURN = 8
 COMPETITORS_DIR = "winners"
-ELIMINATION_SOFT_CUTOFF = 0.5
-ELIMINATION_HARD_CUTOFF = 2
+ELIMINATION_SOFT_CUTOFF = 0.1
+ELIMINATION_HARD_CUTOFF = 1
 MIN_USEFUL_STD_DEV = 5
 MAX_TRIES = 100
+WINNING_MULTIPLIER = 10
 
 if len(os.listdir(COMPETITORS_DIR)) > 1500:
 	COMPETITORS_TO_ELIMINATE = 15
@@ -96,8 +97,8 @@ def run_games(left, right):
 						maxlength=100)
 	
 	results = mars.p_run((left, right))
-	left_score = (5 * results[0][0] + results[0][2])
-	right_score = (5 * results[1][0] + results[1][2])
+	left_score = (WINNING_MULTIPLIER * results[0][0] + results[0][2])
+	right_score = (WINNING_MULTIPLIER * results[1][0] + results[1][2])
 	print ".",
 
 	return left_score, right_score
