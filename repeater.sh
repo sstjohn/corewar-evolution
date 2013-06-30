@@ -29,4 +29,6 @@ if [ 0 -eq $? ]; then
 else
 	git pull -X theirs
 fi
-. ./repeater.sh
+if [ ! -x .stopnow ]; then
+	exec ./repeater.sh
+fi
