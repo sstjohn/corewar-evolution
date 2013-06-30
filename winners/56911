@@ -1,5 +1,0 @@
-;redcode
-;assert 1
-	MOV 9427, <-94
-	DJN -8001, #1018
-	JMP -1, 2012
