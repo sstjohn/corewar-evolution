@@ -35,6 +35,7 @@ REPRODUCTION_SCORE_MIN = 0
 EXTINCTION_LEVEL_RADIATION_THRESHOLD = 0.7
 EXTINCTION_LEVEL_RADIATION_ROUNDS = 25
 PROGENITOR_DIR = "winners"
+DUPEDROP_MUTATOR_PROB = 0.75
 
 superwinners = []
 def print_superwinners():
@@ -43,7 +44,7 @@ def print_superwinners():
 		print "%d - score: %f, fname %s" % (i, superwinners[i][0], superwinners[i][1])
 
 def get_mutator():
-	return random.choice([flip_mutator, swap_mutator])
+	return random.choice([flip_mutator, swap_mutator, dupedrop_mutator])
 
 def line_parse(i):
 	parts = i.replace(",", " ").split()
@@ -173,6 +174,15 @@ def flip_mutator(dna):
 			mutated += c
 
 	return first_part + mutated + sec_part
+
+def dupedrop_mutator(dna):
+    new_dna = ""
+    for i in range(len(dna) / 14):
+        if (i + 1) * 14 < len(dna) and dna[i * 14:(i + 1)*14] == dna[(i + 1) * 14:(i + 2) * 14] and random.random() < DUPEDROP_MUTATOR_PROB:
+            pass
+        else:
+            new_dna += dna[i * 14:(i + 1) * 14]
+    return new_dna
 
 def drop_mutator(dna):
 	if len(dna) < 29:
