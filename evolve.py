@@ -44,7 +44,7 @@ def print_superwinners():
 		print "%d - score: %f, fname %s" % (i, superwinners[i][0], superwinners[i][1])
 
 def get_mutator():
-	return random.choice([flip_mutator, swap_mutator, dupedrop_mutator])
+	return random.choice([flip_mutator, swap_mutator, dupedrop_mutator, irev_mutator])
 
 def line_parse(i):
 	parts = i.replace(",", " ").split()
@@ -161,7 +161,7 @@ def swap_mutator(dna):
 	return new_dna
 
 def flip_mutator(dna):
-	strpos = random.randint(0, len(dna) / 14)
+	strpos = random.randint(0, (len(dna) / 14) - 1)
 	first_part = dna[:(strpos * 14)]
 	mutatee = dna[strpos * 14:(strpos + 1) * 14]
 	sec_part = dna[(strpos + 1) * 14:]
@@ -175,14 +175,22 @@ def flip_mutator(dna):
 
 	return first_part + mutated + sec_part
 
+def irev_mutator(dna):
+	strpos = random.randint(0, (len(dna) / 14) - 1)
+	first_part = dna[:(strpos * 14)]
+	mutatee = dna[strpos * 14:(strpos + 1) * 14]
+	sec_part = dna[(strpos + 1) * 14:]
+
+	return first_part + mutatee[::-1] + sec_part
+
 def dupedrop_mutator(dna):
-    new_dna = ""
-    for i in range(len(dna) / 14):
-        if (i + 1) * 14 < len(dna) and dna[i * 14:(i + 1)*14] == dna[(i + 1) * 14:(i + 2) * 14] and random.random() < DUPEDROP_MUTATOR_PROB:
-            pass
-        else:
-            new_dna += dna[i * 14:(i + 1) * 14]
-    return new_dna
+	new_dna = ""
+	for i in range(len(dna) / 14):
+		if (i + 1) * 14 < len(dna) and dna[i * 14:(i + 1)*14] == dna[(i + 1) * 14:(i + 2) * 14] and random.random() < DUPEDROP_MUTATOR_PROB:
+			pass
+		else:
+			new_dna += dna[i * 14:(i + 1) * 14]
+	return new_dna
 
 def drop_mutator(dna):
 	if len(dna) < 29:
