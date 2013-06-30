@@ -176,7 +176,7 @@ def flip_mutator(dna):
 	return first_part + mutated + sec_part
 
 def irev_mutator(dna):
-	inst_no = random.randint(0, (len(dna) / 14) - 1)
+	strpos = random.randint(0, (len(dna) / 14) - 1)
 	first_part = dna[:(strpos * 14)]
 	mutatee = dna[strpos * 14:(strpos + 1) * 14]
 	sec_part = dna[(strpos + 1) * 14:]
