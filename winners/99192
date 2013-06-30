@@ -1,0 +1,6 @@
+;redcode
+;assert 1
+	MOV 1297, <-30
+	MOV 1297, <-30
+	MOV 1297, <-30
+	DJN -1, <5012
