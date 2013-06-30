@@ -2,6 +2,8 @@
 
 export GIT_MERGE_AUTOEDIT=no
 
+rm core.*
+
 ./evolve.py 100 100
 if [ 0 -eq $? ]; then
 	git add winners
@@ -29,4 +31,6 @@ if [ 0 -eq $? ]; then
 else
 	git pull -X theirs
 fi
-. ./repeater.sh
+if [ ! -x .stopnow ]; then
+	exec ./repeater.sh
+fi
