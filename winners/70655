@@ -1,5 +1,0 @@
-;redcode
-;assert 1
-	SPL 1, #-4013
-	DJN -1, <4016
-	MOV 5429, <-156
