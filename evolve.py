@@ -282,7 +282,7 @@ def gengen(lastgen, scores):
 	else:
 		win_loss_dev = 0.0
 
-	print "win loss deviation is %2.04f" % win_loss_dev
+	print "deviation spread is %2.04f" % win_loss_dev
 
 	if win_loss_dev < RADIATION_THRESH:
 		radiation = 1.0 - float(win_loss_dev / RADIATION_THRESH)
@@ -427,7 +427,7 @@ def era_comp(winners):
 
         print
         print
-        print "elimination results!"
+        print "selection results!"
         print "--------------------"
         print
 
