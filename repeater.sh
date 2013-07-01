@@ -52,6 +52,10 @@ if [ ! -x .stopnow ] && [ "$0" != "./run_once.sh" ]; then
 	exec $0
 fi
 if [ $pushed -eq 0 ]; then
-	git pull -X theirs
-	git push
+	result=1
+	while [ $result -ne 0 ]; do
+		git pull -X theirs
+		git push
+		result=$?
+	done
 fi

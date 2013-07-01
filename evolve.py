@@ -357,6 +357,7 @@ def run_games(left, right):
 
 def save_progenitors():
 	global superwinners
+	os.system("git pull --no-edit -X theirs")
 	if PROGENITOR_DIR != None:
 		for w in superwinners:
 			sname = w[0]
