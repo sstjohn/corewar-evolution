@@ -1,7 +1,0 @@
-;redcode
-;assert 1
-	SPL -1, -2015
-	MOV 807, <-193
-	JMP -1, #-2012
-	SPL -1, -2015
-	SPL -1, -2015
