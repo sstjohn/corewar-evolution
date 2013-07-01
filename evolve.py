@@ -45,9 +45,22 @@ SINGLE_GEN_INCEST_CHANCE = .05
 
 superwinners = None
 def print_superwinners():
+	avg = 0
 	print "\nsuperwinners!\n-------------\n"
 	for i in range(len(superwinners)):
 		print "%d - score: %f, fname %s" % (i, superwinners[i][2], superwinners[i][0])
+		avg += superwinners[i][2]
+
+	avg /= float(len(superwinners))
+	std_dev = (float(reduce(lambda x, y: x + y, map(lambda x: (float(x[2]) - avg) ** 2, superwinners))) / float(len(superwinners) - 1)) ** 0.5
+
+	print
+	print "era average: %4.02f" % avg
+	print "era std dev: %4.02f" % std_dev
+	if 0 != std_dev:
+		print "era dev del: %4.02f" % (((superwinners[0][2] - avg) / std_dev) - ((superwinners[-1][2] - avg) / std_dev))
+
+	print
 
 def get_mutator():
 	return random.choice([flip_mutator, swap_mutator, dupedrop_mutator, irev_mutator, dupe_mutator, drop_mutator])
@@ -269,7 +282,7 @@ def gengen(lastgen, scores):
 	else:
 		win_loss_dev = 0.0
 
-	print "win loss deviation is %2.04f" % win_loss_dev
+	print "deviation spread is %2.04f" % win_loss_dev
 
 	if win_loss_dev < RADIATION_THRESH:
 		radiation = 1.0 - float(win_loss_dev / RADIATION_THRESH)
@@ -410,11 +423,11 @@ def era_comp(winners):
                         	warriors[bottom[j]][2] += bottom_score_delta
                 pairings.append(pairings.pop(0))
 
-	warriors = [[x[0], x[1], float(x[2]) / float(ERA_COMP_ROUNDS)] for x in warriors]
+	warriors = [[x[0], x[1], float(x[2]) / (2 * float(ERA_COMP_ROUNDS))] for x in warriors]
 
         print
         print
-        print "elimination results!"
+        print "selection results!"
         print "--------------------"
         print
 
@@ -439,7 +452,6 @@ def era_gen(g, prev_gen):
 	print "======================="
 	print
 	print_superwinners()
-	superwinners = map(lambda x: [x[0], x[1], x[2] * (1.0 - INTERERA_SW_AGE_PENALTY)], superwinners)
 
 if __name__ == "__main__":
 	if len(sys.argv) > 1:
