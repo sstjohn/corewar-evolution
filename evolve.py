@@ -410,7 +410,7 @@ def era_comp(winners):
                         	warriors[bottom[j]][2] += bottom_score_delta
                 pairings.append(pairings.pop(0))
 
-	warriors = [[x[0], x[1], float(x[2]) / float(ERA_COMP_ROUNDS)] for x in warriors]
+	warriors = [[x[0], x[1], float(x[2]) / (2 * float(ERA_COMP_ROUNDS))] for x in warriors]
 
         print
         print
@@ -439,7 +439,6 @@ def era_gen(g, prev_gen):
 	print "======================="
 	print
 	print_superwinners()
-	superwinners = map(lambda x: [x[0], x[1], x[2] * (1.0 - INTERERA_SW_AGE_PENALTY)], superwinners)
 
 if __name__ == "__main__":
 	if len(sys.argv) > 1:
