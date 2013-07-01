@@ -439,7 +439,6 @@ def era_gen(g, prev_gen):
 	print "======================="
 	print
 	print_superwinners()
-	superwinners = map(lambda x: [x[0], x[1], x[2] * , superwinners)
 
 if __name__ == "__main__":
 	if len(sys.argv) > 1:
