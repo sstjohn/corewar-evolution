@@ -58,7 +58,7 @@ def print_superwinners():
 	print "era average: %4.02f" % avg
 	print "era std dev: %4.02f" % std_dev
 	if 0 != std_dev:
-		print "era dev del: %4.02f" % ((superwinners[0][2] - avg) / std_dev) - ((superwinners[-1][2] - avg) / std_dev)
+		print "era dev del: %4.02f" % (((superwinners[0][2] - avg) / std_dev) - ((superwinners[-1][2] - avg) / std_dev))
 
 	print
 
