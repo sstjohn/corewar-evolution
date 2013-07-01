@@ -6,6 +6,8 @@ import random
 import sys
 import Corewar, Corewar.Benchmarking
 
+from math import ceil
+
 UNARY_OPS = ["DAT","JMP","SPL"]
 INSTRUCTIONS =		 {"DAT": [["#", "<"], ["#", "<"]],
 			  "MOV": [["$", "#", "@", "<"], ["$", "@", "<"]],
