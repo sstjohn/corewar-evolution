@@ -19,8 +19,9 @@ INSTRUCTIONS =		 {"DAT": [["#", "<"], ["#", "<"]],
 			  "DJN": [["$", "@", "<"], ["$", "#", "@", "<"]],
 			  "SPL": [["$", "@", "<"], ["$", "#", "@", "<"]]}
 
-ROUNDS_PER_GAME=3		#needs to be odd?
-MUTATION_CHANCE = .05
+ROUNDS_PER_GAME=3		
+ERA_COMP_ROUNDS = 2
+MUTATION_CHANCE = .1
 CHILDREN_PER_GEN = 16
 ADAM_FILE = "dat"
 EVE_FILE = "dat"
@@ -29,7 +30,7 @@ DIGIT_MUNGE_PROB = (1.5 / 14.0)
 INTERERA_SW_AGE_PENALTY = 0.05
 RADIATION_THRESH = 3.5
 MIN_REPRODUCTIVE_STDDEV = -.5
-MAX_RADIATION_MUTATION_PROB = .9
+MAX_RADIATION_MUTATION_PROB = .85
 EXTINCTION_LEVEL_RADIATION_THRESHOLD = .9
 EXTINCTION_LEVEL_RADIATION_ROUNDS = 10
 PROGENITOR_DIR = "winners"
@@ -288,30 +289,15 @@ def gengen(lastgen, scores):
 
 def rungen(gen):
 	global superwinners
-	parser = Corewar.Parser(coresize=8000,
-								maxprocesses=8000,
-								maxcycles=80000,
-								maxlength=100,
-								mindistance=100,
-								standard=Corewar.STANDARD_88)
 	
-	try:
-		warriors = [[str(gen) + "/" + str(x + 1), warrior_load(str(gen) + "/" + str(x + 1)), 0]
-				for x in range(CHILDREN_PER_GEN)]
-	except Corewar.WarriorParseError, e:
-		print e
-		sys.exit(1)
+	warriors = [[str(gen) + "/" + str(x + 1), warrior_load(str(gen) + "/" + str(x + 1)), 0]
+			for x in range(CHILDREN_PER_GEN)]
 
-	mars = Corewar.Benchmarking.MARS_88(coresize=8000,
-											maxprocesses=8000,
-											maxcycles=80000,
-											mindistance=100,
-											maxlength=100)
 	if superwinners == None:
 		superwinners = warriors
 	for i in range(CHILDREN_PER_GEN - 1):
 		for j in range(CHILDREN_PER_GEN):
-			child_score, sw_score = run_games(parser.parse(unparse(warriors[j][1])), parser.parse(unparse(superwinners[j][1])))
+			child_score, sw_score = run_games(warriors[j][1], superwinners[j][1])
 			warriors[j][2] += child_score
 		warriors.append(warriors.pop(0))
 
@@ -321,7 +307,7 @@ def rungen(gen):
 	superwinners.sort(key=lambda x: x[2], reverse=True)
 	superwinners = superwinners[:CHILDREN_PER_GEN]
 
-	winners = warriors[0:4]
+	winners = warriors
 	print "gen %d winners:" % gen
 	for x in winners:
 		print "\t%s: %4.2f " % (x[0].split("/")[1], x[2])
@@ -330,16 +316,24 @@ def rungen(gen):
 	return warriors
 
 def run_games(left, right):
-		mars = Corewar.Benchmarking.MARS_88(coresize=8000,
-											maxprocesses=8000,
-											maxcycles=80000,
-											mindistance=100,
-											maxlength=100)
+		parser = Corewar.Parser(coresize=8000,
+					maxprocesses=8000,
+					maxcycles=80000,
+					maxlength=100,
+					mindistance=100,
+					standard=Corewar.STANDARD_88)
 
-		results = mars.run((left, right), rounds=ROUNDS_PER_GAME)
+		mars = Corewar.Benchmarking.MARS_88(coresize=8000,
+							maxprocesses=8000,
+							maxcycles=80000,
+							mindistance=100,
+							maxlength=100)
+		l = parser.parse(unparse(left))
+		r = parser.parse(unparse(right))
+		results = mars.run((l, r), rounds = ROUNDS_PER_GAME, seed = int(ceil(((2 ** 31) - 101) * random.random() + 100)))
 		left_score = (WINNING_MULTIPLIER * results[0][0] + LOSS_PENALTY * results[0][1] + TIE_SCORE * results[0][2])
 		right_score = (WINNING_MULTIPLIER * results[1][0] + LOSS_PENALTY * results[1][1] + TIE_SCORE * results[1][2])
-		results = mars.run((right, left))
+		results = mars.run((r, l), rounds = ROUNDS_PER_GAME, seed = int(ceil(((2 ** 31) - 101) * random.random() + 100)))
 		right_score += (WINNING_MULTIPLIER * results[0][0] + LOSS_PENALTY * results[0][1] + TIE_SCORE * results[0][2])
 		left_score += (WINNING_MULTIPLIER * results[1][0] + LOSS_PENALTY * results[1][1] + TIE_SCORE * results[1][2])
 
@@ -389,16 +383,55 @@ def initial_setup():
 			f.write(child_l)
 		with open(fname_r, "w") as f:
 			f.write(child_r)
+def era_comp(winners):
+	global supperwinners
+
+	warriors = [[x[0], x[1], 0] for x in (winners + superwinners)]
+
+        parser = Corewar.Parser(coresize=8000,
+                                                                maxprocesses=8000,
+                                                                maxcycles=80000,
+                                                                maxlength=100,
+                                                                mindistance=100,
+                                                                standard=Corewar.STANDARD_88)
+
+        print "beginning end-of-era selection...",
+
+        pairings = range(1, len(warriors))
+        for i in range(len(warriors) - 1):
+                top = [0] + pairings[:(len(warriors) / 2) - 1]
+                bottom = pairings[len(top) - 1:][::-1]
+                for j in range(len(warriors) / 2):
+			for _ in range(ERA_COMP_ROUNDS):
+                        	top_score_delta, bottom_score_delta = run_games(warriors[top[j]][1], warriors[bottom[j]][1])
+                        	warriors[top[j]][2] += top_score_delta
+                        	warriors[bottom[j]][2] += bottom_score_delta
+                pairings.append(pairings.pop(0))
+
+	warriors = [[x[0], x[1], float(x[2]) / float(ERA_COMP_ROUNDS)] for x in warriors]
+
+        print
+        print
+        print "elimination results!"
+        print "--------------------"
+        print
+
+        warriors.sort(key=lambda x: x[2], reverse=True)
+        for w in warriors:
+                print "%s: %4d" % (w[0], w[2])
+
+        print
+
+        return warriors
 
 def era_gen(g, prev_gen):
 	global superwinners
-	os.mkdir(str(g))
 	i = 0
-	for s in random.sample(superwinners + prev_gen, CHILDREN_PER_GEN):
-		i += 1
-		with open(str(g) + "/" + str(i), "w") as f:
-			with open(s[0], "r") as source:
-				f.write(source.read())
+
+	potential_parents = era_comp(prev_gen)
+	gengen(g - 1, potential_parents)
+	superwinners = potential_parents[:CHILDREN_PER_GEN]
+
 	print "======================="
 	print "it's the end of an era!"
 	print "======================="
