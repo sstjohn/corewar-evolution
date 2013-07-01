@@ -6,7 +6,7 @@ pushed=1
 success=0
 rm core.*
 
-./evolve.py 20 10
+./evolve.py 30 10
 if [ 0 -eq $? ]; then
 	pushed=0
 	success=1
