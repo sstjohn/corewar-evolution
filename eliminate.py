@@ -63,6 +63,7 @@ def run_comp():
 		print e
 		sys.exit(1)
 
+	print "need to destroy %d more competitors" % (COMPETITORS_TO_ELIMINATE - competitors_destroyed)
 	print "beginning round-robin elimination...",
 
 	pairings = range(1, COMPETITORS_PER_TOURN)
