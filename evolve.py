@@ -58,7 +58,7 @@ def print_superwinners():
 	print "era average: %4.02f" % avg
 	print "era std dev: %4.02f" % std_dev
 	if 0 != std_dev:
-		print "era dev del: %4.02f" % ((superwinners[0][2] - avg) / std_dev) - ((superwinners[-1][2] - avg) / std_dev)
+		print "era dev del: %4.02f" % (((superwinners[0][2] - avg) / std_dev) - ((superwinners[-1][2] - avg) / std_dev))
 
 	print
 
@@ -360,7 +360,24 @@ def save_progenitors():
 	if PROGENITOR_DIR != None:
 		for w in superwinners:
 			sname = w[0]
-			dname = PROGENITOR_DIR + "/" + sname.replace("/","")
+			tmp_dname = PROGENITOR_DIR + "/" + sname.replace("/","")
+			dname = tmp_dname
+			ext="a"
+			while os.path.exists(dname):
+				dname = tmp_dname + ext
+				if ext[-1] == "z":
+					add_letters = 1
+					ext = ext[:-1]
+					while ext[-1] == "z":
+						add_letters += 1
+						ext = ext[:-1]
+					if len(ext) == 0:
+						ext = "a"
+					else:
+						ext = ext[:-1] + str(chr(ord(ext[-1])))
+					ext = ext + ("a" * add_letters)
+				else:
+					ext = ext[:-1] + str(chr(ord(ext[-1]) + 1))
 			with open(sname, "r") as s:
 				with open(dname, "w") as d:
 					d.write(s.read())
