@@ -45,9 +45,22 @@ SINGLE_GEN_INCEST_CHANCE = .05
 
 superwinners = None
 def print_superwinners():
+	avg = 0
 	print "\nsuperwinners!\n-------------\n"
 	for i in range(len(superwinners)):
 		print "%d - score: %f, fname %s" % (i, superwinners[i][2], superwinners[i][0])
+		avg += superwinners[i][2]
+
+	avg /= float(len(superwinners))
+	std_dev = (float(reduce(lambda x, y: x + y, map(lambda x: (float(x[2]) - avg) ** 2, superwinners))) / float(len(superwinners) - 1)) ** 0.5
+
+	print
+	print "era average: %4.02f" % avg
+	print "era std dev: %4.02f" % std_dev
+	if 0 != std_dev:
+		print "era dev del: %4.02f" % ((superwinners[0][2] - avg) / std_dev) - ((superwinners[-1][2] - avg) / std_dev)
+
+	print
 
 def get_mutator():
 	return random.choice([flip_mutator, swap_mutator, dupedrop_mutator, irev_mutator, dupe_mutator, drop_mutator])
