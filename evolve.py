@@ -21,15 +21,15 @@ INSTRUCTIONS =		 {"DAT": [["#", "<"], ["#", "<"]],
 			  "DJN": [["$", "@", "<"], ["$", "#", "@", "<"]],
 			  "SPL": [["$", "@", "<"], ["$", "#", "@", "<"]]}
 
-ROUNDS_PER_GAME=1
-ERA_COMP_ROUNDS = 2
+ROUNDS_PER_GAME=3
+ERA_COMP_ROUNDS = 4
 MUTATION_CHANCE = .1
 CHILDREN_PER_GEN = 16
 ADAM_FILE = "dat"
 EVE_FILE = "dat"
 SPLICE_MECH_ONE_PROB = .4
 DIGIT_MUNGE_PROB = (1.5 / 14.0)
-INTERERA_SW_AGE_PENALTY = 0.05
+INTERERA_SW_AGE_PENALTY = 0
 RADIATION_THRESH = 3.5
 MIN_REPRODUCTIVE_STDDEV = -.5
 MAX_RADIATION_MUTATION_PROB = .85
@@ -37,9 +37,9 @@ EXTINCTION_LEVEL_RADIATION_THRESHOLD = .9
 EXTINCTION_LEVEL_RADIATION_ROUNDS = 10
 PROGENITOR_DIR = "winners"
 DUPEDROP_MUTATOR_PROB = 0.25
-WINNING_MULTIPLIER = 1
+WINNING_MULTIPLIER = 7
 LOSS_PENALTY = 0
-TIE_SCORE = 0
+TIE_SCORE = 2
 SCORING_EXP = 2
 SINGLE_GEN_INCEST_CHANCE = .05
 
@@ -330,13 +330,13 @@ def rungen(gen):
 	for i in range(CHILDREN_PER_GEN - 1):
 		for j in range(CHILDREN_PER_GEN):
 			child_score, sw_score = run_games(warriors[j][1], superwinners[j][1])
-            warriors[j][2] += child_score
+			warriors[j][2] += child_score
 			sw_scores[j] += sw_score
 		warriors.append(warriors.pop(0))
 
-    sw_scores = zip(range(1, CHILDREN_PER_GEN + 1), sw_scores)
+	sw_scores = zip([x[0] for x in superwinners], sw_scores)
 
-    sw_scores.sort(key=lambda x: x[1], reverse=True)
+	sw_scores.sort(key=lambda x: x[1], reverse=True)
 
 	warriors.sort(key=lambda x: x[2], reverse=True)
 
@@ -344,9 +344,11 @@ def rungen(gen):
 	superwinners.sort(key=lambda x: x[2], reverse=True)
 	superwinners = superwinners[:CHILDREN_PER_GEN]
 
-	print "gen %d warriors:" % gen
+	print "gen %d:" % gen
+	print "\twarriors\t\telite"
+	print "\t=======\t\t\t====="
 	for (x, sw) in zip(warriors, sw_scores):
-		print "\t%s: %4.2f (vs %4.2f)" % (x[0].split("/")[1], x[2], sw)
+		print "\t%s:\t%3.02f\t\t%s:\t%3.02f" % (x[0], x[2], sw[0], sw[1])
 	print
 	
 	return warriors
