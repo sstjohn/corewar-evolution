@@ -21,7 +21,7 @@ INSTRUCTIONS =		 {"DAT": [["#", "<"], ["#", "<"]],
 			  "DJN": [["$", "@", "<"], ["$", "#", "@", "<"]],
 			  "SPL": [["$", "@", "<"], ["$", "#", "@", "<"]]}
 
-ROUNDS_PER_GAME=3		
+ROUNDS_PER_GAME=1
 ERA_COMP_ROUNDS = 2
 MUTATION_CHANCE = .1
 CHILDREN_PER_GEN = 16
@@ -37,9 +37,9 @@ EXTINCTION_LEVEL_RADIATION_THRESHOLD = .9
 EXTINCTION_LEVEL_RADIATION_ROUNDS = 10
 PROGENITOR_DIR = "winners"
 DUPEDROP_MUTATOR_PROB = 0.25
-WINNING_MULTIPLIER = 10
+WINNING_MULTIPLIER = 1
 LOSS_PENALTY = 0
-TIE_SCORE = 1
+TIE_SCORE = 0
 SCORING_EXP = 2
 SINGLE_GEN_INCEST_CHANCE = .05
 
@@ -184,18 +184,18 @@ def swap_mutator(dna):
 	return new_dna
 
 def segrev_mutator(dna):
-    inst_cnt = len(dna) / 14
-    if inst_cnt < 5:
-        return swap_mutator(irev_mutator(dna))
-    
-    seg_len = (inst_cnt / 3)
-    seg_offset = random.randint(0, inst_cnt - seg_len)
+	inst_cnt = len(dna) / 14
+	if inst_cnt < 5:
+		return swap_mutator(irev_mutator(dna))
+	
+	seg_len = (inst_cnt / 3)
+	seg_offset = random.randint(0, inst_cnt - seg_len)
 
-    new_dna = dna[:(seg_offset * 14)]
-    new_dna += dna[(seg_offset + seg_len) * 14:seg_offset * 14:-1]
-    new_dna += dna[(seg_offset + seg_len) * 14:]
+	new_dna = dna[:(seg_offset * 14)]
+	new_dna += dna[(seg_offset + seg_len) * 14:seg_offset * 14:-1]
+	new_dna += dna[(seg_offset + seg_len) * 14:]
 
-    return new_dna
+	return new_dna
 
 def flip_mutator(dna):
 	strpos = random.randint(0, (len(dna) / 14) - 1)
@@ -266,7 +266,7 @@ def report(scores):
 
 def score_pick(scores, exclude_ind = None):
 	avg = float(reduce(lambda x, y: x + y, map(lambda x: x[2], scores))) / float(len(scores))
-        std_dev = (float(reduce(lambda x, y: x + y, map(lambda x: (float(x[2]) - avg) ** 2, scores))) / float(len(scores) - 1)) ** 0.5
+	std_dev = (float(reduce(lambda x, y: x + y, map(lambda x: (float(x[2]) - avg) ** 2, scores))) / float(len(scores) - 1)) ** 0.5
 	
 	if std_dev != 0:
 		rel_scores = map(lambda x: float(max(0.0, ((float(x[2]) - avg) / std_dev) - MIN_REPRODUCTIVE_STDDEV) ** SCORING_EXP if exclude_ind == None or scores[exclude_ind] != x else 0.0), scores)
@@ -289,7 +289,7 @@ def gengen(lastgen, scores):
 	os.mkdir(nextgen)
 
 	avg = float(reduce(lambda x, y: x + y, map(lambda x: x[2], scores))) / float(len(scores))
-        std_dev = (float(reduce(lambda x, y: x + y, map(lambda x: (float(x[2]) - avg) ** 2, scores))) / float(len(scores) - 1)) ** 0.5
+	std_dev = (float(reduce(lambda x, y: x + y, map(lambda x: (float(x[2]) - avg) ** 2, scores))) / float(len(scores) - 1)) ** 0.5
 
 	if std_dev != 0:
 		win_loss_dev = float(scores[0][2] - scores[-1][2]) / std_dev
@@ -324,11 +324,19 @@ def rungen(gen):
 
 	if superwinners == None:
 		superwinners = warriors
+
+	sw_scores = [0] * CHILDREN_PER_GEN
+
 	for i in range(CHILDREN_PER_GEN - 1):
 		for j in range(CHILDREN_PER_GEN):
 			child_score, sw_score = run_games(warriors[j][1], superwinners[j][1])
-			warriors[j][2] += child_score
+            warriors[j][2] += child_score
+			sw_scores[j] += sw_score
 		warriors.append(warriors.pop(0))
+
+    sw_scores = zip(range(1, CHILDREN_PER_GEN + 1), sw_scores)
+
+    sw_scores.sort(key=lambda x: x[1], reverse=True)
 
 	warriors.sort(key=lambda x: x[2], reverse=True)
 
@@ -336,10 +344,9 @@ def rungen(gen):
 	superwinners.sort(key=lambda x: x[2], reverse=True)
 	superwinners = superwinners[:CHILDREN_PER_GEN]
 
-	winners = warriors
-	print "gen %d winners:" % gen
-	for x in winners:
-		print "\t%s: %4.2f " % (x[0].split("/")[1], x[2])
+	print "gen %d warriors:" % gen
+	for (x, sw) in zip(warriors, sw_scores):
+		print "\t%s: %4.2f (vs %4.2f)" % (x[0].split("/")[1], x[2], sw)
 	print
 	
 	return warriors
@@ -432,44 +439,41 @@ def initial_setup():
 			f.write(child_r)
 def era_comp(winners):
 	global supperwinners
-
 	warriors = [[x[0], x[1], 0] for x in (winners + superwinners)]
+	parser = Corewar.Parser(coresize=8000,
+								maxprocesses=8000,
+								maxcycles=80000,
+								maxlength=100,
+								mindistance=100,
+								standard=Corewar.STANDARD_88)
+	print "beginning end-of-era selection...",
 
-        parser = Corewar.Parser(coresize=8000,
-                                                                maxprocesses=8000,
-                                                                maxcycles=80000,
-                                                                maxlength=100,
-                                                                mindistance=100,
-                                                                standard=Corewar.STANDARD_88)
-
-        print "beginning end-of-era selection...",
-
-        pairings = range(1, len(warriors))
-        for i in range(len(warriors) - 1):
-                top = [0] + pairings[:(len(warriors) / 2) - 1]
-                bottom = pairings[len(top) - 1:][::-1]
-                for j in range(len(warriors) / 2):
+	pairings = range(1, len(warriors))
+	for i in range(len(warriors) - 1):
+		top = [0] + pairings[:(len(warriors) / 2) - 1]
+		bottom = pairings[len(top) - 1:][::-1]
+		for j in range(len(warriors) / 2):
 			for _ in range(ERA_COMP_ROUNDS):
-                        	top_score_delta, bottom_score_delta = run_games(warriors[top[j]][1], warriors[bottom[j]][1])
-                        	warriors[top[j]][2] += top_score_delta
-                        	warriors[bottom[j]][2] += bottom_score_delta
-                pairings.append(pairings.pop(0))
+				top_score_delta, bottom_score_delta = run_games(warriors[top[j]][1], warriors[bottom[j]][1])
+				warriors[top[j]][2] += top_score_delta
+				warriors[bottom[j]][2] += bottom_score_delta
+		pairings.append(pairings.pop(0))
 
 	warriors = [[x[0], x[1], float(x[2]) / (2 * float(ERA_COMP_ROUNDS))] for x in warriors]
 
-        print
-        print
-        print "selection results!"
-        print "--------------------"
-        print
+	print
+	print
+	print "selection results!"
+	print "--------------------"
+	print
 
-        warriors.sort(key=lambda x: x[2], reverse=True)
-        for w in warriors:
-                print "%s: %4d" % (w[0], w[2])
+	warriors.sort(key=lambda x: x[2], reverse=True)
+	for w in warriors:
+			print "%s: %4d" % (w[0], w[2])
 
-        print
+	print
 
-        return warriors
+	return warriors
 
 def era_gen(g, prev_gen):
 	global superwinners
@@ -490,6 +494,7 @@ if __name__ == "__main__":
 		generations_to_run = int(sys.argv[1])
 	else:
 		generations_to_run = 10
+	
 	if len(sys.argv) > 2:
 		eras = int(sys.argv[2])
 	else:
