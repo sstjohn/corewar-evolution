@@ -48,7 +48,7 @@ if [ $success -eq 1 ]; then
 		git pull -X theirs
 	fi
 fi
-if [ ! -x .stopnow ] && [ "$0" != "./run_once.sh" ]; then
+if [ ! -f .stopnow ] && [ "$0" != "./run_once.sh" ]; then
 	exec $0
 fi
 if [ $pushed -eq 0 ]; then

@@ -43,22 +43,22 @@ TIE_SCORE = 2
 SCORING_EXP = 2
 SINGLE_GEN_INCEST_CHANCE = .05
 
-superwinners = None
-def print_superwinners():
+elites = None
+def print_elites():
 	avg = 0
-	print "\nsuperwinners!\n-------------\n"
-	for i in range(len(superwinners)):
-		print "%d - score: %f, fname %s" % (i, superwinners[i][2], superwinners[i][0])
-		avg += superwinners[i][2]
+	print "\nelites!\n-------------\n"
+	for i in range(len(elites)):
+		print "%d - score: %f, fname %s" % (i, elites[i][2], elites[i][0])
+		avg += elites[i][2]
 
-	avg /= float(len(superwinners))
-	std_dev = (float(reduce(lambda x, y: x + y, map(lambda x: (float(x[2]) - avg) ** 2, superwinners))) / float(len(superwinners) - 1)) ** 0.5
+	avg /= float(len(elites))
+	std_dev = (float(reduce(lambda x, y: x + y, map(lambda x: (float(x[2]) - avg) ** 2, elites))) / float(len(elites) - 1)) ** 0.5
 
 	print
 	print "era average: %4.02f" % avg
 	print "era std dev: %4.02f" % std_dev
 	if 0 != std_dev:
-		print "era dev del: %4.02f" % (((superwinners[0][2] - avg) / std_dev) - ((superwinners[-1][2] - avg) / std_dev))
+		print "era dev del: %4.02f" % (((elites[0][2] - avg) / std_dev) - ((elites[-1][2] - avg) / std_dev))
 
 	print
 
@@ -317,38 +317,50 @@ def gengen(lastgen, scores):
 
 
 def rungen(gen):
-	global superwinners
+	global elites
 	
 	warriors = [[str(gen) + "/" + str(x + 1), warrior_load(str(gen) + "/" + str(x + 1)), 0]
 			for x in range(CHILDREN_PER_GEN)]
 
-	if superwinners == None:
-		superwinners = warriors
+	if elites == None:
+		elites = warriors
+	else:
+		elites = [[x[0], x[1], 0] for x in elites]
 
-	sw_scores = [0] * CHILDREN_PER_GEN
 
 	for i in range(CHILDREN_PER_GEN - 1):
 		for j in range(CHILDREN_PER_GEN):
-			child_score, sw_score = run_games(warriors[j][1], superwinners[j][1])
+			child_score, sw_score = run_games(warriors[j][1], elites[j][1])
 			warriors[j][2] += child_score
-			sw_scores[j] += sw_score
+			elites[j][2] += sw_score
 		warriors.append(warriors.pop(0))
 
-	sw_scores = zip([x[0] for x in superwinners], sw_scores)
+	pairings = range(1, CHILDREN_PER_GEN)
+        for i in range((CHILDREN_PER_GEN - 1)):
+                top = [0] + pairings[:(CHILDREN_PER_GEN / 2) - 1]
+                bottom = pairings[len(top) - 1:][::-1]
+                for j in range(CHILDREN_PER_GEN / 2):
+                        top_score_delta, bottom_score_delta = run_games(warriors[top[j]][1], warriors[bottom[j]][1])
+                        warriors[top[j]][2] += top_score_delta
+                        warriors[bottom[j]][2] += bottom_score_delta
+			top_score_delta, botton_score_delta = run_games(elites[top[j]][1], elites[bottom[j]][1])
+			elites[top[j]][2] += top_score_delta
+			elites[bottom[j]][2] += bottom_score_delta
+                pairings.append(pairings.pop(0))
 
-	sw_scores.sort(key=lambda x: x[1], reverse=True)
+	elites.sort(key=lambda x: x[2], reverse=True)
 
 	warriors.sort(key=lambda x: x[2], reverse=True)
 
-	superwinners = warriors + superwinners
-	superwinners.sort(key=lambda x: x[2], reverse=True)
-	superwinners = superwinners[:CHILDREN_PER_GEN]
+	elites = warriors + elites
+	elites.sort(key=lambda x: x[2], reverse=True)
+	elites = elites[:CHILDREN_PER_GEN]
 
 	print "gen %d:" % gen
 	print "\twarriors\t\telite"
 	print "\t=======\t\t\t====="
-	for (x, sw) in zip(warriors, sw_scores):
-		print "\t%s:\t%3.02f\t\t%s:\t%3.02f" % (x[0], x[2], sw[0], sw[1])
+	for (x, sw) in zip(warriors, elites):
+		print "\t%s:\t%3.02f\t\t%s:\t%3.02f" % (x[0], x[2], sw[0], sw[2])
 	print
 	
 	return warriors
@@ -379,10 +391,10 @@ def run_games(left, right):
 
 
 def save_progenitors():
-	global superwinners
+	global elites
 	os.system("git pull --no-edit -X theirs")
 	if PROGENITOR_DIR != None:
-		for w in superwinners:
+		for w in elites:
 			sname = w[0]
 			tmp_dname = PROGENITOR_DIR + "/" + sname.replace("/","")
 			dname = tmp_dname
@@ -441,7 +453,7 @@ def initial_setup():
 			f.write(child_r)
 def era_comp(winners):
 	global supperwinners
-	warriors = [[x[0], x[1], 0] for x in (winners + superwinners)]
+	warriors = [[x[0], x[1], 0] for x in (winners + elites)]
 	parser = Corewar.Parser(coresize=8000,
 								maxprocesses=8000,
 								maxcycles=80000,
@@ -478,18 +490,18 @@ def era_comp(winners):
 	return warriors
 
 def era_gen(g, prev_gen):
-	global superwinners
+	global elites
 	i = 0
 
 	potential_parents = era_comp(prev_gen)
 	gengen(g - 1, potential_parents)
-	superwinners = potential_parents[:CHILDREN_PER_GEN]
+	elites = potential_parents[:CHILDREN_PER_GEN]
 
 	print "======================="
 	print "it's the end of an era!"
 	print "======================="
 	print
-	print_superwinners()
+	print_elites()
 
 if __name__ == "__main__":
 	if len(sys.argv) > 1:
@@ -524,4 +536,4 @@ if __name__ == "__main__":
 
 	save_progenitors()
 
-	print_superwinners()
+	print_elites()
