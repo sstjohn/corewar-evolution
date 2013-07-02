@@ -42,7 +42,7 @@ LOSS_PENALTY = 0
 TIE_SCORE = 1
 SCORING_EXP = 2
 SINGLE_GEN_INCEST_CHANCE = .05
-
+TEM
 superwinners = None
 def print_superwinners():
 	avg = 0
@@ -63,7 +63,7 @@ def print_superwinners():
 	print
 
 def get_mutator():
-	return random.choice([flip_mutator, swap_mutator, dupedrop_mutator, irev_mutator, dupe_mutator, drop_mutator])
+	return random.choice([flip_mutator, swap_mutator, dupedrop_mutator, irev_mutator, dupe_mutator, drop_mutator, segrev_mutator])
 
 def line_parse(i):
 	parts = i.replace(",", " ").split()
@@ -182,6 +182,20 @@ def swap_mutator(dna):
 	new_dna += dna[choices[0] * 14:(choices[0] + 1) * 14]
 	new_dna += dna[(choices[1] + 1) * 14:]
 	return new_dna
+
+def segrev_mutator(dna):
+    inst_cnt = len(dna) / 14
+    if inst_cnt < 5:
+        return swap_mutator(irev_mutator(dna))
+    
+    seg_len = (inst_cnt / 3)
+    seg_offset = random.randint(0, inst_cnt - seg_len)
+
+    new_dna = dna[:(seg_offset * 14)]
+    new_dna += dna[(seg_offset + seg_len) * 14:seg_offset * 14:-1]
+    new_dna += dna[(seg_offset + seg_len) * 14:]
+
+    return new_dna
 
 def flip_mutator(dna):
 	strpos = random.randint(0, (len(dna) / 14) - 1)
