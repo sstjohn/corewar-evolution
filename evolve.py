@@ -30,10 +30,10 @@ EVE_FILE = "dat"
 SPLICE_MECH_ONE_PROB = .4
 DIGIT_MUNGE_PROB = (1.5 / 14.0)
 INTERERA_SW_AGE_PENALTY = 0
-RADIATION_THRESH = 3.5
+RADIATION_THRESH = 4
 MIN_REPRODUCTIVE_STDDEV = -.5
 MAX_RADIATION_MUTATION_PROB = .85
-EXTINCTION_LEVEL_RADIATION_THRESHOLD = .9
+EXTINCTION_LEVEL_RADIATION_THRESHOLD = 1
 EXTINCTION_LEVEL_RADIATION_ROUNDS = 10
 PROGENITOR_DIR = "winners"
 DUPEDROP_MUTATOR_PROB = 0.25
@@ -299,7 +299,7 @@ def gengen(lastgen, scores):
 	print "deviation spread is %2.04f" % win_loss_dev
 
 	if win_loss_dev < RADIATION_THRESH:
-		radiation = 1.0 - float(win_loss_dev / RADIATION_THRESH)
+		radiation = float((RADIATION_THRESH - win_loss_dev) / RADIATION_THRESH)
 		print "radiation now at %f" % radiation
 	else:
 		radiation = 0
