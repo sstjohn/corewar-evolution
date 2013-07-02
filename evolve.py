@@ -42,7 +42,7 @@ LOSS_PENALTY = 0
 TIE_SCORE = 1
 SCORING_EXP = 2
 SINGLE_GEN_INCEST_CHANCE = .05
-TEM
+
 superwinners = None
 def print_superwinners():
 	avg = 0
