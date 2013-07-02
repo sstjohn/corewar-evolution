@@ -42,6 +42,7 @@ LOSS_PENALTY = 0
 TIE_SCORE = 2
 SCORING_EXP = 2
 SINGLE_GEN_INCEST_CHANCE = .05
+CLONE_CHANCE = .05
 
 elites = None
 def print_elites():
@@ -247,7 +248,11 @@ def dupe_mutator(dna):
 	return new_dna
 
 def evolve(a, b, radiation = 0):
-	child_l, child_r = spawn(a, b)
+	if random.random() > CLONE_CHANCE:
+		child_l, child_r = spawn(a, b)
+	else:
+		child_l = a
+		child_r = b
 	if random.random() <= (MUTATION_CHANCE + (radiation  * MAX_RADIATION_MUTATION_PROB)):
 		child_l = get_mutator()(child_l)
 	if random.random() <= (MUTATION_CHANCE + (radiation  * MAX_RADIATION_MUTATION_PROB)):
