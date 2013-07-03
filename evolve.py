@@ -440,7 +440,7 @@ def save_progenitors():
 					if len(ext) == 0:
 						ext = "a"
 					else:
-						ext = ext[:-1] + str(chr(ord(ext[-1])))
+						ext = ext[:-1] + str(chr(ord(ext[-1]) + 1))
 					ext = ext + ("a" * add_letters)
 				else:
 					ext = ext[:-1] + str(chr(ord(ext[-1]) + 1))
@@ -449,7 +449,11 @@ def save_progenitors():
 					d.write(s.read())
 
 def initial_setup():
-	os.mkdir("0")
+	try:
+		os.mkdir("0")
+	except:
+		print "Initial setup already completed. Moving on..."
+		return
 	adam = None
 	progenitor_options = None
 	if PROGENITOR_DIR != None:
@@ -550,20 +554,29 @@ if __name__ == "__main__":
 	for e in range(eras):
 		radioactive_rounds = 0
 		if e > 0:
-			era_gen(e * generations_to_run, prev_gen_winners)
-			prev_gen_winners = []
+			try:
+				era_gen(e * generations_to_run, prev_gen_winners)
+				prev_gen_winners = []
+			except:
+				print "Era %d already generated. Moving on..." % e
 		for i in range(generations_to_run):
+			if os.path.exists(str(generations_to_run * e + i + 1)):
+				print "Future generation %d already exists. Moving on..." % (generations_to_run * e + i + 1)
+				continue
 			winners = rungen(generations_to_run * e + i)
 			prev_gen_winners = winners
 			if (i + 1) != generations_to_run:
-				cur_rad = gengen(generations_to_run * e + i, winners)
-				if cur_rad > EXTINCTION_LEVEL_RADIATION_THRESHOLD:
-					radioactive_rounds += 1
-				elif radioactive_rounds > 0 and cur_rad < (EXTINCTION_LEVEL_RADIATION_THRESHOLD / 2.0):
-						radioactive_rounds -= 1
-			if radioactive_rounds == EXTINCTION_LEVEL_RADIATION_ROUNDS:
-				print "Extinction level event! Begining next era!"
-				break
+				try:
+					cur_rad = gengen(generations_to_run * e + i, winners)
+					if cur_rad > EXTINCTION_LEVEL_RADIATION_THRESHOLD:
+						radioactive_rounds += 1
+					elif radioactive_rounds > 0 and cur_rad < (EXTINCTION_LEVEL_RADIATION_THRESHOLD / 2.0):
+							radioactive_rounds -= 1
+					if radioactive_rounds == EXTINCTION_LEVEL_RADIATION_ROUNDS:
+						print "Extinction level event! Begining next era!"
+						break
+				except:
+					print "Generation %d already completed. Moving on..." % int(generations_to_run) * int(e) + int(i)
 
 	save_progenitors()
 
