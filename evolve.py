@@ -347,9 +347,9 @@ def rungen(gen):
 		for j in range(CHILDREN_PER_GEN):
 			child_res, e_res = run_games(warriors[j][1], elites[j][1])
 			warriors[j][2] += child_res[0]
-			warriors[j][3] += child_res[1]
+			warriors[j][3] += child_res[1] + child_res[0] + child_res[2]
 			elites[j][2] += e_res[0]
-			elites[j][3] += e_res[1]
+			elites[j][3] += e_res[1] + e_res[0] + e_res[2]
 			
 		warriors.append(warriors.pop(0))
 
@@ -360,14 +360,14 @@ def rungen(gen):
                 for j in range(CHILDREN_PER_GEN / 2):
                         top_res, bottom_res = run_games(warriors[top[j]][1], warriors[bottom[j]][1])
                         warriors[top[j]][2] += top_res[0]
-			warriors[top[j]][3] += top_res[1]
+			warriors[top[j]][3] += top_res[0] + top_res[1] + top_res[2]
                         warriors[bottom[j]][2] += bottom_res[0]
-			warriors[bottom[j]][3] += bottom_res[1]
+			warriors[bottom[j]][3] += bottom_res[1] + bottom_res[1] + bottom_res[2]
 			top_res, botton_res = run_games(elites[top[j]][1], elites[bottom[j]][1])
 			elites[top[j]][2] += top_res[0]
-			elites[top[j]][3] += top_res[1]
+			elites[top[j]][3] += top_res[1] + top_res[0] + top_res[2]
 			elites[bottom[j]][2] += bottom_res[0]
-			elites[bottom[j]][3] += bottom_res[1]
+			elites[bottom[j]][3] += bottom_res[1] + bottom_res[0] + bottom_res[2]
                 pairings.append(pairings.pop(0))
 
 	elites = [[x[0], x[1], float(x[2]) / float(x[3])] for x in elites]
