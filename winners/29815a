@@ -1,0 +1,7 @@
+;redcode
+;assert 1
+	DAT #-1, <-511
+	MOV #131, 103
+	DAT #-1, <-11
+	JMN @13, #166
+	MOV 310, 30
