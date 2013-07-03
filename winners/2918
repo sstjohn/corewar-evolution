@@ -1,5 +1,0 @@
-;redcode
-;assert 1
-	SLT 127, 520
-	SLT 127, 520
-	ADD 24, @10
