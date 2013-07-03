@@ -1,7 +1,0 @@
-;redcode
-;assert 1
-	SPL 131, <200
-	SPL 131, <200
-	SPL 131, <200
-	SPL 151, 200
-	SPL 131, <200
