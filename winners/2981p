@@ -16,9 +16,29 @@
 	SUB @1, <4
 	JMP 123, @30
 	SUB @1, <4
+	SUB @1, <4
+	MOV 12, 7
+	DJN -1, #-12
+	JMZ 21, 60
+	DJN -1, #-12
 	SUB 0, 3
 	DJN -1, #-12
+	SUB 0, 3
+	JMZ 21, 20
+	JMP 123, @30
+	JMZ 21, 60
 	DJN -1, #-12
 	SUB 0, 3
 	DJN -1, #-12
 	SUB 0, 3
+	JMZ 21, 20
+	JMP 123, @30
+	ADD #111, 103
+	SUB <23, <-5
+	SUB @1, <4
+	DJN -1, #-12
+	SUB @1, <4
+	MOV 12, 7
+	DJN -1, #-12
+	MOV 12, 7
+	DJN -1, #-12
