@@ -380,7 +380,7 @@ def rungen(gen):
 	print "\twarriors\t\telite"
 	print "\t=======\t\t\t====="
 	for (x, sw) in zip(warriors, elites):
-		print "\t%s:\t%3.02f\t\t%s:\t%3.02f" % (x[0], x[2], sw[0], sw[2])
+		print "\t%s:\t%09.02f\t%s:\t%09.02f" % (x[0], x[2], sw[0], sw[2])
 	print
 	
 	elites = warriors + elites
@@ -409,14 +409,14 @@ def run_games(left, right):
 		for i in range(ROUNDS_PER_GAME):
 			tmp = mars.run((l, r), rounds = 1, seed = int(ceil(((2 ** 31) - 101) * random.random() + 100)))
 			l_results[0] += (float(tmp[0][0]) + float(tmp[0][1]) * .5) * float(tmp[2])
-			l_results[1] += (float(tmp[0][0]) + float(tmp[0][2]) + float(tmp[0][1])) * float(tmp[2])
+			l_results[1] += (float(tmp[0][2])  * .5 + float(tmp[0][1]))
 			r_results[0] += (float(tmp[1][0]) + float(tmp[1][1]) * .5) * float(tmp[2])
-			r_results[1] += (float(tmp[1][0]) + float(tmp[1][2]) + float(tmp[1][1])) * float(tmp[2])
+			r_results[1] += float(tmp[1][2]) * .5 + float(tmp[1][1])
 			tmp = mars.run((r, l), rounds = 1, seed = int(ceil(((2 ** 31) - 101) * random.random() + 100)))
 			l_results[0] += (float(tmp[0][0]) + float(tmp[0][1]) * .5) * float(tmp[2])
-			l_results[1] += (float(tmp[0][0]) + float(tmp[0][2]) + float(tmp[0][1])) * float(tmp[2])
+			l_results[1] += (float(tmp[0][2])  * .5 + float(tmp[0][1]))
 			r_results[0] += (float(tmp[1][0]) + float(tmp[1][1]) * .5) * float(tmp[2])
-			r_results[1] += (float(tmp[1][0]) + float(tmp[1][2]) + float(tmp[1][1])) * float(tmp[2])
+			r_results[1] += float(tmp[1][2]) * .5 + float(tmp[1][1])
 		return l_results, r_results
 
 
