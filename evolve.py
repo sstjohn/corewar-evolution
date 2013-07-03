@@ -421,7 +421,7 @@ def save_progenitors():
 				if ext[-1] == "z":
 					add_letters = 1
 					ext = ext[:-1]
-					while ext[-1] == "z":
+					while len(ext) > 0 and ext[-1] == "z":
 						add_letters += 1
 						ext = ext[:-1]
 					if len(ext) == 0:
