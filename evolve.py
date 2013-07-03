@@ -482,8 +482,7 @@ def initial_setup():
 		with open(fname_r, "w") as f:
 			f.write(child_r)
 def era_comp(winners):
-	global supperwinners
-	warriors = [[x[0], x[1], 0] for x in (winners + elites)]
+	warriors = [[x[0], x[1], 0, 0] for x in (winners + elites)]
 	parser = Corewar.Parser(coresize=8000,
 								maxprocesses=8000,
 								maxcycles=80000,
@@ -499,11 +498,13 @@ def era_comp(winners):
 		for j in range(len(warriors) / 2):
 			for _ in range(ERA_COMP_ROUNDS):
 				top_score_delta, bottom_score_delta = run_games(warriors[top[j]][1], warriors[bottom[j]][1])
-				warriors[top[j]][2] += top_score_delta[0]
+				warriors[top[j]][2] += top_score_delta[0] 
+				warriors[top[j]][3] += top_score_delta[1]
 				warriors[bottom[j]][2] += bottom_score_delta[0]
+				warriors[bottom[j]][3] += bottom_score_delta[1]
 		pairings.append(pairings.pop(0))
 
-	warriors = [[x[0], x[1], float(x[2]) / (2 * float(ERA_COMP_ROUNDS))] for x in warriors]
+	warriors = [[x[0], x[1], float(x[2]) / float(x[3])] for x in warriors]
 
 	print
 	print
