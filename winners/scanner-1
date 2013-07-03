@@ -1,0 +1,11 @@
+;redcode
+;assert 1
+ADD #1226, $3
+JMZ $-1, @2
+MOV $5, @1
+MOV $2, <0
+JMN $-4, $-4
+SPL $0, $0
+MOV @10, <-1
+JMP $-1, $0
+
