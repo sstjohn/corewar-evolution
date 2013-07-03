@@ -1,0 +1,7 @@
+;redcode
+;assert 1
+	SUB 3, @260
+	SUB @121, 106
+	SUB @121, 106
+	SUB @121, 106
+	SUB @121, 106

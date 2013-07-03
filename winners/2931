@@ -1,4 +1,4 @@
 ;redcode
 ;assert 1
-	ADD 210, 60
+	JMN 12, 180
 	ADD 210, 60
