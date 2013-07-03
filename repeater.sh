@@ -28,10 +28,14 @@ else
 fi
 rm -rf `seq 0 10000`
 if [ $success -eq 1 ]; then
-	./eliminate.py && (./check_compressibility.sh | tee compress)
+	./eliminate.py 
 	if [ 0 -eq $? ]; then
 		pushed=0
-		git add compress
+		if (./check_compressibility.sh | tee compress); then
+			git add compress
+		else
+			git checkout compress
+		fi
 		git add -u winners
 		git commit -m "removing losers"
 		git pull -X theirs
