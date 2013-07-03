@@ -1,0 +1,9 @@
+;redcode
+;assert 1
+	ADD #26, 3
+	JMZ -1, @2
+	ADD #26, 3
+	DAT #0, #0
+	DAT #0, #0
+	DAT #0, #0
+	JMZ -1, @2
