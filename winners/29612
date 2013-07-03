@@ -1,7 +1,0 @@
-;redcode
-;assert 1
-	ADD -12, 408
-	DJN 0, 70
-	DJN 0, 70
-	ADD -12, 408
-	ADD -12, 408
