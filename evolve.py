@@ -503,8 +503,6 @@ def era_comp(winners):
 				warriors[bottom[j]][2] += bottom_score_delta[0]
 		pairings.append(pairings.pop(0))
 
-	warriors = [[x[0], x[1], float(x[2]) / (2 * float(ERA_COMP_ROUNDS))] for x in warriors]
-
 	print
 	print
 	print "selection results!"
