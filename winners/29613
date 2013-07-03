@@ -1,6 +1,0 @@
-;redcode
-;assert 1
-	DJN @21, 20
-	SUB 0, 3
-	ADD -12, 408
-	ADD -12, 408
