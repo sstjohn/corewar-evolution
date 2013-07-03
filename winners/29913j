@@ -1,65 +1,76 @@
 ;redcode
 ;assert 1
+	SUB @10, @6
+	DJN -1, <-141
+	SUB @121, 106
+	MOV 10, @20
+	MOV 10, @20
+	MOV 10, @-20
+	SUB @10, @6
+	JMZ 123, @-106
+	MOV 10, @20
 	MOV 270, 60
-	DJN -1, <-141
-	SUB @121, 106
-	DJN -1, <-141
-	MOV 10, @2
+	SUB @10, @6
+	SUB @0, @6
+	SUB @0, @6
+	JMZ 123, @-106
 	MOV 10, @20
-	SUB @0, @6
-	DJN -1, #-16
-	SUB 0, 0
 	SUB @10, @6
-	SUB 0, 0
+	DJN -1, <-16
+	JMP 101, 200
+	JMZ 123, @-106
+	JMP 101, 200
 	SUB @0, @6
-	SUB @0, @6
-	SUB @0, @6
-	DJN -1, #-16
-	SUB @0, @6
-	SUB 0, 0
-	SUB @0, @6
+	JMZ 123, @-106
+	MOV 10, @-20
+	MOV 270, 60
+	JMP 101, 20
 	SUB @10, @6
-	SUB @10, @6
-	SUB @0, @6
-	SUB @0, @6
-	DJN -1, #-16
-	SUB 0, 0
-	MOV 450, @24
-	SUB @10, @6
-	SUB 0, 0
-	SUB @0, @6
-	SUB @0, @6
-	SUB @0, @6
-	DJN -1, #-16
-	SUB @0, @6
-	SUB 0, 0
-	SUB @0, @6
+	DJN -1, <-16
+	JMP 101, 20
+	JMP 101, 200
 	MOV 10, @20
-	MOV 450, @24
-	MOV 450, @24
-	JMP -100, 200
+	ADD 101, 60
 	MOV 10, @20
-	SUB @0, @6
-	SUB @0, @6
+	SUB @10, @6
+	SUB @10, @6
+	SUB @10, @6
+	DJN -1, <-16
+	MOV 10, @20
+	MOV #131, 103
+	MOV 10, @20
+	JMZ 123, @-106
+	JMP 101, 200
+	MOV 10, @20
+	ADD 101, 60
 	SUB @10, @6
 	SUB @0, @6
 	SUB @0, @6
-	SUB @0, @6
-	SUB @0, @6
+	JMZ 123, @-106
 	MOV 10, @20
-	DJN -1, <-141
-	SUB @121, 106
-	DJN -1, <-141
-	MOV 10, @2
-	MOV 10, @20
-	SUB @0, @6
-	SUB @0, @6
-	DJN -1, #-16
 	SUB @10, @6
-	MOV #111, 103
-	MOV #111, 103
+	DJN -1, <-16
+	JMP 101, 200
+	MOV 10, @20
+	MOV -123, <-1
 	MOV 10, 20
+	MOV 10, @20
 	SUB @0, @6
+	SUB 0, -5
+	SUB 0, -5
+	SUB @10, @6
+	SUB 1, -5
+	MOV #131, 103
+	SUB 1, -5
 	SUB @0, @6
-	SUB 0, 0
+	MOV 270, 60
+	SUB @10, @6
+	MOV 7, <60
 	SUB @0, @6
+	JMZ 123, @-106
+	MOV 10, @-20
+	MOV 270, 60
+	JMP 101, 20
+	SUB @10, @6
+	DJN -1, <-16
+	JMP 101, 20
