@@ -1,0 +1,6 @@
+;redcode
+;assert 1
+	SUB <0, @-18
+	JMP -1, -12
+	MOV 101, 200
+	MOV #10, @120
