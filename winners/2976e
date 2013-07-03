@@ -16,8 +16,14 @@
 	SUB @0, @6
 	SUB 0, 0
 	ADD 1, 60
+	ADD 1, 60
+	JMP 101, 200
 	JMP 101, 200
 	JMP 101, 200
 	SUB @0, @6
 	SUB 0, 0
-	MOV #111, 103
+	JMP 101, 200
+	SUB @0, @6
+	SUB 0, 0
+	SUB @10, @6
+	ADD 1, 60
