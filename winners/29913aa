@@ -1,6 +1,0 @@
-;redcode
-;assert 1
-	SUB @121, 6
-	DJN -1, <-16
-	JMP 12, #200
-	JMP 10, #20
