@@ -43,6 +43,7 @@ TIE_SCORE = 2
 SCORING_EXP = 2
 SINGLE_GEN_INCEST_CHANCE = .05
 CLONE_CHANCE = .05
+MUNGE_ROUNDS = 100
 
 elites = None
 def print_elites():
@@ -64,9 +65,21 @@ def print_elites():
 	print
 
 def get_mutator():
-	return random.choice([flip_mutator, swap_mutator, dupedrop_mutator, irev_mutator, dupe_mutator, drop_mutator, segrev_mutator])
+	return random.choice([flip_mutator, swap_mutator, dupedrop_mutator, irev_mutator, dupe_mutator, drop_mutator, segrev_mutator, munge_mutator])
 
-def line_parse(i):
+def munge_mutator(dna):
+	new_dna = dna
+	i = 0
+
+	#haha, this is lazy
+	while i < MUNGE_ROUNDS:
+		m = get_mutator()
+		if m != munge_mutator:
+			new_dna = m(new_dna)
+			i += 1
+	return new_dna
+
+def line_parse(i):	
 	parts = i.replace(",", " ").split()
 	if len(parts) == 0:
 		return ""
