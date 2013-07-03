@@ -1,0 +1,23 @@
+;redcode
+;assert 1
+	SUB @-1, -12
+	DJN -1, #-16
+	ADD 40, 10
+	SLT 4, -20
+	ADD 40, 10
+	SUB @10, @6
+	DJN -1, #-16
+	ADD 40, 10
+	DJN -1, #-16
+	SUB @-1, -12
+	DJN -1, #-16
+	ADD 40, 10
+	SLT 4, -20
+	ADD 40, 10
+	DJN -1, #-16
+	ADD 40, 10
+	SLT 4, -20
+	ADD 40, 10
+	ADD 40, 10
+	SLT 4, -20
+	ADD 40, 10
