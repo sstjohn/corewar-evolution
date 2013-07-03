@@ -1,4 +1,0 @@
-;redcode
-;assert 1
-	SUB @10, @6
-	MOV 270, @60
