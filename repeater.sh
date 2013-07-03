@@ -23,10 +23,10 @@ if [ 0 -eq $? ]; then
 	else
 		pushed=1
 	fi
+	rm -rf `seq 0 10000`
 else
 	git pull -X ours
 fi
-rm -rf `seq 0 10000`
 if [ $success -eq 1 ]; then
 	./eliminate.py 
 	if [ 0 -eq $? ]; then
