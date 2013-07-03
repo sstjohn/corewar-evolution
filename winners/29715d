@@ -1,0 +1,12 @@
+;redcode
+;assert 1
+	JMZ 177, #106
+	JMZ 177, #106
+	DJN -2, <-19
+	JMZ 177, #106
+	JMZ 177, #106
+	DJN -2, <-19
+	SUB 0, 3
+	MOV -17, @-4
+	DJN 0, 0
+	MOV -17, @-4
