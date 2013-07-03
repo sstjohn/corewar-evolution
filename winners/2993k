@@ -1,7 +1,0 @@
-;redcode
-;assert 1
-	SUB 100, 200
-	DJN -1, <-14
-	JMN 310, 30
-	DJN -1, <-14
-	DAT <310, #30
