@@ -1,0 +1,4 @@
+;redcode
+;assert 1
+	DJN @310, 30
+	MOV 7, <60
