@@ -494,8 +494,8 @@ def era_comp(winners):
 		for j in range(len(warriors) / 2):
 			for _ in range(ERA_COMP_ROUNDS):
 				top_score_delta, bottom_score_delta = run_games(warriors[top[j]][1], warriors[bottom[j]][1])
-				warriors[top[j]][2] += top_score_delta
-				warriors[bottom[j]][2] += bottom_score_delta
+				warriors[top[j]][2] += top_score_delta[0]
+				warriors[bottom[j]][2] += bottom_score_delta[0]
 		pairings.append(pairings.pop(0))
 
 	warriors = [[x[0], x[1], float(x[2]) / (2 * float(ERA_COMP_ROUNDS))] for x in warriors]
