@@ -22,64 +22,50 @@
 	DJN 0, 0
 	DJN 0, 0
 	DJN 0, 0
-	JMP 122
-	SUB 0, 3
-	SUB -501, -77
-	SUB 1, -5
-	SUB 1, -5
-	SUB 0, 3
+	DJN 0, 0
+	SUB 2, <-895
 	DJN 0, 0
 	SUB 0, 3
-	SUB 0, 3
-	SUB 0, 3
+	DJN 0, 0
+	SUB 2, <-5
+	JMP @177, #40
+	DJN 0, 0
+	DJN 0, 0
+	JMZ 117, #106
+	DJN -2, <-19
+	JMZ 177, #106
+	JMZ 177, #106
+	DJN -2, <-19
+	SUB -501, -77
+	SUB 2, <-5
 	DJN -2, <-19
 	DJN 0, 0
 	SUB 2, <-5
-	SUB 2, <-5
 	DJN 0, 0
+	DJN 0, 0
+	JMP 122
 	SUB 0, 3
-	JMP @177, #40
+	SPL @132, 103
+	SUB 17, @-15
 	DJN 0, 0
 	SUB 0, 3
 	JMP 122
 	SPL @132, 103
-	DJN -2, <-19
-	SUB 2, <-5
-	SUB 2, <-5
-	SUB 0, 30
-	SUB 0, 3
-	JMP @177, #40
+	DJN 0, 0
 	SUB 1, -5
-	SUB 1, -5
-	SUB 0, 3
-	DJN 0, 0
-	SUB 0, 3
-	SUB 0, 3
-	SUB 0, 3
-	DJN -2, <-19
-	DJN 0, 0
-	SUB 2, <-5
-	SUB 2, <-5
-	DJN 0, 0
-	SUB 0, 3
-	JMP @177, #40
-	SUB 2, <-5
 	DJN 0, 0
 	DJN 0, 0
-	JMP @177, #40
-	DJN 0, 0
-	JMZ 117, #106
-	DJN -2, <-19
-	SUB 2, <-5
+	SUB 17, @-15
 	JMZ 117, #106
 	DJN 0, 0
-	SUB 1, -5
-	SUB 2, <-5
-	JMP @177, #40
-	JMP 122
-	SUB 0, 3
-	SUB -501, -77
-	SUB 1, -5
-	SUB 1, -5
-	SUB 0, 3
 	DJN 0, 0
+	JMZ 177, #106
+	DJN -2, <-19
+	JMP 101
+	SUB 1, -5
+	DJN 0, 0
+	DJN -2, <-19
+	SUB 2, <-5
+	DJN -2, <-19
+	DJN 0, 0
+	SUB 2, <-5
