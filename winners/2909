@@ -1,6 +1,0 @@
-;redcode
-;assert 1
-	SPL @121, 101
-	CMP #12, @190
-	CMP #12, @190
-	SPL @121, 101
