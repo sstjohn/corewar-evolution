@@ -1,9 +1,0 @@
-;redcode
-;assert 1
-	SUB @10, @6
-	DJN -1, <-16
-	ADD 101, 60
-	JMZ 123, @-106
-	DJN -1, #-12
-	JMZ 123, @-106
-	SUB @10, @6
