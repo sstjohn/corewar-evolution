@@ -137,9 +137,9 @@ def unparse(dna):
 			result += mode
 		if int(line[3]) % 2 == 1:
 			result += "-"
-		result += str(int(line[4:8]))
+		result += str(int(line[5:8]))
 		mode = b_modes[int(line[8]) % len(b_modes)]
-		val = int(line[10:14])
+		val = int(line[11:14])
 		if (not inst in UNARY_OPS) or (not mode == "$") or (not val == 0):
 			result += ", "
 			if not mode == "$":
@@ -422,7 +422,7 @@ def save_progenitors():
 					add_letters = 1
 					ext = ext[:-1]
 					while ext[-1] == "z":
-						add_letters += 1
+						add_letters = add_letters + 1
 						ext = ext[:-1]
 					if len(ext) == 0:
 						ext = "a"
