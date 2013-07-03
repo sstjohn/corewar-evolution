@@ -1,4 +1,0 @@
-;redcode
-;assert 1
-	CMP #12, @190
-	CMP #12, @190
