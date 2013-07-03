@@ -367,12 +367,7 @@ def rungen(gen):
                 pairings.append(pairings.pop(0))
 
 	elites.sort(key=lambda x: x[2], reverse=True)
-
 	warriors.sort(key=lambda x: x[2], reverse=True)
-
-	elites = warriors + elites
-	elites.sort(key=lambda x: x[2], reverse=True)
-	elites = elites[:CHILDREN_PER_GEN]
 
 	print "gen %d:" % gen
 	print "\twarriors\t\telite"
@@ -381,6 +376,10 @@ def rungen(gen):
 		print "\t%s:\t%3.02f\t\t%s:\t%3.02f" % (x[0], x[2], sw[0], sw[2])
 	print
 	
+	elites = warriors + elites
+	elites.sort(key=lambda x: x[2], reverse=True)
+	elites = elites[:CHILDREN_PER_GEN]
+
 	return warriors
 
 def run_games(left, right):
