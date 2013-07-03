@@ -1,0 +1,8 @@
+;redcode
+;assert 1
+	DJN @21, 20
+	ADD -12, 408
+	ADD -12, 408
+	ADD -12, 408
+	ADD -12, 408
+	ADD -12, 408

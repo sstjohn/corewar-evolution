@@ -1,0 +1,5 @@
+;redcode
+;assert 1
+	ADD -12, @908
+	DJN 0, 70
+	DJN 0, 70
