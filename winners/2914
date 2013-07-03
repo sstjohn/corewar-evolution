@@ -1,0 +1,6 @@
+;redcode
+;assert 1
+	JMN @21, 3
+	SPL 610, 30
+	ADD 210, 60
+	ADD 210, 60

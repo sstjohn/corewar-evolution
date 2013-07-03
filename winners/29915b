@@ -1,4 +1,0 @@
-;redcode
-;assert 1
-	ADD -12, 408
-	SUB 0, 3
