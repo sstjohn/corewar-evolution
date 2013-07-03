@@ -1,0 +1,4 @@
+;redcode
+;assert 1
+	CMP #12, @190
+	SPL @121, 101
