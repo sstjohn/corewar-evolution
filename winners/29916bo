@@ -1,0 +1,22 @@
+;redcode
+;assert 1
+	SUB @10, @6
+	DJN -1, <-16
+	SUB @10, @6
+	SUB @10, @6
+	DJN -1, <-16
+	SUB @10, @6
+	DJN -1, #-12
+	SUB -10, @-516
+	DJN -1, #-12
+	MOV -7, <-20
+	JMP @72, #200
+	SUB 10, @6
+	SUB @10, @6
+	SUB @10, @6
+	SUB 0, 3
+	SUB @10, @6
+	SUB 0, 3
+	SUB @10, @6
+	SUB 0, 3
+	SUB 10, @6
