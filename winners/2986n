@@ -1,5 +1,15 @@
 ;redcode
 ;assert 1
+	MOV @161, <-86
+	DJN -1, <-14
+	SUB @121, 106
+	SUB @121, 106
+	SUB <26, 102
+	SUB <26, 102
+	ADD -6, <30
+	ADD -6, <30
+	ADD -6, <30
+	ADD -6, <30
 	SUB @121, 106
 	DJN -1, <-141
 	SUB @127, 106

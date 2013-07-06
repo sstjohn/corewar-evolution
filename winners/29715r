@@ -1,5 +1,56 @@
 ;redcode
 ;assert 1
+	MOV -77, <-76
+	DJN -1, <-14
+	JMN 1, #80
+	DJN 0, #-8
+	DJN -1, <-14
+	JMN @13, #100
+	JMN 1, @80
+	DJN -1, <-14
+	JMZ @131, 103
+	SUB 21, 8
+	SUB 21, 8
+	SUB 21, 8
+	DJN -1, <-14
+	JMN 1, 80
+	JMZ 0, 0
+	SUB 0, @-8
+	SUB <0, @-1
+	JMN 0, #1
+	CMP 305, @-8
+	CMP 305, @-8
+	SUB @0, @931
+	JMN 1, #80
+	JMZ <11, 3
+	DJN 0, #-8
+	DJN -1, <-14
+	JMZ @131, 103
+	SUB <0, @-8
+	JMN 310, 3
+	JMN 310, 3
+	JMN 1, #80
+	JMN 110, 3
+	DJN -1, <-14
+	JMN 1, #80
+	DJN 0, #-8
+	DJN -1, <-14
+	JMN @13, #100
+	JMN 1, @80
+	DJN -1, <-14
+	JMN 310, 3
+	JMN 310, 3
+	JMN 1, #80
+	SUB -13, @18
+	DJN -1, <-14
+	JMZ @131, 103
+	JMN 310, 3
+	JMZ @131, 103
+	JMN @13, #100
+	JMN 1, @80
+	DJN -1, <-14
+	JMN 310, 3
+	CMP 100, -300
 	SUB @121, 106
 	DJN -1, <-143
 	SUB @127, 106
