@@ -1,0 +1,11 @@
+executable	=	condor.sh
+universe	=	vanilla
+output		=	out.$(Cluster).$(Process)
+error		=	err.$(Cluster).$(Process)
+log		=	log.$(Cluster).$(Process)
+requirements	= 	( OpSysAndVer == "RedHat6" )
+should_transfer_files	=	YES
+transfer_input_files	=	sshkey
+request_memory		=	128
+notification = always
+queue 64
