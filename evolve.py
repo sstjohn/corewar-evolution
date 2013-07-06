@@ -32,21 +32,24 @@ CLONE_CHANCE = .05
 MUNGE_ROUNDS_MAX = 85
 
 elites = None
+def gen_score_function(w):
+	return ((float(w.lap_scores.wins) + 0.5 * float(w.lap_scores.ties)) * float(w.lap_scores.lines)) / float(max(1.0, w.lap_scores.losses))
+
 def print_elites():
 	avg = 0
 	print "\nelites!\n-------------\n"
 	for i in range(len(elites)):
-		print "%d - score: %f, fname %s" % (i, gen_score_function(elites[i]), elites[i].name)
-		avg += gen_score_function(elites[i])
+		print "%d - score: %f, fname %s" % (i, era_score_function(elites[i]), elites[i].name)
+		avg += era_score_function(elites[i])
 
 	avg /= float(len(elites))
-	std_dev = (float(reduce(lambda x, y: x + y, map(lambda x: (gen_score_function(x) - avg) ** 2, elites))) / float(len(elites) - 1)) ** 0.5
+	std_dev = (float(reduce(lambda x, y: x + y, map(lambda x: (era_score_function(x) - avg) ** 2, elites))) / float(len(elites) - 1)) ** 0.5
 
 	print
 	print "era average: %4.02f" % avg
 	print "era std dev: %4.02f" % std_dev
 	if 0 != std_dev:
-		print "era dev del: %4.02f" % (((gen_score_function(elites[0]) - avg) / std_dev) - ((gen_score_function(elites[-1]) - avg) / std_dev))
+		print "era dev del: %4.02f" % (((era_score_function(elites[0]) - avg) / std_dev) - ((era_score_function(elites[-1]) - avg) / std_dev))
 
 	print
 
@@ -206,12 +209,12 @@ def report(scores):
 	print "\tavg: %d" % avg
 	print
 
-def score_pick(scores, exclude_ind = None):
-	avg = float(reduce(lambda x, y: x + y, map(gen_score_function, scores))) / float(len(scores))
-	std_dev = (float(reduce(lambda x, y: x + y, map(lambda x: (gen_score_function(x) - avg) ** 2, scores))) / float(len(scores) - 1)) ** 0.5
+def score_pick(scores, exclude_ind = None, score_function=gen_score_function):
+	avg = float(reduce(lambda x, y: x + y, map(score_function, scores))) / float(len(scores))
+	std_dev = (float(reduce(lambda x, y: x + y, map(lambda x: (score_function(x) - avg) ** 2, scores))) / float(len(scores) - 1)) ** 0.5
 	
 	if std_dev != 0:
-		rel_scores = map(lambda x: float(max(0.0, ((gen_score_function(x) - avg) / std_dev) - MIN_REPRODUCTIVE_STDDEV) ** SCORING_EXP if exclude_ind == None or scores[exclude_ind] != x else 0.0), scores)
+		rel_scores = map(lambda x: float(max(0.0, ((score_function(x) - avg) / std_dev) - MIN_REPRODUCTIVE_STDDEV) ** SCORING_EXP if exclude_ind == None or scores[exclude_ind] != x else 0.0), scores)
 
 		partitions = []
 		sum = reduce(lambda x, y: x + y, map(lambda x: x if x > 0 else 0, rel_scores))
@@ -225,16 +228,16 @@ def score_pick(scores, exclude_ind = None):
 
 	return picked
 
-def gengen(lastgen, scores):
+def gengen(lastgen, scores, score_function=gen_score_function):
 	parents = []
 	nextgen = str(lastgen + 1)
 	os.mkdir(nextgen)
 
-	avg = float(reduce(lambda x, y: x + y, map(gen_score_function, scores))) / float(len(scores))
-	std_dev = (float(reduce(lambda x, y: x + y, map(lambda x: (gen_score_function(x) - avg) ** 2, scores))) / float(len(scores) - 1)) ** 0.5
+	avg = float(reduce(lambda x, y: x + y, map(score_function, scores))) / float(len(scores))
+	std_dev = (float(reduce(lambda x, y: x + y, map(lambda x: (score_function(x) - avg) ** 2, scores))) / float(len(scores) - 1)) ** 0.5
 
 	if std_dev != 0:
-		win_loss_dev = float(gen_score_function(scores[0]) - gen_score_function(scores[-1])) / std_dev
+		win_loss_dev = float(score_function(scores[0]) - score_function(scores[-1])) / std_dev
 	else:
 		win_loss_dev = 0.0
 
@@ -247,8 +250,8 @@ def gengen(lastgen, scores):
 		radiation = 0
 
 	for i in range(0, CHILDREN_PER_GEN, 2):
-		mother = score_pick(scores)
-		father = score_pick(scores, mother)
+		mother = score_pick(scores, None, score_function)
+		father = score_pick(scores, mother, score_function)
 		l, r = evolve(scores[mother], scores[father], radiation)
 		with open(nextgen + "/" + str(i + 1), "w") as f:
 			f.write(l.code)
@@ -256,8 +259,9 @@ def gengen(lastgen, scores):
 			f.write(r.code)
 	return radiation
 
-def gen_score_function(w):
-	return ((w.lap_scores.wins + 0.5 * w.lap_scores.ties) * w.lap_scores.lines) / max(1, w.lap_scores.losses)
+
+def era_score_function(w):
+	return (float(w.all_scores.wins) / float(max(1.0, w.all_scores.losses)))
 
 def rungen(gen):
 	global elites
@@ -296,8 +300,9 @@ def rungen(gen):
 	for (x, sw) in zip(warriors, elites):
 		print "\t%s:\t%09.02f\t%s:\t%09.02f" % (x.name, gen_score_function(x), sw.name, gen_score_function(sw))
 	print
-	
-	elites = warriors + elites
+
+	if int(gen) > 1:	
+		elites = warriors + elites
 	elites.sort(key=gen_score_function, reverse=True)
 	elites = elites[:CHILDREN_PER_GEN]
 
@@ -418,31 +423,24 @@ def initial_setup():
 			f.write(child_r.code)
 
 def era_comp(winners):
-	warriors = winners + elites
-	for w in warriors:
-		w.lap()
-
 	print "beginning end-of-era selection...",
 
-	pairings = range(1, len(warriors))
-	for i in range(len(warriors) - 1):
-		top = [0] + pairings[:(len(warriors) / 2) - 1]
+	pairings = range(1, len(elites))
+	for i in range(len(elites) - 1):
+		top = [0] + pairings[:(len(elites) / 2) - 1]
 		bottom = pairings[len(top) - 1:][::-1]
-		for j in range(len(warriors) / 2):
+		for j in range(len(elites) / 2):
 			for _ in range(ERA_COMP_ROUNDS):
-				run_games(warriors[top[j]], warriors[bottom[j]])
+				run_games(elites[top[j]], elites[bottom[j]])
 		pairings.append(pairings.pop(0))
-
-	warriors.sort(key=lambda x:gen_score_function, reverse=True)
-	return warriors
+	elites.sort(key=era_score_function, reverse=True)
 
 def era_gen(g, prev_gen):
 	global elites
 	i = 0
 
-	potential_parents = era_comp(prev_gen)
-	gengen(g - 1, potential_parents)
-	elites = potential_parents[:CHILDREN_PER_GEN]
+	era_comp(prev_gen)
+	gengen(g - 1, prev_gen + elites, era_score_function)
 
 	print "======================="
 	print "it's the end of an era!"
@@ -485,5 +483,5 @@ if __name__ == "__main__":
 					break
 
 	save_progenitors()
-
+	elites.sort(key=era_score_function, reverse=True)
 	print_elites()
