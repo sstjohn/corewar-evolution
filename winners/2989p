@@ -1,5 +1,44 @@
 ;redcode
 ;assert 1
+	MOV -61, <-60
+	DJN -1, <0
+	DJN -1, <0
+	SUB 310, 80
+	DJN -1, <0
+	SUB @-101, 103
+	SLT -611, <10
+	SLT 11, @10
+	SUB <0, @-6
+	SUB 31, 103
+	MOV -61, <-60
+	DJN -1, <0
+	DJN -1, <0
+	SUB 310, 80
+	DJN -2, <0
+	SUB 0, @-10
+	SUB <0, @0
+	SUB <0, @-6
+	SLT 11, @10
+	SLT -121, -101
+	JMP 130, 301
+	JMP 130, 301
+	SUB 0, @-10
+	SUB <0, @0
+	SUB <0, @-6
+	SLT 11, @10
+	SLT -121, -101
+	JMP 130, 301
+	JMP 130, 301
+	SUB 31, 103
+	DJN -1, <0
+	SUB @11, 3
+	SUB 31, 103
+	SLT 11, @10
+	SUB <0, @-6
+	SUB 31, 103
+	SUB 31, 103
+	SUB 31, 103
+	DJN -1, <0
 	SUB @10, @6
 	DJN -1, <-16
 	SUB 0, 3

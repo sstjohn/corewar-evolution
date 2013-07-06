@@ -1,6 +1,7 @@
 #!/bin/sh
 
 export GIT_MERGE_AUTOEDIT=no
+export PYTHONPATH=`pwd`/pycorewar/lib64/python2.6/site-packages/
 
 pushed=1
 success=0
@@ -53,7 +54,7 @@ if [ $success -eq 1 ]; then
 		git pull -X theirs
 	fi
 fi
-if [ ! -f .stopnow ] && [ "$0" != "./run_once.sh" ]; then
+if [ ! -f .stopnow ] && [ "$0" == "./repeater.sh" ]; then
 	exec $0
 fi
 if [ $pushed -eq 0 ]; then
