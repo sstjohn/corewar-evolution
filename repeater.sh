@@ -54,7 +54,7 @@ if [ $success -eq 1 ]; then
 		git pull -X theirs
 	fi
 fi
-if [ ! -f .stopnow ] && [ "$0" != "./run_once.sh" ]; then
+if [ ! -f .stopnow ] && [ "$0" == "./repeater.sh" ]; then
 	exec $0
 fi
 if [ $pushed -eq 0 ]; then
