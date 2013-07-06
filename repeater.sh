@@ -1,6 +1,7 @@
 #!/bin/sh
 
 export GIT_MERGE_AUTOEDIT=no
+export PYTHONPATH=`pwd`/pycorewar/lib64/python2.6/site-packages/
 
 pushed=1
 success=0
