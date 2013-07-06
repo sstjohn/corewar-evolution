@@ -1,0 +1,10 @@
+;redcode
+;assert 1
+	MOV -61, <-60
+	MOV -61, <-60
+	DJN -1, <-33
+	DJN -1, <-33
+	DJN 101, 100
+	DJN -1, <-33
+	DJN 101, 100
+	DJN -1, <-33
