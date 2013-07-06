@@ -91,13 +91,13 @@ def run_comp():
 
 	return eliminate_failures([[x[0], x[2]] for x in warriors])
 
+mars = Corewar.Benchmarking.MARS_88(coresize=8000,
+					maxprocesses=8000,
+					maxcycles=80000,
+					mindistance=100,
+					maxlength=100)
+
 def run_games(left, right):
-	mars = Corewar.Benchmarking.MARS_88(coresize=8000,
-						maxprocesses=8000,
-						maxcycles=80000,
-						mindistance=100,
-						maxlength=100)
-	
 	results = mars.p_run((left, right))
 	left_score = (WINNING_MULTIPLIER * results[0][0] + results[0][2])
 	right_score = (WINNING_MULTIPLIER * results[1][0] + results[1][2])
