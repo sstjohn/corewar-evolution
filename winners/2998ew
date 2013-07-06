@@ -1,0 +1,11 @@
+;redcode
+;assert 1
+	SPL @1, -11
+	DJN -1, #-12
+	ADD -1, @-12
+	DJN -1, #-12
+	DJN -1, #-12
+	SPL @1, -11
+	ADD #111, 103
+	DJN -1, #-12
+	ADD -1, @-12
