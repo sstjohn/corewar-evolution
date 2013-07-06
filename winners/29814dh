@@ -1,0 +1,25 @@
+;redcode
+;assert 1
+	MOV -17, <-36
+	MOV -17, <-36
+	MOV #131, 103
+	MOV -7, <-18
+	MOV #131, 103
+	MOV -7, <-18
+	SUB 0, 3
+	SUB 0, 3
+	MOV -7, <-18
+	SUB 0, 3
+	MOV -7, <-18
+	DJN -1, #-12
+	SLT @-121, 103
+	MOV -7, <-18
+	SUB 0, 3
+	DJN -1, #-12
+	SLT @-121, 103
+	MOV -7, <-18
+	SUB 0, 3
+	MOV -7, <-18
+	MOV -7, <-18
+	SUB 0, 3
+	MOV -7, <-18
