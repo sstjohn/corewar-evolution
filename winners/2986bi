@@ -1,9 +1,0 @@
-;redcode
-;assert 1
-	SUB 4, 13
-	SUB @121, 106
-	DJN -1, <-141
-	SUB @127, 106
-	DJN -1, @-121
-	SUB @127, 106
-	DJN -1, @-121
