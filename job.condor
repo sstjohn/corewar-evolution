@@ -7,5 +7,4 @@ requirements	= 	( OpSysAndVer == "RedHat6" )
 should_transfer_files	=	YES
 transfer_input_files	=	sshkey
 request_memory		=	128
-notification = always
-queue 64
+queue 16
