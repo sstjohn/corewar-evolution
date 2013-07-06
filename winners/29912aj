@@ -1,31 +1,39 @@
 ;redcode
 ;assert 1
-	SUB 0, 3
-	SUB @121, 106
+	SUB 12, @10
 	DJN -1, <-141
-	SLT @-121, 173
+	SUB @127, 106
 	DJN -1, @-121
 	SUB @127, 106
-	DJN -1, #-12
-	JMP 112, #820
-	JMP 112, #820
-	SUB @127, 106
-	SUB @12, @-5
-	SUB @12, @-5
-	ADD #111, 103
-	MOV -7, <-20
-	SUB @12, @-5
-	SUB @12, @-5
-	ADD #111, 103
-	MOV -7, <-20
-	SLT @-121, 103
-	DJN @-1, @-121
-	SLT -131, 103
-	SUB @127, 106
-	SLT @-121, 173
 	DJN -1, @-121
-	SUB @127, 106
+	SUB 0, 8
 	DJN 0, 0
-	MOV -7, <-20
+	SUB #11, 3
+	SUB 0, 8
+	SUB 0, 3
+	SUB 0, 3
+	DAT <17, #30
+	DJN 0, 0
+	JMN 0, 0
+	DJN -1, <-141
+	SUB 0, 3
+	SUB <7, @17
+	JMN 0, 0
+	SUB <7, @17
+	JMN 0, 0
+	DJN -1, <-141
+	DJN 0, 0
+	DJN 0, 0
+	JMN 0, 0
+	DJN -1, <-141
+	DJN 0, 0
+	SUB #11, 3
+	SUB 0, 3
 	SLT @-121, 103
+	DAT <17, #30
+	SUB 0, 8
+	DJN 0, 0
+	SLT @-121, 103
+	SUB 0, 3
 	DJN -1, @-121
+	DJN 0, 0
