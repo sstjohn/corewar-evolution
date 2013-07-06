@@ -97,7 +97,7 @@ def swap_mutator(w):
 	dna = w.dna
 	inst_cnt = len(dna) / 14
 	if inst_cnt < 2:
-		return flip_mutator(dupe_mutator(dna))
+		return flip_mutator(dupe_mutator(w))
 	choices = random.sample(range(inst_cnt), 2)
 	if choices[0] > choices[1]:
 		choices = [choices[1], choices[0]]
