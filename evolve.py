@@ -30,20 +30,17 @@ EVE_FILE = "dat"
 SPLICE_MECH_ONE_PROB = .4
 DIGIT_MUNGE_PROB = (1.5 / 14.0)
 INTERERA_SW_AGE_PENALTY = 0
-RADIATION_THRESH = 4
+RADIATION_THRESH = 3.75
 MIN_REPRODUCTIVE_STDDEV = -.5
 MAX_RADIATION_MUTATION_PROB = .85
 EXTINCTION_LEVEL_RADIATION_THRESHOLD = 1
 EXTINCTION_LEVEL_RADIATION_ROUNDS = 10
 PROGENITOR_DIR = "winners"
 DUPEDROP_MUTATOR_PROB = 0.6
-WINNING_MULTIPLIER = 7
-LOSS_PENALTY = 0
-TIE_SCORE = 2
 SCORING_EXP = 2
 SINGLE_GEN_INCEST_CHANCE = .05
 CLONE_CHANCE = .05
-MUNGE_ROUNDS = 100
+MUNGE_ROUNDS_MAX = 85
 
 elites = None
 def print_elites():
@@ -72,7 +69,7 @@ def munge_mutator(dna):
 	i = 0
 
 	#haha, this is lazy
-	while i < MUNGE_ROUNDS:
+	while i < (random.random() * MUNGE_ROUNDS_MAX):
 		m = get_mutator()
 		if m != munge_mutator:
 			new_dna = m(new_dna)
@@ -337,20 +334,23 @@ def gengen(lastgen, scores):
 def rungen(gen):
 	global elites
 	
-	warriors = [[str(gen) + "/" + str(x + 1), warrior_load(str(gen) + "/" + str(x + 1)), 0]
+	warriors = [[str(gen) + "/" + str(x + 1), warrior_load(str(gen) + "/" + str(x + 1)), 0, 0]
 			for x in range(CHILDREN_PER_GEN)]
 
 	if elites == None:
 		elites = warriors
 	else:
-		elites = [[x[0], x[1], 0] for x in elites]
+		elites = [[x[0], x[1], 0, 0] for x in elites]
 
 
 	for i in range(CHILDREN_PER_GEN - 1):
 		for j in range(CHILDREN_PER_GEN):
-			child_score, sw_score = run_games(warriors[j][1], elites[j][1])
-			warriors[j][2] += child_score
-			elites[j][2] += sw_score
+			child_res, e_res = run_games(warriors[j][1], elites[j][1])
+			warriors[j][2] += child_res[0]
+			warriors[j][3] += child_res[1]
+			elites[j][2] += e_res[0]
+			elites[j][3] += e_res[1]
+			
 		warriors.append(warriors.pop(0))
 
 	pairings = range(1, CHILDREN_PER_GEN)
@@ -358,13 +358,20 @@ def rungen(gen):
                 top = [0] + pairings[:(CHILDREN_PER_GEN / 2) - 1]
                 bottom = pairings[len(top) - 1:][::-1]
                 for j in range(CHILDREN_PER_GEN / 2):
-                        top_score_delta, bottom_score_delta = run_games(warriors[top[j]][1], warriors[bottom[j]][1])
-                        warriors[top[j]][2] += top_score_delta
-                        warriors[bottom[j]][2] += bottom_score_delta
-			top_score_delta, botton_score_delta = run_games(elites[top[j]][1], elites[bottom[j]][1])
-			elites[top[j]][2] += top_score_delta
-			elites[bottom[j]][2] += bottom_score_delta
+                        top_res, bottom_res = run_games(warriors[top[j]][1], warriors[bottom[j]][1])
+                        warriors[top[j]][2] += top_res[0]
+			warriors[top[j]][3] += top_res[1]
+                        warriors[bottom[j]][2] += bottom_res[0]
+			warriors[bottom[j]][3] += bottom_res[1]
+			top_res, botton_res = run_games(elites[top[j]][1], elites[bottom[j]][1])
+			elites[top[j]][2] += top_res[0]
+			elites[top[j]][3] += top_res[1]
+			elites[bottom[j]][2] += bottom_res[0]
+			elites[bottom[j]][3] += bottom_res[1]
                 pairings.append(pairings.pop(0))
+
+	elites = [[x[0], x[1], float(x[2]) / float(x[3])] for x in elites]
+	warriors = [[x[0], x[1], float(x[2]) / float(x[3])] for x in warriors]
 
 	elites.sort(key=lambda x: x[2], reverse=True)
 	warriors.sort(key=lambda x: x[2], reverse=True)
@@ -373,7 +380,7 @@ def rungen(gen):
 	print "\twarriors\t\telite"
 	print "\t=======\t\t\t====="
 	for (x, sw) in zip(warriors, elites):
-		print "\t%s:\t%3.02f\t\t%s:\t%3.02f" % (x[0], x[2], sw[0], sw[2])
+		print "\t%s:\t%09.02f\t%s:\t%09.02f" % (x[0], x[2], sw[0], sw[2])
 	print
 	
 	elites = warriors + elites
@@ -382,29 +389,35 @@ def rungen(gen):
 
 	return warriors
 
-def run_games(left, right):
-		parser = Corewar.Parser(coresize=8000,
+parser = Corewar.Parser(coresize=8000,
+			maxprocesses=8000,
+			maxcycles=80000,
+			maxlength=100,
+			mindistance=100,
+			standard=Corewar.STANDARD_88)
+
+mars = Corewar.Benchmarking.MARS_88(coresize=8000,
 					maxprocesses=8000,
 					maxcycles=80000,
-					maxlength=100,
 					mindistance=100,
-					standard=Corewar.STANDARD_88)
-
-		mars = Corewar.Benchmarking.MARS_88(coresize=8000,
-							maxprocesses=8000,
-							maxcycles=80000,
-							mindistance=100,
-							maxlength=100)
+					maxlength=100)
+def run_games(left, right):
 		l = parser.parse(unparse(left))
 		r = parser.parse(unparse(right))
-		results = mars.run((l, r), rounds = ROUNDS_PER_GAME, seed = int(ceil(((2 ** 31) - 101) * random.random() + 100)))
-		left_score = (WINNING_MULTIPLIER * results[0][0] + LOSS_PENALTY * results[0][1] + TIE_SCORE * results[0][2])
-		right_score = (WINNING_MULTIPLIER * results[1][0] + LOSS_PENALTY * results[1][1] + TIE_SCORE * results[1][2])
-		results = mars.run((r, l), rounds = ROUNDS_PER_GAME, seed = int(ceil(((2 ** 31) - 101) * random.random() + 100)))
-		right_score += (WINNING_MULTIPLIER * results[0][0] + LOSS_PENALTY * results[0][1] + TIE_SCORE * results[0][2])
-		left_score += (WINNING_MULTIPLIER * results[1][0] + LOSS_PENALTY * results[1][1] + TIE_SCORE * results[1][2])
-
-		return left_score, right_score
+		l_results = [0, 0]
+		r_results = [0, 0]
+		for i in range(ROUNDS_PER_GAME):
+			tmp = mars.run((l, r), rounds = 1, seed = int(ceil(((2 ** 31) - 101) * random.random() + 100)))
+			l_results[0] += (float(tmp[0][0]) + float(tmp[0][1]) * .5) * float(tmp[2])
+			l_results[1] += (float(tmp[0][2])  * .5 + float(tmp[0][1]))
+			r_results[0] += (float(tmp[1][0]) + float(tmp[1][1]) * .5) * float(tmp[2])
+			r_results[1] += float(tmp[1][2]) * .5 + float(tmp[1][1])
+			tmp = mars.run((r, l), rounds = 1, seed = int(ceil(((2 ** 31) - 101) * random.random() + 100)))
+			l_results[0] += (float(tmp[0][0]) + float(tmp[0][1]) * .5) * float(tmp[2])
+			l_results[1] += (float(tmp[0][2])  * .5 + float(tmp[0][1]))
+			r_results[0] += (float(tmp[1][0]) + float(tmp[1][1]) * .5) * float(tmp[2])
+			r_results[1] += float(tmp[1][2]) * .5 + float(tmp[1][1])
+		return l_results, r_results
 
 
 def save_progenitors():
@@ -421,13 +434,13 @@ def save_progenitors():
 				if ext[-1] == "z":
 					add_letters = 1
 					ext = ext[:-1]
-					while ext[-1] == "z":
+					while len(ext) > 0 and ext[-1] == "z":
 						add_letters = add_letters + 1
 						ext = ext[:-1]
 					if len(ext) == 0:
 						ext = "a"
 					else:
-						ext = ext[:-1] + str(chr(ord(ext[-1])))
+						ext = ext[:-1] + str(chr(ord(ext[-1]) + 1))
 					ext = ext + ("a" * add_letters)
 				else:
 					ext = ext[:-1] + str(chr(ord(ext[-1]) + 1))
@@ -436,7 +449,11 @@ def save_progenitors():
 					d.write(s.read())
 
 def initial_setup():
-	os.mkdir("0")
+	try:
+		os.mkdir("0")
+	except:
+		print "Initial setup already completed. Moving on..."
+		return
 	adam = None
 	progenitor_options = None
 	if PROGENITOR_DIR != None:
@@ -469,8 +486,7 @@ def initial_setup():
 		with open(fname_r, "w") as f:
 			f.write(child_r)
 def era_comp(winners):
-	global supperwinners
-	warriors = [[x[0], x[1], 0] for x in (winners + elites)]
+	warriors = [[x[0], x[1], 0, 0] for x in (winners + elites)]
 	parser = Corewar.Parser(coresize=8000,
 								maxprocesses=8000,
 								maxcycles=80000,
@@ -486,11 +502,13 @@ def era_comp(winners):
 		for j in range(len(warriors) / 2):
 			for _ in range(ERA_COMP_ROUNDS):
 				top_score_delta, bottom_score_delta = run_games(warriors[top[j]][1], warriors[bottom[j]][1])
-				warriors[top[j]][2] += top_score_delta
-				warriors[bottom[j]][2] += bottom_score_delta
+				warriors[top[j]][2] += top_score_delta[0] 
+				warriors[top[j]][3] += top_score_delta[1]
+				warriors[bottom[j]][2] += bottom_score_delta[0]
+				warriors[bottom[j]][3] += bottom_score_delta[1]
 		pairings.append(pairings.pop(0))
 
-	warriors = [[x[0], x[1], float(x[2]) / (2 * float(ERA_COMP_ROUNDS))] for x in warriors]
+	warriors = [[x[0], x[1], float(x[2]) / float(x[3])] for x in warriors]
 
 	print
 	print
@@ -536,20 +554,29 @@ if __name__ == "__main__":
 	for e in range(eras):
 		radioactive_rounds = 0
 		if e > 0:
-			era_gen(e * generations_to_run, prev_gen_winners)
-			prev_gen_winners = []
+			try:
+				era_gen(e * generations_to_run, prev_gen_winners)
+				prev_gen_winners = []
+			except:
+				print "Era %d already generated. Moving on..." % e
 		for i in range(generations_to_run):
+			if os.path.exists(str(generations_to_run * e + i + 1)):
+				print "Future generation %d already exists. Moving on..." % (generations_to_run * e + i + 1)
+				continue
 			winners = rungen(generations_to_run * e + i)
 			prev_gen_winners = winners
 			if (i + 1) != generations_to_run:
-				cur_rad = gengen(generations_to_run * e + i, winners)
-				if cur_rad > EXTINCTION_LEVEL_RADIATION_THRESHOLD:
-					radioactive_rounds += 1
-				elif radioactive_rounds > 0 and cur_rad < (EXTINCTION_LEVEL_RADIATION_THRESHOLD / 2.0):
-						radioactive_rounds -= 1
-			if radioactive_rounds == EXTINCTION_LEVEL_RADIATION_ROUNDS:
-				print "Extinction level event! Begining next era!"
-				break
+				try:
+					cur_rad = gengen(generations_to_run * e + i, winners)
+					if cur_rad > EXTINCTION_LEVEL_RADIATION_THRESHOLD:
+						radioactive_rounds += 1
+					elif radioactive_rounds > 0 and cur_rad < (EXTINCTION_LEVEL_RADIATION_THRESHOLD / 2.0):
+							radioactive_rounds -= 1
+					if radioactive_rounds == EXTINCTION_LEVEL_RADIATION_ROUNDS:
+						print "Extinction level event! Begining next era!"
+						break
+				except:
+					print "Generation %d already completed. Moving on..." % int(generations_to_run) * int(e) + int(i)
 
 	save_progenitors()
 
