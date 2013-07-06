@@ -141,7 +141,7 @@ class Warrior:
 			if ln_cnt == 100:
 				break
 
-		self._code = "\n".join(code_lines[:i])
+		self._code = "\n".join(code_lines[:(i + 1)])
 		if not self._dna_code_mutex:
 			self._dna_code_mutex = True
 			self.dna = dna_compile(self._code)
