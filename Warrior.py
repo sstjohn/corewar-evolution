@@ -179,6 +179,15 @@ class Warrior:
 
 	mut_marks = property(_get_mut_marks, None)
 
+	def _get_parent_a(self):
+		return self._parent_a
+
+	def _get_parent_b(self):
+		return self._parent_b
+
+	parent_a = property(_get_parent_a, None)
+	parent_b = property(_get_parent_b, None)
+
 	def lap(self):
 		self.lap_scores = CascadingScore(self.all_scores)
 
@@ -192,14 +201,18 @@ class Warrior:
 		self.lap_scores = CascadingScore(self.all_scores)
 		self._mut_marks = ""
 		if None != parent_a:
-			self.parent_a = parent_a.name
+			self.parent_a_name = parent_a.name
+			self._parent_a = parent_a
 		else:
-			self.parent_a = "unknown"
+			self.parent_a_name = "unknown"
+			self._parent_a = None
 
 		if None != parent_b:
-			self.parent_b = parent_b.name
+			self.parent_b_name = parent_b.name
+			self._parent_b = parent_b
 		else:	
-			self.parent_b = "unknown"
+			self.parent_b_name = "unknown"
+			self._parent_b = None
 
 		if code != None:
 			self._set_code(code)

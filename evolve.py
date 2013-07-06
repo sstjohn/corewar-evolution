@@ -10,36 +10,40 @@ from math import ceil
 
 from Warrior import Warrior
 
-ROUNDS_PER_GAME=3
+ROUNDS_PER_GAME=5
 ERA_COMP_ROUNDS = 4
 MUTATION_CHANCE = .1
-CHILDREN_PER_GEN = 16
+CHILDREN_PER_GEN = 32
 ADAM_FILE = "dat"
 EVE_FILE = "dat"
 SPLICE_MECH_ONE_PROB = .4
-DIGIT_MUNGE_PROB = (1.5 / 14.0)
+DIGIT_MUNGE_PROB = (2.0 / 14.0)
 INTERERA_SW_AGE_PENALTY = 0
-RADIATION_THRESH = 3.75
+RADIATION_THRESH = 4
 MIN_REPRODUCTIVE_STDDEV = -.5
-MAX_RADIATION_MUTATION_PROB = .85
+MAX_RADIATION_MUTATION_PROB = .65
+MAX_MUTATION_ROUNDS = 5
 EXTINCTION_LEVEL_RADIATION_THRESHOLD = 1
 EXTINCTION_LEVEL_RADIATION_ROUNDS = 10
 PROGENITOR_DIR = "winners"
 DUPEDROP_MUTATOR_PROB = 0.6
 SCORING_EXP = 2
-SINGLE_GEN_INCEST_CHANCE = 0
-#CLONE_CHANCE = .05
 MUNGE_ROUNDS_MAX = 85
+PROGENITORS_TO_SAVE = 16
+
 
 elites = None
-def gen_score_function(w):
+def era_score_function(w):
 	return ((float(w.lap_scores.wins) + 0.5 * float(w.lap_scores.ties)) * float(w.lap_scores.lines)) / float(max(1.0, w.lap_scores.losses))
+
+def gen_score_function(w):
+	return ((float(w.all_scores.ties) * 0.5 + float(w.all_scores.wins)) / (float(w.all_scores.wins) + float(w.all_scores.ties) + float(w.all_scores.losses))) * 1000
 
 def print_elites():
 	avg = 0
 	print "\nelites!\n-------------\n"
 	for i in range(len(elites)):
-		print "%d - score: %f, fname %s (%s, %s, %s)" % (i, era_score_function(elites[i]), elites[i].name, elites[i].parent_a, elites[i].parent_b, elites[i].mut_marks)
+		print "%d - score: %f, fname %s (%s, %s, %s) [w: %d, l: %d, t: %d, loc: %d]" % (i, era_score_function(elites[i]), elites[i].name, elites[i].parent_a_name, elites[i].parent_b_name, elites[i].mut_marks, elites[i].all_scores.wins, elites[i].all_scores.losses, elites[i].all_scores.ties, elites[i].all_scores.lines)
 		avg += era_score_function(elites[i])
 
 	avg /= float(len(elites))
@@ -202,11 +206,11 @@ def dupe_mutator(w):
 def evolve(a, b, radiation = 0, gen = None, id = None):
 	child_l, child_r = spawn(a, b, gen, id)
 	if random.random() <= (MUTATION_CHANCE + (radiation  * MAX_RADIATION_MUTATION_PROB)):
-		child_l = get_mutator()(child_l)
+		for i in range(int(random.random() * MAX_MUTATION_ROUNDS)):
+			child_l = get_mutator()(child_l)
 	if random.random() <= (MUTATION_CHANCE + (radiation  * MAX_RADIATION_MUTATION_PROB)):
-		child_r = get_mutator()(child_r)
-	if random.random() <= SINGLE_GEN_INCEST_CHANCE:
-		return spawn(child_l, child_r, gen, id)
+		for i in range(int(random.random() * MAX_MUTATION_ROUNDS)):
+			child_r = get_mutator()(child_r)
 	return (child_l, child_r)
 
 def report(scores):
@@ -272,8 +276,6 @@ def gengen(lastgen, scores, score_function=gen_score_function):
 	return (radiation, newgen)
 
 
-def era_score_function(w):
-	return (float(w.all_scores.wins) / float(max(1.0, w.all_scores.losses)))
 
 def rungen(gen, warriors = None):
 	global elites
@@ -314,7 +316,7 @@ def rungen(gen, warriors = None):
 		print "\t%s:\t%09.02f\t%s:\t%09.02f" % (x.name, gen_score_function(x), sw.name, gen_score_function(sw))
 	print
 
-	if int(gen) > 1:	
+	if int(gen) > 0:	
 		elites = warriors + elites
 	elites.sort(key=gen_score_function, reverse=True)
 	elites = elites[:CHILDREN_PER_GEN]
@@ -373,7 +375,7 @@ def save_progenitors():
 	global elites
 	os.system("git pull --no-edit -X theirs")
 	if PROGENITOR_DIR != None:
-		for w in elites:
+		for w in elites[:PROGENITORS_TO_SAVE]:
 			sname = w.name
 			tmp_dname = PROGENITOR_DIR + "/" + sname.replace("/","")
 			dname = tmp_dname
@@ -497,6 +499,6 @@ if __name__ == "__main__":
 					print "Extinction level event! Begining next era!"
 					break
 
-	save_progenitors()
 	elites.sort(key=era_score_function, reverse=True)
+	save_progenitors()
 	print_elites()
