@@ -1,0 +1,11 @@
+;redcode
+;assert 1
+	MOV -7, <0
+	DJN -1, #-12
+	SUB 27, 106
+	MOV -7, <0
+	MOV -7, <0
+	SUB 27, 106
+	SUB 27, 106
+	MOV -7, <0
+	MOV -97, @305
