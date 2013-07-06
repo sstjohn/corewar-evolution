@@ -6,6 +6,8 @@ import random
 import sys
 import Corewar, Corewar.Benchmarking
 
+from Warrior import Warrior
+
 COMPETITORS_PER_TOURN = 8
 COMPETITORS_DIR = "winners"
 ELIMINATION_SOFT_CUTOFF = 0.1
@@ -49,6 +51,13 @@ def eliminate_failures(results):
 			else:
 				break
 
+def parse_file(fname):
+	warrior_code = ""
+	with open(fname, "r") as f:
+		warrior_code = f.read()
+	
+	return Warrior(code=warrior_code).player
+
 def run_comp():
 	parser = Corewar.Parser(coresize=8000,
 								maxprocesses=8000,
@@ -57,7 +66,9 @@ def run_comp():
 								mindistance=100,
 								standard=Corewar.STANDARD_88)
 	try:
-		warriors = [[COMPETITORS_DIR + "/" + x, parser.parse_file(COMPETITORS_DIR + "/" + x), 0] 
+		code = ""
+		
+		warriors = [[COMPETITORS_DIR + "/" + x, parse_file(COMPETITORS_DIR + "/" + x), 0] 
 				for x in random.sample(os.listdir(COMPETITORS_DIR), COMPETITORS_PER_TOURN)]
 	except Corewar.WarriorParseError, e:
 		print e
