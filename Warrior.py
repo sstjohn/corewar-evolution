@@ -168,10 +168,21 @@ class Warrior:
 
 	name = property(_get_name, None)
 
+	def add_mut_mark(self, mark):
+		if len(self._mut_marks) > 0:
+			self._mut_marks += (",%s" % mark)
+		else:
+			self._mut_marks = mark
+
+	def _get_mut_marks(self):
+		return self._mut_marks
+
+	mut_marks = property(_get_mut_marks, None)
+
 	def lap(self):
 		self.lap_scores = CascadingScore(self.all_scores)
 
-	def __init__(self, code = None, dna = None, generation = None, id = None):
+	def __init__(self, code = None, dna = None, generation = None, id = None, parent_a = None, parent_b = None):
 		self._code = None
 		self._dna = None
 		self._dna_code_mutex = False
@@ -179,6 +190,16 @@ class Warrior:
 		self.id = id
 		self.all_scores = CascadingScore()
 		self.lap_scores = CascadingScore(self.all_scores)
+		self._mut_marks = ""
+		if None != parent_a:
+			self.parent_a = parent_a.name
+		else:
+			self.parent_a = "unknown"
+
+		if None != parent_b:
+			self.parent_b = parent_b.name
+		else:	
+			self.parent_b = "unknown"
 
 		if code != None:
 			self._set_code(code)
