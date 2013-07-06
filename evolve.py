@@ -27,8 +27,8 @@ EXTINCTION_LEVEL_RADIATION_ROUNDS = 10
 PROGENITOR_DIR = "winners"
 DUPEDROP_MUTATOR_PROB = 0.6
 SCORING_EXP = 2
-SINGLE_GEN_INCEST_CHANCE = .05
-CLONE_CHANCE = .05
+SINGLE_GEN_INCEST_CHANCE = 0
+#CLONE_CHANCE = .05
 MUNGE_ROUNDS_MAX = 85
 
 elites = None
@@ -39,7 +39,7 @@ def print_elites():
 	avg = 0
 	print "\nelites!\n-------------\n"
 	for i in range(len(elites)):
-		print "%d - score: %f, fname %s" % (i, era_score_function(elites[i]), elites[i].name)
+		print "%d - score: %f, fname %s (%s, %s, %s)" % (i, era_score_function(elites[i]), elites[i].name, elites[i].parent_a, elites[i].parent_b, elites[i].mut_marks)
 		avg += era_score_function(elites[i])
 
 	avg /= float(len(elites))
@@ -56,17 +56,15 @@ def print_elites():
 def get_mutator():
 	return random.choice([flip_mutator, swap_mutator, dupedrop_mutator, irev_mutator, dupe_mutator, drop_mutator, segrev_mutator, munge_mutator])
 
-def munge_mutator(dna):
-	new_dna = dna
+def munge_mutator(w):
 	i = 0
-
 	#haha, this is lazy
 	while i < (random.random() * MUNGE_ROUNDS_MAX):
 		m = get_mutator()
 		if m != munge_mutator:
-			new_dna = m(new_dna)
+			w = m(w)
 			i += 1
-	return new_dna
+	return w
 
 def warrior_load(fname, id=None, gen=None):
 	with open(fname, "r") as f:
@@ -76,7 +74,7 @@ def warrior_read(f, id=None, gen=None):
 	return Warrior(code=f.read(), id=id, generation=gen)
 
 
-def spawn(warrior_a, warrior_b):
+def spawn(warrior_a, warrior_b, gen = None, id = None):
 	a = warrior_a.dna
 	b = warrior_b.dna
 	a_len = len(a) / 14
@@ -94,13 +92,19 @@ def spawn(warrior_a, warrior_b):
 			result_l = a[:a_cutpt] + b[b_cutpt:]
 			result_r = b[:b_cutpt] + a[a_cutpt:]
 	
-	return (Warrior(dna=result_l), Warrior(dna=result_r))
+	if id != None:
+		r_id = id + 1
+	else:
+		r_id = None
+	return (Warrior(dna=result_l, parent_a=warrior_a, parent_b=warrior_b, generation=gen, id=id), 
+		Warrior(dna=result_r, parent_a=warrior_a, parent_b=warrior_b, generation=gen, id=r_id))
 
 def swap_mutator(w):
 	dna = w.dna
 	inst_cnt = len(dna) / 14
 	if inst_cnt < 2:
 		return flip_mutator(dupe_mutator(w))
+	w.add_mut_mark("sw")
 	choices = random.sample(range(inst_cnt), 2)
 	if choices[0] > choices[1]:
 		choices = [choices[1], choices[0]]
@@ -119,6 +123,7 @@ def segrev_mutator(w):
 	if inst_cnt < 5:
 		return swap_mutator(irev_mutator(w))
 	
+	w.add_mut_mark("sr")
 	seg_len = (inst_cnt / 3)
 	seg_offset = random.randint(0, inst_cnt - seg_len)
 
@@ -129,6 +134,8 @@ def segrev_mutator(w):
 	return w
 
 def flip_mutator(w):
+	w.add_mut_mark("fl")
+
 	dna = w.dna
 	strpos = random.randint(0, (len(dna) / 14) - 1)
 	first_part = dna[:(strpos * 14)]
@@ -146,6 +153,7 @@ def flip_mutator(w):
 	return w
 
 def irev_mutator(w):
+	w.add_mut_mark("ir")
 	dna = w.dna
 	strpos = random.randint(0, (len(dna) / 14) - 1)
 	first_part = dna[:(strpos * 14)]
@@ -156,6 +164,7 @@ def irev_mutator(w):
 	return w
 
 def dupedrop_mutator(w):
+	w.add_mut_mark("dd")
 	dna = w.dna
 	new_dna = ""
 	for i in range(len(dna) / 14):
@@ -170,6 +179,8 @@ def drop_mutator(w):
 	dna = w.dna
 	if len(dna) < 29:
 		return flip_mutator(dupe_mutator(w))
+
+	w.add_mut_mark("dr")
 	inst = random.randint(0, (len(dna) / 14) - 1)
 	new_dna = dna[:inst * 14]
 	new_dna += dna[(inst + 1) * 14:]
@@ -180,6 +191,7 @@ def dupe_mutator(w):
 	dna = w.dna
 	if not len(dna) < 1400:
 		return flip_mutator(drop_mutator(w))
+	w.add_mut_mark("du")
 	inst = random.randint(0, (len(dna) / 14) - 1)
 	new_dna = dna[:inst * 14]
 	new_dna += dna[inst * 14:(inst + 1) * 14]
@@ -187,18 +199,14 @@ def dupe_mutator(w):
 	w.dna = new_dna
 	return w
 
-def evolve(a, b, radiation = 0):
-	if random.random() > CLONE_CHANCE:
-		child_l, child_r = spawn(a, b)
-	else:
-		child_l = a
-		child_r = b
+def evolve(a, b, radiation = 0, gen = None, id = None):
+	child_l, child_r = spawn(a, b, gen, id)
 	if random.random() <= (MUTATION_CHANCE + (radiation  * MAX_RADIATION_MUTATION_PROB)):
 		child_l = get_mutator()(child_l)
 	if random.random() <= (MUTATION_CHANCE + (radiation  * MAX_RADIATION_MUTATION_PROB)):
 		child_r = get_mutator()(child_r)
 	if random.random() <= SINGLE_GEN_INCEST_CHANCE:
-		return evolve(child_l, child_r, radiation)
+		return spawn(child_l, child_r, gen, id)
 	return (child_l, child_r)
 
 def report(scores):
@@ -249,25 +257,30 @@ def gengen(lastgen, scores, score_function=gen_score_function):
 	else:
 		radiation = 0
 
+	newgen = []
+
 	for i in range(0, CHILDREN_PER_GEN, 2):
 		mother = score_pick(scores, None, score_function)
 		father = score_pick(scores, mother, score_function)
-		l, r = evolve(scores[mother], scores[father], radiation)
+		l, r = evolve(scores[mother], scores[father], radiation, gen = lastgen + 1, id = (i + 1))
 		with open(nextgen + "/" + str(i + 1), "w") as f:
 			f.write(l.code)
+			newgen.append(l)
 		with open(nextgen + "/" + str(i + 2), "w") as f:
 			f.write(r.code)
-	return radiation
+			newgen.append(r)
+	return (radiation, newgen)
 
 
 def era_score_function(w):
 	return (float(w.all_scores.wins) / float(max(1.0, w.all_scores.losses)))
 
-def rungen(gen):
+def rungen(gen, warriors = None):
 	global elites
 	
-	warriors = [warrior_load(str(gen) + "/" + str(x + 1), gen=gen, id=(x + 1))
-			for x in range(CHILDREN_PER_GEN)]
+	if None == warriors or len(warriors) == 0:
+		warriors = [warrior_load(str(gen) + "/" + str(x + 1), gen=gen, id=(x + 1))
+				for x in range(CHILDREN_PER_GEN)]
 
 	if elites == None:
 		elites = warriors
@@ -416,7 +429,7 @@ def initial_setup():
 				adam = warrior_read(f)
 			with open(PROGENITOR_DIR + "/" + eve_file, "r") as f:
 				eve = warrior_read(f)
-		child_l, child_r = evolve(adam, eve)
+		child_l, child_r = evolve(adam, eve, gen=0, id=(i + 1))
 		with open(fname_l, "w") as f:
 			f.write(child_l.code)
 		with open(fname_r, "w") as f:
@@ -440,13 +453,14 @@ def era_gen(g, prev_gen):
 	i = 0
 
 	era_comp(prev_gen)
-	gengen(g - 1, prev_gen + elites, era_score_function)
+	radiation, newgen = gengen(g - 1, prev_gen + elites, era_score_function)
 
 	print "======================="
 	print "it's the end of an era!"
 	print "======================="
 	print
 	print_elites()
+	return newgen
 
 if __name__ == "__main__":
 	if len(sys.argv) > 1:
@@ -461,19 +475,20 @@ if __name__ == "__main__":
 	random.seed()
 	initial_setup()
 	prev_gen_winners = []
+	next_gen = []
 	for e in range(eras):
 		radioactive_rounds = 0
 		if e > 0:
-			era_gen(e * generations_to_run, prev_gen_winners)
+			next_gen = era_gen(e * generations_to_run, prev_gen_winners)
 			prev_gen_winners = []
 		for i in range(generations_to_run):
 			if os.path.exists(str(generations_to_run * e + i + 1)):
 				print "Future generation %d already exists. Moving on..." % (generations_to_run * e + i + 1)
 				continue
-			winners = rungen(generations_to_run * e + i)
+			winners = rungen(generations_to_run * e + i, next_gen)
 			prev_gen_winners = winners
 			if (i + 1) != generations_to_run:
-				cur_rad = gengen(generations_to_run * e + i, winners)
+				cur_rad, next_gen = gengen(generations_to_run * e + i, winners)
 				if cur_rad > EXTINCTION_LEVEL_RADIATION_THRESHOLD:
 					radioactive_rounds += 1
 				elif radioactive_rounds > 0 and cur_rad < (EXTINCTION_LEVEL_RADIATION_THRESHOLD / 2.0):
