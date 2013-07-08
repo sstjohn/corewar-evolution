@@ -1,0 +1,12 @@
+;redcode
+;assert 1
+	MOV -7, <-20
+	SPL 0, 3
+	MOV -7, <-20
+	DAT #0, #3
+	JMP 0, 90
+	JMP 12, 10
+	SPL 0, 6
+	SUB @128, 165
+	SLT -7, <-20
+	MOV #82, @200
