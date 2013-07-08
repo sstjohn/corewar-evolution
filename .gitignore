@@ -1,2 +1,5 @@
 pycorewar-code/
 werk/
+*.pyc
+core.*
+condor_logs/
