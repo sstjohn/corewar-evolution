@@ -1,0 +1,7 @@
+;redcode
+;assert 1
+	MOV 7, <689
+	SUB 0, 90
+	SPL 0
+	MOV 4, <-80
+	MOV 7, <689
