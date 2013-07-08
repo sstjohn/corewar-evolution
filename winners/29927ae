@@ -1,0 +1,6 @@
+;redcode
+;assert 1
+	SPL 0, 20
+	SUB @0, @802
+	SPL 0, 20
+	MOV -7, <-20
