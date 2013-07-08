@@ -4,6 +4,10 @@ import bisect
 import os
 import random
 import sys
+
+import warnings
+warnings.simplefilter("ignore", DeprecationWarning)
+
 import Corewar, Corewar.Benchmarking
 
 from Warrior import Warrior
@@ -16,7 +20,9 @@ MIN_USEFUL_STD_DEV = 5
 MAX_TRIES = 100
 WINNING_MULTIPLIER = 10
 
-if len(os.listdir(COMPETITORS_DIR)) > 5000:
+if len(os.listdir(COMPETITORS_DIR)) > 7500:
+	COMPETITORS_TO_ELIMINATE = 30
+elif len(os.listdir(COMPETITORS_DIR)) > 5000:
 	COMPETITORS_TO_ELIMINATE = 20
 else:
 	COMPETITORS_TO_ELIMINATE = 10
