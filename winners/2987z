@@ -1,7 +1,0 @@
-;redcode
-;assert 1
-	JMP -0, @-20
-	SLT 613, 60
-	JMP -0, @-20
-	JMP -0, @-20
-	JMP -0, @-20
