@@ -1,0 +1,8 @@
+;redcode
+;assert 1
+	ADD 210, -60
+	CMP 1, <-20
+	JMP -0, -1
+	SPL -121, 106
+	SUB <8, @16
+	MOV -307, -20
