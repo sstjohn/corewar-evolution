@@ -1,5 +1,0 @@
-;redcode
-;assert 1
-	SUB #77, 40
-	SPL 0, #40
-	MOV -57, <-21
