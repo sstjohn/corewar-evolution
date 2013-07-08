@@ -1,0 +1,8 @@
+;redcode
+;assert 1
+	MOV -77, <-20
+	MOV -61, <-61
+	DJN -1, <-812
+	DJN -1, <-812
+	DJN -1, <-812
+	DJN -1, <-812
