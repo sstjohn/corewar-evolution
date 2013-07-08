@@ -1,6 +1,0 @@
-;redcode
-;assert 1
-	JMZ 913, #60
-	MOV -31, <-20
-	MOV -31, <-20
-	JMP -0, @-20
