@@ -1,0 +1,8 @@
+;redcode
+;assert 1
+	SUB 8, @-1
+	SLT -1, <-121
+	SPL 0, 40
+	MOV -57, <-21
+	SPL 0, 40
+	MOV -57, <-21
