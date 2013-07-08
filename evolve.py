@@ -34,10 +34,11 @@ CROSSOVER_CHANCE = .1
 
 elites = None
 def era_score_function(w):
-	return ((float(w.lap_scores.wins) + 0.5 * float(w.lap_scores.ties)) * float(w.lap_scores.lines)) / float(max(1.0, w.lap_scores.losses))
+	return ((float(w.lap_scores.wins) + 0.5 * float(w.lap_scores.ties)) * float(w.lap_scores.lines)) * ((float(w.all_scores.ties) * 0.5 + float(w.all_scores.wins)) / (float(w.all_scores.wins) + float(w.all_scores.ties) + float(w.all_scores.losses)))
 
 def gen_score_function(w):
-	return ((float(w.all_scores.ties) * 0.5 + float(w.all_scores.wins)) / (float(w.all_scores.wins) + float(w.all_scores.ties) + float(w.all_scores.losses))) * 1000
+	return (((float(w.all_scores.ties) * 0.5 + float(w.all_scores.wins)) / (float(w.all_scores.wins) + float(w.all_scores.ties) + float(w.all_scores.losses))) +
+	        ((float(w.lap_scores.ties) * 0.5 + float(w.lap_scores.wins)) / (float(w.lap_scores.wins) + float(w.lap_scores.ties) + float(w.lap_scores.losses)))) * 500
 
 def print_elites():
 	avg = 0
