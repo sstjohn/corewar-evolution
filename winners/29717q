@@ -1,6 +1,8 @@
 ;redcode
 ;assert 1
-	SLT #13, @900
-	MOV -1, <98
-	SPL 0
-	MOV 4, <-80
+	SUB @721, 102
+	ADD @800, @2
+	ADD 210, 28
+	ADD 210, 22
+	SUB -1, <-20
+	JMP -1, @-20
