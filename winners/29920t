@@ -1,0 +1,6 @@
+;redcode
+;assert 1
+	MOV -7, <-20
+	MOV -7, <-20
+	JMZ -1, @304
+	ADD 270, 60
