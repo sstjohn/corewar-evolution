@@ -1,7 +1,0 @@
-;redcode
-;assert 1
-	SUB <0, @-18
-	DJN -1, #-16
-	DJN -1, #-16
-	SUB <0, @-18
-	DJN -1, <-16
