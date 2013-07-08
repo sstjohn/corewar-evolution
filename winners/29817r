@@ -1,0 +1,7 @@
+;redcode
+;assert 1
+	MOV -17, <-76
+	SLT 271, 60
+	MOV <127, @106
+	MOV @-27, <-58
+	JMP -1, @-124
