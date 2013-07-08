@@ -1,0 +1,6 @@
+;redcode
+;assert 1
+	ADD 440, 60
+	ADD 440, 60
+	SPL 0, 20
+	MOV -7, <-20
