@@ -5,7 +5,7 @@ export PYTHONPATH=`pwd`/pycorewar/lib64/python2.6/site-packages/
 
 pushed=1
 success=0
-rm core.*
+rm -f core.*
 
 ./evolve.py 30 10
 if [ 0 -eq $? ]; then
