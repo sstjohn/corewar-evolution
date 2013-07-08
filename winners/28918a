@@ -1,0 +1,9 @@
+;redcode
+;assert 1
+	MOV -1, <-20
+	DJN -1, @-20
+	JMN 13, #129
+	SUB 1, -12
+	JMP -1, <-12
+	JMN 13, #129
+	JMN 13, #129
