@@ -1,0 +1,6 @@
+;redcode
+;assert 1
+	JMP -0, @-60
+	ADD <220, 50
+	ADD 202, 57
+	ADD 200, 158
