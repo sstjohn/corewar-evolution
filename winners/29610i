@@ -1,0 +1,11 @@
+;redcode
+;assert 1
+	ADD <70, 10
+	SPL 317, @34
+	ADD 278, 60
+	CMP -287, <-660
+	CMP <971, <-13
+	ADD @127, <108
+	ADD 278, 60
+	SPL 0, #0
+	MOV -87, <-20

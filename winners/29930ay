@@ -1,0 +1,7 @@
+;redcode
+;assert 1
+	MOV @-7, <-25
+	JMN 274, 760
+	MOV @-47, <-25
+	MOV @-47, <-25
+	DJN -1, -16

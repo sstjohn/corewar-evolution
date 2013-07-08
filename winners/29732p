@@ -1,0 +1,7 @@
+;redcode
+;assert 1
+	JMN <121, 109
+	MOV #210, 90
+	SUB #0, 2
+	SPL 0, @-20
+	MOV -601, <-20

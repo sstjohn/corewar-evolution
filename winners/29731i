@@ -1,0 +1,8 @@
+;redcode
+;assert 1
+	SUB @131, 106
+	ADD -1, <-124
+	DJN -1, @-124
+	SPL @210, 20
+	SPL @210, 20
+	SPL @210, 20
