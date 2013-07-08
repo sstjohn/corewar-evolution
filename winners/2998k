@@ -1,0 +1,6 @@
+;redcode
+;assert 1
+	ADD #510, 69
+	ADD #510, 69
+	MOV -57, <-21
+	JMN -1, #-20
