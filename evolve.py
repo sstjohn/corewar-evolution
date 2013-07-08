@@ -30,7 +30,7 @@ DUPEDROP_MUTATOR_PROB = 0.6
 SCORING_EXP = 2
 MUNGE_ROUNDS_MAX = 85
 PROGENITORS_TO_SAVE = 16
-
+CROSSOVER_CHANCE = .1
 
 elites = None
 def era_score_function(w):
@@ -81,20 +81,30 @@ def warrior_read(f, id=None, gen=None):
 def spawn(warrior_a, warrior_b, gen = None, id = None):
 	a = warrior_a.dna
 	b = warrior_b.dna
-	a_len = len(a) / 14
-	b_len = len(b) / 14
 	result_l = ''
 	result_r = ''
-	while len(result_l) == 0 or len(result_r) == 0:
-		if random.random() < SPLICE_MECH_ONE_PROB:
-			cutpt = random.randint(0, max(a_len, b_len)) * 14
-			result_l = a[:cutpt] + b[cutpt:]
-			result_r = b[:cutpt] + a[cutpt:]
-		else:
-			a_cutpt = random.randint(0, a_len) * 14
-			b_cutpt = random.randint(0, b_len) * 14
-			result_l = a[:a_cutpt] + b[b_cutpt:]
-			result_r = b[:b_cutpt] + a[a_cutpt:]
+
+	cur_parent = a
+	i = 0
+	while i < (len(cur_parent) / 14):
+		result_l += cur_parent[i * 14:(i + 1) * 14]
+		if random.random() < CROSSOVER_CHANCE:
+			if cur_parent == a:
+				cur_parent = b
+			else:
+				cur_parent = a
+		i += 1
+
+	cur_parent = b
+	i = 0
+	while i < (len(cur_parent) / 14):
+		result_r += cur_parent[i * 14:(i + 1) * 14]
+		if random.random() < CROSSOVER_CHANCE:
+			if cur_parent == b:
+				cur_parent = a
+			else:
+				cur_parent = b
+		i += 1
 	
 	if id != None:
 		r_id = id + 1
