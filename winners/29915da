@@ -1,6 +1,6 @@
 ;redcode
 ;assert 1
-	DJN 3, #10
+	SUB @10, 9
 	SUB 551, @-103
 	SLT 130, 0
 	MOV @103, <-90
