@@ -1,8 +1,0 @@
-;redcode
-;assert 1
-	MOV #210, 90
-	SPL 0, @-20
-	SUB #0, 2
-	SUB @120, 409
-	SPL 0, @-20
-	MOV -601, <-20
