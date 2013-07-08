@@ -1,0 +1,5 @@
+;redcode
+;assert 1
+	ADD 230, <60
+	MOV -503, <-20
+	DJN -1, @-20
