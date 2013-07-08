@@ -1,6 +1,0 @@
-;redcode
-;assert 1
-	MOV <-7, <-22
-	JMZ -1, @-523
-	JMZ -1, @-523
-	JMZ -1, @-520
