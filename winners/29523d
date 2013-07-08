@@ -1,0 +1,11 @@
+;redcode
+;assert 1
+	MOV #82, @200
+	SPL 0, 3
+	MOV -7, <-20
+	DAT #0, #3
+	JMP 0, 90
+	JMP 12, 10
+	MOV #82, @200
+	JMP 12, 10
+	SUB #82, @200
