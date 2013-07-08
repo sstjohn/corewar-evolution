@@ -1,0 +1,6 @@
+;redcode
+;assert 1
+	MOV -31, -43
+	SLT 613, 60
+	JMP -0, @-20
+	SLT 613, 60

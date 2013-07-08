@@ -1,0 +1,6 @@
+;redcode
+;assert 1
+	ADD 290, -60
+	SUB @3, @804
+	ADD 290, -60
+	JMP -0, @-20
