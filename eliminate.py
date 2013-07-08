@@ -4,6 +4,10 @@ import bisect
 import os
 import random
 import sys
+
+import warnings
+warnings.simplefilter("ignore", DeprecationWarning)
+
 import Corewar, Corewar.Benchmarking
 
 from Warrior import Warrior
