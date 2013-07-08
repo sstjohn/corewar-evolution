@@ -1,7 +1,0 @@
-;redcode
-;assert 1
-	SUB @127, 106
-	MOV -7, <-20
-	DJN -1, @-329
-	JMZ 210, 30
-	JMZ 610, 238

@@ -1,8 +1,8 @@
 ;redcode
 ;assert 1
-	SUB @721, 102
-	ADD @800, @2
-	ADD 210, 28
+	JMN <0, #2
+	SPL 72, #810
+	MOV @800, @2
 	ADD 210, 22
 	SUB -1, <-20
 	JMP -1, @-20
