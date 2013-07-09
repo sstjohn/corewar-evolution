@@ -23,31 +23,32 @@
 	ADD 10, 1
 	DAT <708, #43
 	DAT <708, #43
+	SUB @1, 0
 	SUB @121, 103
 	SPL 0, 90
-	SPL 0, 90
+	SUB #0, 9
+	ADD 10, 1
 	SUB #0, 9
 	SUB #0, 9
-	SUB #0, 9
-	DJN @8, -17
+	ADD 10, 1
+	SUB @127, 106
 	ADD 10, 1
 	SLT 0, @42
-	SUB #0, 9
-	ADD 10, 1
 	ADD 10, 1
 	SLT 0, @42
 	SUB @127, 106
 	SUB @127, 106
-	MOV -1, <-20
+	CMP -7, <-420
+	CMP -7, <-420
+	CMP -7, <-420
 	SPL 0, #2
-	SPL 0, #2
-	DAT <708, #43
 	ADD 210, 60
 	SPL 0, #2
 	DAT <708, #43
 	ADD 10, 1
 	SPL 0, #2
-	ADD 10, 1
-	SPL 0, #2
 	ADD 210, 60
+	SPL 0, #2
+	SPL 0, #2
+	CMP -7, <-420
 	CMP -7, <-420

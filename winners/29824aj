@@ -23,13 +23,13 @@
 	ADD 10, 1
 	DAT <708, #43
 	DAT <708, #43
-	SUB @121, 103
+	SUB @1, 0
 	SPL 0, 90
 	SPL 0, 90
+	SPL 0, #2
 	SUB #0, 9
 	SUB #0, 9
-	SUB #0, 9
-	DJN @8, -17
+	MOV -1, <-20
 	ADD 10, 1
 	SLT 0, @42
 	SUB #0, 9
@@ -49,5 +49,6 @@
 	SPL 0, #2
 	ADD 10, 1
 	SPL 0, #2
+	SPL 0, #2
 	ADD 210, 60
-	CMP -7, <-420
+	ADD 210, 60
