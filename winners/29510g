@@ -1,0 +1,6 @@
+;redcode
+;assert 1
+	JMN 271, -360
+	JMN 271, -360
+	MOV <-17, <-36
+	JMZ -1, @-124
