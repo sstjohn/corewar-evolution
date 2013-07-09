@@ -1,7 +1,0 @@
-;redcode
-;assert 1
-	MOV -7, <-20
-	MOV -7, <-20
-	ADD 410, -9
-	SPL 0, #-3
-	MOV -7, <-20
