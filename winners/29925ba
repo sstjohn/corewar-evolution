@@ -1,7 +1,0 @@
-;redcode
-;assert 1
-	MOV -7, <-20
-	JMZ -1, @-131
-	MOV -707, <-20
-	ADD #210, 62
-	JMZ -1, @-131
