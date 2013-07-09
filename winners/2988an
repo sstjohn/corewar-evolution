@@ -1,6 +1,0 @@
-;redcode
-;assert 1
-	SUB @920, 105
-	SLT 613, 60
-	JMP -0, @-20
-	SLT 613, 60
