@@ -1,4 +1,0 @@
-;redcode
-;assert 1
-	SPL 0, #-57
-	MOV <0, <437
