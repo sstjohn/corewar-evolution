@@ -1,8 +1,0 @@
-;redcode
-;assert 1
-	SUB @0, @2
-	MOV -7, <-26
-	DJN -1, @-128
-	JMP <-131, 103
-	JMP -140, -800
-	SLT -1, <-128
