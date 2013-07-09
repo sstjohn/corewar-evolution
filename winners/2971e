@@ -1,0 +1,6 @@
+;redcode
+;assert 1
+	SPL 0, #-217
+	SPL -0, -187
+	SLT 0, -634
+	SPL 52, -585

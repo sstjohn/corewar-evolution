@@ -1,0 +1,7 @@
+;redcode
+;assert 1
+	SPL 0, #-287
+	SLT -902, <232
+	SLT -902, <232
+	DJN <-900, 162
+	SPL 0, #-287
