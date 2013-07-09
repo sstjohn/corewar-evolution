@@ -1,8 +1,0 @@
-;redcode
-;assert 1
-	SUB 10, 9
-	SLT 271, 60
-	SUB @1, @1
-	MOV 271, 60
-	MOV -17, <-16
-	DJN -1, @-20
