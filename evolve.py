@@ -41,8 +41,7 @@ def era_score_function(w):
     return (((float(w.lap_scores.wins) + 0.5 * float(w.lap_scores.ties))) + ((float(w.all_scores.ties) * 0.5 + float(w.all_scores.wins)))) / (float(w.all_scores.losses) + float(w.lap_scores.losses))
 
 def gen_score_function(w):
-    return ((((float(w.all_scores.ties) * 0.5 + float(w.all_scores.wins)) / (float(w.all_scores.wins) + float(w.all_scores.ties) + float(w.all_scores.losses))) +
-             ((float(w.lap_scores.ties) * 0.5 + float(w.lap_scores.wins)) / (float(w.lap_scores.wins) + float(w.lap_scores.ties) + float(w.lap_scores.losses)))) *
+    return  ((((float(w.lap_scores.ties) * 0.5 + float(w.lap_scores.wins)) / (float(w.lap_scores.wins) + float(w.lap_scores.ties) + float(w.lap_scores.losses)))) *
            float(w.lap_scores.lines))
 
 def print_elites():
@@ -86,7 +85,12 @@ def warrior_read(f, id=None, gen=None):
 
 def spawn(warrior_a, warrior_b, gen = None, id = None):
     a = warrior_a.dna
+    if len(a) / 14 < 50:
+        a += a
+
     b = warrior_b.dna
+    if len(b) / 14 < 50:
+        b += b
     result_l = ''
     result_r = ''
 
