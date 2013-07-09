@@ -1,8 +1,8 @@
 ;redcode
 ;assert 1
 	SPL 0, <332
-	SPL -17, #-320
-	SUB @-117, @109
+	ADD <171, 90
+	ADD <171, 90
 	SPL -17, #-320
 	SPL -17, #-320
 	MOV -7, <-20
