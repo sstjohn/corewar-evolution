@@ -1,7 +1,0 @@
-;redcode
-;assert 1
-	MOV 38, @-124
-	DJN -1, @-124
-	DAT #-178, <3
-	DJN 0, #12
-	SPL -1, @124
