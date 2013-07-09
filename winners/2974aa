@@ -1,7 +1,0 @@
-;redcode
-;assert 1
-	SPL 0, #-287
-	SPL 52, -585
-	SPL -0, -187
-	SPL -0, -187
-	SPL 0, #-287
