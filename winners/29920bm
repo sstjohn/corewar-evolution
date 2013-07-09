@@ -1,4 +1,0 @@
-;redcode
-;assert 1
-	MOV -57, <-21
-	JMN -1, #-20
