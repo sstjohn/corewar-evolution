@@ -6,47 +6,47 @@
 	MOV -7, <-20
 	DJN -1, @-20
 	DJN -1, @-20
-	MOV 0, <-40
-	SUB 171, 0
-	SLT @101, 100
-	SUB 0, @-0
+	JMN 100, 0
+	JMN 100, 0
+	ADD 130, 9
+	CMP 130, 9
 	MOV 0, -2
 	JMN 130, 9
 	CMP 130, 9
 	SUB #10, @10
 	SUB #630, 603
 	MOV 0, -2
-	SUB 171, 0
+	MOV 0, -2
 	MOV 0, 0
 	JMN 710, 600
 	SUB 100, 0
 	SUB 1, @-0
-	JMN 0, -0
-	SUB 1, @-0
-	JMN 0, #-0
-	SUB 12, 0
+	DJN 800, <210
 	SUB 12, @13
+	SUB 12, @13
+	SUB 12, 0
+	ADD 0, 0
 	ADD 130, 9
-	SUB 0, @-0
+	SUB 12, 0
 	ADD 130, 9
+	SPL 421
 	SUB 2, @400
-	SPL 421
-	SPL 421
+	SUB 0, @42
+	SUB 100, 0
+	SUB 12, @13
+	JMN 2, #400
+	DJN @42, #200
+	JMN 2, #400
+	SUB 12, @13
+	SUB 12, @13
+	JMN 2, #400
 	ADD 130, 9
-	SUB 12, @13
-	JMN 2, #400
-	SUB 12, @13
-	JMN 2, #400
-	SUB 12, @13
-	SUB 12, @13
-	JMN 2, #400
 	ADD 130, 9
-	CMP 10, 3
-	SUB 12, 0
-	SUB #42, @200
-	SUB 12, @13
+	SPL 0, <-2
+	MOV -1, <-29
 	SUB 171, 0
+	ADD 270, 1
 	ADD 270, 1
 	CMP -7, <-420
 	CMP -7, <-420
-	DJN -1, @-20
+	SPL 0, <-2
