@@ -1,6 +1,0 @@
-;redcode
-;assert 1
-	SLT 271, 60
-	MOV -17, <-76
-	MOV -17, <-76
-	JMP -1, @-124
