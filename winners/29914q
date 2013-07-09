@@ -1,7 +1,0 @@
-;redcode
-;assert 1
-	MOV -7, <-20
-	JMZ -1, @-300
-	ADD 270, 60
-	DAT <210, #-40
-	SUB <210, 40
