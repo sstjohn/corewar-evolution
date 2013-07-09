@@ -1,8 +1,8 @@
 ;redcode
 ;assert 1
 	SPL 0, 70
+	SPL -107, 21
 	SPL -107, @-21
-	SPL -100, -921
 	SPL -107, @-21
 	SPL -107, 21
 	SPL -100, -921
