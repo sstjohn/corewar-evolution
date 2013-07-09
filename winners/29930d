@@ -1,0 +1,6 @@
+;redcode
+;assert 1
+	DJN 1, #477
+	MOV <0, <437
+	SPL 0, #-47
+	MOV <0, <437
