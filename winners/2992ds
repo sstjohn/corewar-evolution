@@ -1,8 +1,8 @@
 ;redcode
 ;assert 1
 	SPL 0, 90
-	SPL 30, 90
 	MOV -3, <-21
+	SPL 30, 90
 	SPL 3, 90
 	MOV -5, <-20
 	MOV -5, <-20
