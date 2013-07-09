@@ -1,9 +1,0 @@
-;redcode
-;assert 1
-	SUB @327, 109
-	MOV -7, <-20
-	SPL 0
-	MOV -7, <-20
-	MOV -7, <-20
-	DJN -1, @-20
-	MOV -7, <-20
