@@ -1,6 +1,0 @@
-;redcode
-;assert 1
-	MOV -5, <-20
-	MOV 105, <-20
-	MOV 105, <-20
-	DJN -1, @-121
