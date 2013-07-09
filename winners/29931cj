@@ -5,49 +5,50 @@
 	MOV -1, <-20
 	MOV -7, <-20
 	DJN -1, @-20
-	SPL 0, <-2
-	DAT <300, #80
-	JMN 0, <-804
-	ADD 0, 2
-	ADD 0, 2
-	SPL 0, <-2
-	JMZ -130, 8
-	JMN 0, <-701
-	ADD 0, -704
-	ADD 0, -704
-	SUB #0, 9
-	SUB 300, 0
-	ADD 0, -75
-	JMP @300, 880
-	ADD 0, 2
-	JMN -2, @-26
-	MOV -7, <-20
-	MOV -7, <-20
-	SUB 0, -0
-	MOV @162, 106
-	MOV @162, 106
+	SPL <80, 90
+	MOV @-0, 0
+	ADD 270, 60
+	SUB 100, @300
+	SUB <100, @0
+	SUB @0, 0
+	SUB 0, 960
+	MOV #0, <29
+	SUB @0, @2
+	SUB <0, @2
+	SUB @0, @2
+	SUB 0, 860
+	SUB @121, 103
 	SPL 0, <-2
 	SPL 0, <-2
-	SUB @43, 20
-	SUB @18, 0
-	ADD 430, 200
-	ADD 3, @20
-	ADD 430, 200
-	SUB 430, 200
-	SPL 0, 90
-	MOV -2, -26
-	ADD 0, -75
-	SUB @0, <2
-	SUB 300, 0
+	MOV #0, <29
+	MOV -7, <-520
+	JMP 0, 96
+	MOV #0, 0
+	ADD 270, 60
+	SUB @0, 0
+	SUB 0, 960
+	MOV -1, <-20
+	SUB #0, 0
 	ADD 130, 9
-	ADD 430, 200
-	ADD 430, 200
-	ADD 430, 200
-	ADD 3, @20
-	DAT #620, #60
-	DAT #620, #60
-	SPL 0, <2
+	ADD 130, 9
+	ADD 270, 60
+	SUB @127, 100
+	SUB @121, 106
+	SUB 0, 960
+	JMP <121, 106
+	SUB #8, 9
+	SUB #0, 0
+	MOV -307, <20
+	SUB @-0, 0
+	ADD 270, 160
+	SPL 8, 290
+	MOV -51, <-860
+	MOV -1, <-20
+	ADD 270, 60
 	SPL 0, 90
 	SPL 0, 90
 	SPL 0, 90
-	SPL 0, 90
+	CMP -7, <-420
+	MOV -1, <-20
+	MOV 210, -30
+	MOV @-0, 0
