@@ -1,8 +1,6 @@
 ;redcode
 ;assert 1
-	ADD 3, -400
-	MOV -57, <-21
-	SPL 0, <40
-	SUB #-2, <-20
-	SPL 0, <40
-	MOV -57, <-21
+	SPL 0, #-2
+	MOV -17, <-32
+	MOV -501, <-20
+	DJN -1, @-20
