@@ -1,0 +1,8 @@
+;redcode
+;assert 1
+	SPL 0, <-902
+	SPL 0, <-902
+	MOV -17, <-20
+	DAT #50, <-2
+	ADD #5, -900
+	DAT #50, <-2
