@@ -1,8 +1,6 @@
 ;redcode
 ;assert 1
-	SPL 52, -585
-	SPL -0, -187
-	SPL -0, -187
-	SPL 0, -187
-	CMP #170, -187
-	MOV -900, @162
+	SPL 0, #2
+	MOV -7, <-20
+	MOV -7, <-20
+	DJN -1, @-20

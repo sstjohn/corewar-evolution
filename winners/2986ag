@@ -1,9 +1,0 @@
-;redcode
-;assert 1
-	SUB 14, @10
-	MOV 109, @-20
-	MOV 109, @-20
-	DJN -1, @-20
-	ADD 210, 30
-	ADD -31, <-20
-	ADD -31, <-20
