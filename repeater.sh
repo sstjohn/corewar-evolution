@@ -30,6 +30,11 @@ else
 fi
 rm -rf `seq 0 10000`
 if [ $success -eq 1 ]; then
+	./clean_dupes.sh 2>&1
+	git add -u winners
+	git commit -m "removing dupes" 2>&1
+	git pull -X theirs 2>&1
+	git push 2>&1
 	./eliminate.py 
 	if [ 0 -eq $? ]; then
 		pushed=0
