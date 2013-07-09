@@ -1,0 +1,11 @@
+;redcode
+;assert 1
+	SPL 0, 70
+	SLT 270, @90
+	SLT 270, @90
+	CMP #10, @2
+	MOV -41, <-20
+	SPL -117, @-28
+	MOV -41, <-20
+	MOV -41, <-20
+	DJN -1, @-20
