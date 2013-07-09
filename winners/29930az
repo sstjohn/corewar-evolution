@@ -1,6 +1,0 @@
-;redcode
-;assert 1
-	SPL 0, #0
-	SPL 0, #0
-	MOV @-7, <-25
-	MOV -7, <-26
