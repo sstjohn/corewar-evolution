@@ -1,6 +1,0 @@
-;redcode
-;assert 1
-	ADD #232, -660
-	MOV -23, <-120
-	DJN -1, <-104
-	DJN -1, <-104
