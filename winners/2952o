@@ -1,8 +1,8 @@
 ;redcode
 ;assert 1
-	SUB #620, 854
-	JMZ <9, #874
+	SPL 52, -585
 	SPL -0, -187
-	JMZ -0, -244
+	SPL -0, -187
+	SPL 0, -187
 	CMP #170, -187
 	MOV -900, @162
