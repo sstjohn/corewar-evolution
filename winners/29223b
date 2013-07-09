@@ -1,9 +1,0 @@
-;redcode
-;assert 1
-	CMP 180, -800
-	MOV -57, <-21
-	JMZ 0, 2
-	SPL 1, 10
-	SPL 0, 40
-	SPL 0, 40
-	MOV -57, <-21
