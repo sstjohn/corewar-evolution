@@ -1,8 +1,0 @@
-;redcode
-;assert 1
-	MOV 58, <31
-	MOV -57, <-21
-	SLT @127, <106
-	SPL 0, <40
-	SPL 0, <40
-	MOV -57, <-21
