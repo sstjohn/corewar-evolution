@@ -1,0 +1,7 @@
+;redcode
+;assert 1
+	MOV -940, @-162
+	SPL -0, -187
+	SPL -0, -187
+	SPL -0, -187
+	SPL 0, #-287
