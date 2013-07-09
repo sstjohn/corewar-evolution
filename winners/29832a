@@ -1,5 +1,7 @@
 ;redcode
 ;assert 1
-	JMP -0, @-60
-	ADD 200, 50
-	ADD 200, 50
+	SPL 0, #-2
+	MOV 47, -740
+	MOV -11, <-20
+	MOV -11, <-20
+	DJN -1, @-20
