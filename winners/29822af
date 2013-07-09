@@ -1,12 +1,5 @@
 ;redcode
 ;assert 1
-	SPL 0, 101
-	MOV -7, <-20
-	MOV 47, <-20
-	DJN -1, <-21
-	DJN -1, <-21
-	DJN -1, <-21
-	DJN -1, <-21
 	SPL 0, @-2
 	MOV -67, <-20
 	MOV -67, <-20
