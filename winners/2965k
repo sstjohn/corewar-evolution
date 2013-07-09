@@ -1,7 +1,0 @@
-;redcode
-;assert 1
-	SPL 289
-	SUB 98, <-124
-	MOV <821, <-450
-	MOV <821, <-450
-	JMP -1, @-124
