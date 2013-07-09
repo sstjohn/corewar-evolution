@@ -1,7 +1,0 @@
-;redcode
-;assert 1
-	SUB #4, <-85
-	MOV 7, <689
-	SPL 0
-	MOV 4, <-80
-	MOV 7, <689
