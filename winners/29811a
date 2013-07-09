@@ -1,7 +1,0 @@
-;redcode
-;assert 1
-	MOV -455, <-55
-	DJN -1, <-16
-	MOV -455, <-55
-	MOV -455, <-55
-	SUB 255, @60
