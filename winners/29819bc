@@ -24,31 +24,31 @@
 	SUB <1, <-1
 	SUB 412, <88
 	SPL 0, <402
-	CMP 172, @201
+	CMP 17, <-20
 	SUB @127, @6
 	ADD 30, 9
 	ADD 30, 9
-	ADD 30, 9
+	SPL 0, <402
 	DJN 12, #10
 	JMP 30, 9
-	DAT #0, #0
-	SUB @0, 2
-	SUB @127, @6
+	SUB 12, @18
+	JMN @12, #0
 	ADD 30, 9
-	ADD 260, 60
-	MOV 17, <-20
-	DJN 0, 7
-	DJN 0, 7
+	ADD 30, 9
 	SPL 0, <402
-	ADD 30, 9
+	SPL 0, <402
+	DJN 0, 7
+	DJN 0, 7
+	SUB 0, 7
+	SPL 0, <402
 	DJN @12, #3
 	DJN 0, 7
-	SUB #12, @3
-	MOV 17, <-20
+	SPL 0, <402
+	DJN 0, 7
 	DJN 0, 7
 	DJN 271, 481
-	MOV -6, <-20
-	DJN 271, 481
 	SUB 12, @18
+	DJN 271, 481
+	SPL 0, <402
 	SUB @121, 103
 	SPL 0, <402
