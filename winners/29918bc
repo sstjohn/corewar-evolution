@@ -33,21 +33,21 @@
 	SUB @121, <193
 	SUB #1, 0
 	ADD 270, 1
-	ADD 130, 9
+	SUB #1, 0
 	JMP 0
-	SUB @127, @106
-	SUB @127, @106
+	JMP 0
+	ADD 130, 9
 	ADD 130, 9
 	ADD #0, 920
-	ADD -1, <-20
-	CMP #-7, <420
-	CMP #-7, <420
+	SPL 300, 90
+	JMP 1, 10
 	SPL 0, <-2
-	SUB @-0, 92
+	SPL 0, <-2
+	SUB @0, 0
 	ADD 210, 31
-	SUB @121, <193
 	SUB @0, 0
 	ADD -1, <-20
+	MOV -1, <-26
 	ADD -1, <-20
-	SUB @0, 0
+	SPL 0, <-2
 	SUB @0, 0
