@@ -10,44 +10,43 @@
 	SUB 171, 0
 	SLT @101, 100
 	SUB 0, @-0
-	JMN 0, 0
+	MOV 0, -2
 	JMN 130, 9
 	CMP 130, 9
 	SUB #10, @10
 	SUB #630, 603
+	MOV 0, -2
 	SUB 171, 0
-	SUB 171, 0
-	ADD 130, 9
+	MOV 0, 0
 	JMN 710, 600
-	SUB 1, @-0
+	SUB 100, 0
 	SUB 1, @-0
 	JMN 0, -0
 	SUB 1, @-0
 	JMN 0, #-0
-	SUB 12, @13
-	SUB 12, @13
-	ADD 130, 9
 	SUB 12, 0
+	ADD 0, 0
+	ADD 130, 9
+	SUB 0, @-0
+	ADD 130, 9
+	SUB 2, @400
 	SPL 421
-	SLT 101, 100
+	SPL 421
 	ADD 130, 9
-	SUB 0, -0
-	SUB 0, @42
-	SUB 100, 0
-	JMN 2, #400
 	SUB 12, @13
+	JMN 2, #400
+	DJN @42, #200
 	JMN 2, #400
 	SUB 12, @13
 	SUB 12, @13
 	JMN 2, #400
 	ADD 130, 9
-	SUB 1, <1
+	ADD 130, 9
 	SUB 12, 0
+	SUB #42, @200
 	SUB 12, @13
-	MOV -7, <-20
 	SUB 171, 0
 	ADD 270, 1
 	CMP -7, <-420
 	CMP -7, <-420
-	CMP -7, <-420
-	CMP -7, <-420
+	SPL 0, <-2
