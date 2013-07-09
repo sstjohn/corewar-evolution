@@ -1,8 +1,5 @@
 ;redcode
 ;assert 1
-	SPL 0, 40
-	MOV 7, <-125
-	MOV -7, <-20
 	SLT -787, <-258
 	SPL 0, <-854
 	MOV -907, <-20
