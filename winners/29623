@@ -1,7 +1,0 @@
-;redcode
-;assert 1
-	SUB #0, -0
-	SPL 0, #2
-	MOV -17, <-32
-	MOV -51, <-20
-	DJN -1, @-20
