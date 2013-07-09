@@ -1,7 +1,8 @@
 ;redcode
 ;assert 1
-	SLT #0, 624
 	SPL 52, -585
+	SPL -0, -187
 	SPL -0, -187
 	SPL 0, -187
 	CMP #170, -187
+	MOV -900, @162
