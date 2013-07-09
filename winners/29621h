@@ -1,7 +1,0 @@
-;redcode
-;assert 1
-	MOV -1, <-70
-	DJN -1, @0
-	SUB @300, @7
-	DAT #510, #-60
-	MOV -1, <-70
