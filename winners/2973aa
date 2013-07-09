@@ -1,11 +1,5 @@
 ;redcode
 ;assert 1
-	SPL -105, -600
-	MOV -7, <-20
-	SPL 0, <-2
-	MOV -7, <-20
-	SPL <127, 106
-	ADD 270, 60
 	SPL 0, <-2
 	SPL 400, 90
 	SPL 400, 90
