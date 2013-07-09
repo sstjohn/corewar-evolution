@@ -20,12 +20,12 @@
 	SUB #0, @0
 	SPL 0, #-2
 	MOV -51, <-20
-	MOV -51, <-20
+	SUB #0, -9
 	SPL 0, #540
 	SPL 0, #540
 	SUB 0, 0
 	SPL 0, #540
-	SUB #0, -9
+	SPL 0, #540
 	SPL 100, 90
 	SUB #0, -9
 	SUB @5, @2
@@ -37,16 +37,16 @@
 	SUB @21, -103
 	SPL 0, #-2
 	ADD 235, 60
-	SUB -10, 9
-	SUB 0, 8
-	SPL 0, #540
+	SPL 100, 90
+	CMP 1, 8
+	SUB #0, -9
 	DJN -1, @-20
 	SUB -10, 9
 	DJN -1, @-20
 	SUB 0, 0
 	SUB @121, 103
 	ADD 510, 9
-	ADD 510, 9
+	MOV -53, <-20
 	SUB -10, 9
 	ADD 510, 9
 	SUB 0, 0
