@@ -1,9 +1,0 @@
-;redcode
-;assert 1
-	MOV -17, <-36
-	DJN -1, #-12
-	CMP #111, 103
-	DJN -1, @-121
-	JMN @12, #710
-	DJN 11, #12
-	ADD #11, 3
