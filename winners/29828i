@@ -1,0 +1,53 @@
+;redcode
+;assert 1
+	SPL 0, -202
+	CMP -207, <-120
+	MOV -1, <-20
+	MOV -7, <-20
+	DJN -1, @-20
+	JMP 21
+	DAT #2, <0
+	JMN <2, #0
+	MOV -1, <-20
+	SUB -207, <-120
+	JMN 0, -202
+	SUB <0, 9
+	DJN 1, @2
+	SLT 0, 270
+	ADD 100, 9
+	SUB 12, 28
+	SUB 1, <2
+	CMP @-127, 100
+	SLT 110, 20
+	DJN 1, @2
+	SUB @121, 106
+	SLT 110, 20
+	MOV -1, <-20
+	JMN <2, #0
+	SUB @-127, 100
+	DAT #2, <0
+	SUB 12, 28
+	MOV -7, <-20
+	JMP 21
+	JMP 21
+	DAT #2, <0
+	JMN <2, #0
+	DAT #2, <0
+	JMN <2, #0
+	SLT 110, 20
+	JMN <2, #0
+	SLT 110, 20
+	JMN <2, #0
+	JMN <2, #0
+	SPL 0, -202
+	SUB 12, 28
+	SPL 0, -202
+	CMP -201, <-120
+	MOV -1, <-20
+	SUB 12, 28
+	JMN 0, 270
+	SPL 0, -202
+	CMP -207, <-120
+	SPL 0, -202
+	CMP -201, <-120
+	MOV -1, <-20
