@@ -16,34 +16,34 @@
 	SUB @121, 106
 	MOV -1, <-20
 	ADD 30, 9
-	MOV -1, <-20
-	DJN -1, @-0
+	JMP 270, 60
+	CMP 21, 103
 	DAT #0, <2
 	SUB @121, 103
 	ADD 30, 9
 	SUB -1, <-0
-	MOV 0, 802
+	DJN -1, @-0
 	SUB @121, 106
 	SPL -700, -600
 	JMN 121, 103
-	ADD 210, 33
-	SPL 1, 23
+	DJN -1, @-0
+	JMN 0, #0
 	SUB -1, <-20
 	MOV -1, <-20
 	DJN -1, @-20
 	CMP 10, 0
 	CMP 10, 0
-	MOV -1, <20
+	SPL 5, <802
 	CMP 10, 0
 	SUB @121, 103
 	JMN <127, 106
-	DJN -7, @-28
-	SUB @121, 103
+	SPL <121, 103
+	SUB 121, 103
 	JMP <1
 	SUB -1, <-0
 	ADD 30, 9
 	SUB 12, @10
-	SPL <300, 90
+	SUB 12, @10
 	JMN <420, 50
 	SPL 0, <802
 	SPL 0, <802
