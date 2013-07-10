@@ -6,11 +6,11 @@
 	MOV -7, <-20
 	DJN -1, @-20
 	SUB 11, @13
-	DJN <670, 160
+	ADD @130, 9
 	SUB 0, 0
 	MOV -1, <-20
 	SUB 0, 0
-	JMZ 700, 600
+	DJN @11, #200
 	SUB @127, 106
 	SPL <121, 106
 	SUB @121, 106
@@ -19,28 +19,28 @@
 	JMP 0, 90
 	SUB @121, 103
 	SUB #0, 9
-	SUB #0, 9
-	SUB #0, 9
+	SUB @121, 103
+	SUB 0, 0
 	SUB #0, 9
 	SUB @-127, 100
 	SUB #0, 9
-	SUB @-0, @22
+	CMP 0, 0
 	MOV -1, <-20
 	SUB #0, 9
 	DJN @162, -108
 	SUB 0, 0
-	CMP @0, @2
+	SPL 0, 50
 	SPL 0, 50
 	CMP @0, @2
-	SUB 0, 0
+	SPL 0, 50
 	JMZ -7, @-120
 	ADD -3, <-60
 	ADD 3, @221
 	SPL 0, 50
 	SPL 0, 50
-	CMP @123, 102
 	MOV 0, 900
-	SUB 0, 0
+	MOV 0, 900
+	SPL 0, 50
 	SUB 0, 0
 	SPL -111
 	ADD -3, <-60
