@@ -1,52 +1,52 @@
 ;redcode
 ;assert 1
-	CMP 430, 9
+	MOV -811, <-728
 	SPL 0, <402
 	CMP -207, <-110
 	MOV -1, <-20
 	MOV -7, <-20
 	DJN -1, @-20
-	SPL -700
+	MOV -811, <-728
 	SPL -700
 	SUB 0, @2
 	CMP 1, <-1
-	SPL 0, <406
-	CMP 1, <-1
-	JMZ @300, 90
-	JMZ @300, 90
-	SUB 300, 90
-	MOV -811, <-728
-	MOV -811, <-728
-	SPL 0, <402
-	SPL 0, <-402
-	ADD 270, 0
-	ADD 270, 0
-	MOV 930, 9
+	DJN 0, <402
+	SLT 721, 0
+	JMP @300, 90
+	ADD 430, 9
+	SUB #0, -40
+	SUB 11, <-1
+	DJN 0, <402
+	SLT 721, 0
 	JMN 0, <402
+	SUB #0, -40
+	MOV 721, @0
+	MOV 930, 9
+	SLT 30, 9
 	SUB 1, <-1
 	ADD 430, 9
-	MOV 721, @0
+	SLT 721, 0
 	MOV 721, @0
 	MOV 721, @0
 	SLT 430, 9
 	SUB -811, <-728
 	SUB -811, <-728
 	ADD #270, 1
-	SUB -811, <-728
-	MOV -811, <-728
-	JMZ 430, 9
-	ADD #270, 1
+	JMP @211, 66
+	MOV -1, <-20
+	SUB @121, 106
+	JMP 0, <402
 	CMP @121, 106
 	SUB @743, 0
-	CMP @121, 106
+	MOV -7, <-60
 	SUB @743, 0
 	SUB 0, @18
-	SUB 3, @-20
+	MOV -1, <-20
 	MOV -1, <-20
 	ADD 430, 9
-	JMN 0, <402
+	ADD 430, 9
+	SLT 30, 9
 	JMZ <-121, #106
-	MOV -811, <-728
+	SPL 0, <402
+	CMP 430, 9
 	JMP <121, 106
-	CMP 430, 9
-	CMP 430, 9
