@@ -1,7 +1,7 @@
 ;redcode
 ;assert 1
 	SUB -0, 0
-	DJN 1, @20
+	SUB 0, 0
 	SPL 700, 600
 	SPL 700, 600
 	SUB 121, 100
@@ -18,18 +18,18 @@
 	DAT #-9, #-12
 	SUB @21, 3
 	SUB @721, <103
-	SUB @721, <103
+	SPL 0, @804
 	DJN -1, @-20
 	DAT #-9, #-15
 	SUB 0, 0
-	SUB 0, 0
+	MOV -9, <-20
 	MOV -9, <-20
 	SUB 12, @10
 	SUB 12, @10
 	SUB 12, @10
 	JMN <70, 60
-	DJN 0, @-209
 	SUB 12, @10
+	JMN <70, 60
 	SLT 721, -0
 	SUB @921, 3
 	SUB @129, 106
@@ -38,16 +38,17 @@
 	SUB 600, 700
 	SUB 12, @10
 	SUB 12, @10
-	SUB -0, 0
+	SUB 600, 700
 	DJN -1, @-20
 	SUB -0, 0
-	SUB #72, @200
+	SUB -0, 0
 	SUB #70, 60
 	SUB 0, 0
 	SUB #72, @200
 	SUB #72, @200
 	SUB #70, 60
 	SUB 0, 0
-	DJN 1, @20
+	SUB -0, 0
 	SUB 0, 0
 	SUB 0, 0
+	SPL 700, 600

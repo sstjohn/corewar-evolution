@@ -30,24 +30,24 @@
 	JMN <70, 60
 	DJN 0, @-209
 	SUB 12, @10
+	SUB 12, @10
 	SLT 721, -0
-	SUB @921, 3
 	SUB @129, 106
 	SUB @129, 106
 	SUB 600, 700
-	SUB 600, 700
-	SUB 12, @10
-	SUB 12, @10
 	SUB -0, 0
+	SUB 12, @10
 	DJN -1, @-20
+	SUB -0, 0
+	SUB 12, @10
 	SUB -0, 0
 	SUB #72, @200
 	SUB #70, 60
 	SUB 0, 0
 	SUB #72, @200
 	SUB #72, @200
+	SUB #70, 60
 	SUB #70, 60
 	SUB 0, 0
 	DJN 1, @20
-	SUB 0, 0
 	SUB 0, 0
