@@ -12,43 +12,42 @@
 	MOV -9, <-20
 	DJN -1, @-20
 	DJN @0, -9
-	SUB @0, @1
+	DJN -1, @-20
 	SUB 0, 21
 	ADD #92, @129
-	SUB 12, @10
+	SUB @121, 103
 	SUB 12, @10
 	SUB 0, 20
-	DJN <-1, @0
 	SPL 100, 13
 	DJN <-1, @0
-	SUB 0, 2
+	DJN <-1, @0
 	SUB 50, @8
+	CMP 21, 123
 	SUB 0, 2
 	DAT #210, #60
-	MOV -1, <-26
-	SLT 1, <2
-	MOV -7, <-20
 	ADD @-1, <0
-	SPL <-120, 801
+	SLT 1, <2
 	DJN <-1, @0
+	SUB 0, 2
 	CMP 0, 2
-	JMP <-120, 801
-	ADD 2, @912
-	ADD 0, 0
-	SUB 12, @10
-	SLT 0, 0
-	JMP 0
+	CMP 0, 2
+	CMP 0, 2
+	MOV 12, @10
+	SLT 1, <2
+	DJN -1, @-20
+	SLT 0, <-526
+	SUB 1, <2
+	DJN 21, 123
 	SLT 0, <-526
 	DJN 21, 123
-	CMP @127, 106
 	DJN 21, 123
 	ADD 421, 1
 	SUB 72, @14
 	ADD 421, 1
-	ADD 421, 1
+	ADD 0, 0
 	JMZ @129, 120
+	ADD 421, 1
 	MOV -1, <-26
 	MOV -1, <-26
-	ADD 421, 1
-	ADD 421, 1
+	MOV -1, <-26
 	ADD 421, 1
