@@ -14,41 +14,40 @@
 	DJN -1, @-20
 	SUB #0, 1
 	SUB #0, 0
-	JMN 37, #24
+	MOV -9, <-20
 	SLT 290, 90
-	SLT @0, 25
+	ADD 37, @24
 	ADD @17, 8
-	SUB 0, 0
+	MOV -9, <-20
 	MOV -14, <-20
 	MOV -1, <-36
 	JMZ <17, <8
-	MOV <121, 106
+	SUB @129, 106
 	SLT @0, 25
-	SUB 0, 0
-	JMN 37, #22
+	SUB #0, 0
+	JMP <0, 21
 	JMP <0, 21
 	JMZ <17, <8
 	ADD 0, 100
 	SUB #22, @120
-	SUB #22, @120
-	SPL 0, <-742
-	JMP 0
 	ADD 0, 0
+	SPL 0, <-742
+	ADD 0, 0
+	ADD <300, 90
 	ADD 3, @426
 	CMP 0, 100
-	ADD 3, @426
-	SPL 0, <54
 	JMP 0
-	DAT #-130, #9
+	JMP 0
+	JMP 0
+	JMP 0
 	ADD 3, 540
 	DAT #-130, #9
 	ADD #120, 100
 	SUB -0, 0
-	JMP 0
+	SUB -0, 0
 	CMP 290, 91
 	DAT #-130, #9
 	SUB 0, 0
 	JMZ <30, 9
 	SPL -100, -606
-	MOV -1, <-26
-	JMZ <30, 9
+	SUB @-12, <10

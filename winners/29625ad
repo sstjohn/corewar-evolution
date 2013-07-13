@@ -16,30 +16,30 @@
 	SUB #0, 0
 	JMN 37, #24
 	SLT 290, 90
-	SLT @0, 25
+	ADD 37, @24
 	ADD @17, 8
 	SUB 0, 0
-	MOV -14, <-20
-	MOV -1, <-36
+	JMP <0, 21
+	MOV -9, <-20
 	JMZ <17, <8
 	MOV <121, 106
 	SLT @0, 25
 	SUB 0, 0
-	JMN 37, #22
+	SUB @129, 106
 	JMP <0, 21
 	JMZ <17, <8
 	ADD 0, 100
-	SUB #22, @120
-	SUB #22, @120
+	SUB @129, 106
+	SUB @-12, 10
 	SPL 0, <-742
-	JMP 0
 	ADD 0, 0
+	ADD <300, 90
 	ADD 3, @426
 	CMP 0, 100
-	ADD 3, @426
+	JMP 0
 	SPL 0, <54
 	JMP 0
-	DAT #-130, #9
+	ADD 3, 540
 	ADD 3, 540
 	DAT #-130, #9
 	ADD #120, 100
@@ -49,6 +49,6 @@
 	DAT #-130, #9
 	SUB 0, 0
 	JMZ <30, 9
-	SPL -100, -606
-	MOV -1, <-26
-	JMZ <30, 9
+	SPL -9, @-12
+	SUB @-12, <10
+	SLT @0, 5
