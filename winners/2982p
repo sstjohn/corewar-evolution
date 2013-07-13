@@ -1,52 +1,54 @@
 ;redcode
 ;assert 1
-	SPL -9, -42
-	SUB @129, 106
-	SUB 121, 100
-	SPL 0, <-742
-	SUB #0, -32
+	SPL 0, <-2
+	SUB #112, @36
+	ADD 283, 60
+	MOV -1, <-26
+	MOV -1, <-26
 	MOV -1, <-26
 	MOV -7, <-20
 	SPL 0, #400
-	SPL 0, #400
+	SPL 0, -9
 	MOV -9, <-20
-	DJN -1, @276
-	JMZ 0, #2
-	JMZ 0, #2
-	JMZ 0, #2
-	MOV -1, <-26
-	SUB #0, 0
-	ADD 90, 90
-	MOV -1, <-26
-	SLT 1, <0
-	MOV -1, <-26
-	SUB @-10, 1
-	SUB #0, -32
-	ADD <100, 10
-	SLT 10, 5
-	SLT 1, <0
-	SLT 1, <-0
-	SUB 200, 10
-	SUB <0, -74
-	SUB #10, @16
-	JMZ @100, 70
-	SLT 0, <0
-	SUB <0, -74
-	SUB <0, -74
-	JMZ @100, 70
-	SUB #0, 0
-	SUB <0, -74
-	SUB @-7, -29
-	SLT 1, <0
-	CMP @-10, 1
-	JMZ 0, #2
-	SUB 20, 1
-	SUB 22, 4
-	SUB 421, 1
-	SUB 421, 1
-	SUB 22, 4
-	SUB 22, 4
+	DJN -1, @-20
+	JMP -7, -20
+	JMN <-30, 9
+	SUB @121, 103
+	DJN <17, <98
+	DJN <17, <98
 	SUB @129, 106
+	SUB @0, -102
+	ADD 0, @90
+	ADD 0, @90
+	SPL 100, 9
+	DJN -1, @-20
+	DJN -1, @-20
+	SUB @121, 103
+	SUB @121, 103
+	MOV -9, <-20
+	MOV -9, <-20
+	SUB @121, 103
+	SUB @121, 103
+	DJN -1, @-20
+	DJN -1, @-20
+	ADD 0, @90
+	JMZ -390, 60
+	JMZ -390, 60
+	DJN -1, @-20
+	SUB @121, 103
+	DJN -1, @-20
+	DJN <21, 107
+	DJN <21, 107
+	SUB @0, -102
+	SUB 0, @90
+	SUB 0, @90
 	MOV -1, <-26
+	SUB @121, 103
+	MOV 9, 20
+	MOV 9, 20
+	SPL 0, <-2
 	MOV -1, <-26
-	SUB 121, 100
+	ADD 283, 60
+	ADD 283, 60
+	ADD 283, 60
+	MOV -1, <-26
