@@ -2,7 +2,7 @@
 ;assert 1
 	SPL -0, #-22
 	SUB 100, 1
-	SUB 100, 1
+	MOV -507, <-27
 	MOV -507, <-27
 	CMP -1, 2
 	SUB 0, 0
@@ -12,43 +12,42 @@
 	MOV -9, <-20
 	DJN -1, @-20
 	MOV -7, <-21
+	SLT 270, 60
 	JMZ -9, @-18
 	JMZ -9, @-18
+	SUB #0, @50
 	SUB @29, 6
-	SUB @29, 6
-	MOV 9, <20
 	SUB @29, 6
 	JMP 92, 200
 	JMN @12, #201
 	SPL 0, <-742
 	SUB #10, 10
+	SUB #10, 10
 	SUB @121, 103
+	SUB @121, 103
+	JMZ <121, 102
+	SUB -130, 9
 	JMN @129, 594
-	SUB -130, 9
-	SUB 0, 0
-	SUB -130, 9
-	MOV -9, <-20
 	DJN -1, @-20
-	SUB #0, @50
-	CMP @29, 6
-	JMP -1, 2
-	SPL 92, 200
+	ADD 1, 107
+	SLT @105, @800
+	SPL <129, 106
+	CMP #10, 10
 	SPL 0, <-742
+	CMP #10, 10
 	DJN -1, @-20
-	DJN -1, @-20
-	CMP -1, <-20
-	SUB 10, -0
-	SUB #0, @50
-	ADD @121, 145
-	SUB -1, 2
-	SUB -1, 2
-	SUB -1, 2
-	SUB -1, 2
-	SUB -1, 2
-	SUB 415, -661
-	SUB 415, -661
+	JMZ <110, 9
 	SPL 92, 200
 	SUB -1, 2
+	ADD @121, 145
+	JMN @129, 594
 	SUB -1, 2
-	SPL -0, #-22
+	SUB -1, 2
+	SUB -1, 2
+	SUB -9, -82
+	SUB -1, 2
+	SUB 415, -661
+	SPL 92, 200
+	SPL 10
+	SUB -1, 2
 	SUB 415, -661
